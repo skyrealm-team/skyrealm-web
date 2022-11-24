@@ -1,0 +1,8 @@
+replicaCount: 3
+
+ingress:
+  hosts:
+    - host: www.skyrealm.ai
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
