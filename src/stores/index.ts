@@ -1,10 +1,10 @@
 import { createContext, useContext } from 'react';
-import User from './User';
+import Profile from './Profile';
 
 class Root {
-  user: User;
+  profileStore: Profile;
   constructor() {
-    this.user = new User();
+    this.profileStore = new Profile();
   }
 }
 

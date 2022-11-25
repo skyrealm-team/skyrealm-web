@@ -14,3 +14,10 @@ export enum Size {
   md = 'medium',
   lg = 'large',
 }
+
+export enum Severity {
+  error = 'error',
+  warning = 'warning',
+  info = 'info',
+  success = 'success',
+}

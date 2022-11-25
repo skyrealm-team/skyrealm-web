@@ -1,0 +1,23 @@
+.root {
+  display: flex;
+  flex-direction: column;
+
+  .wrapper {
+    position: relative;
+    padding: 70px;
+    flex: 1;
+    overflow: auto;
+  }
+
+  .closeIconWrapper {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+
+  .closeIcon {
+    width: 38px;
+    height: 38px;
+  }
+}
+
