@@ -1,0 +1,16 @@
+.wrapper {
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  right: 0;
+  will-change: transform;
+  transition: transform linear 200ms;
+  transform: scale(0);
+  transform-origin: top right;
+}
+
+.overlayVisible {
+  transform: scale(1);
+}

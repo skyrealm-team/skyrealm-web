@@ -3,3 +3,9 @@
     border: 2px solid #E0DEF7;
   }
 }
+
+.wrapperError {
+  :global(.MuiOutlinedInput-notchedOutline) {
+    border-color: #FF0000;
+  }
+}

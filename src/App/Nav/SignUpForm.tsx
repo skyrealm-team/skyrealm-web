@@ -2,10 +2,8 @@ import React, { useCallback, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useRootStores } from 'stores/index';
 import { useOnSubmit } from 'shared/hooks';
-import { REGISTER_INPUT, REGISTER } from 'graphql/login';
+import { REGISTER_INPUT, REGISTER, REGISTER_RESULT } from 'graphql/login';
 import { InputField, SelectField } from 'components/Fields';
-import { User } from 'graphql/commonTypes';
-import { LOCAL_STORE_KEY, saveToLocalStorage } from 'shared/utils/localStorage';
 import { Size, Variant } from 'shared/enums';
 import AsyncButton from 'components/AsyncButton';
 import { mutateWithMessage } from 'shared/utils/graphql';
@@ -40,12 +38,13 @@ const useAction = (checked: boolean) => {
         Message.warning('Please agree Terms of Service and Privacy Policy ');
         return;
       }
-      const { data } = await mutateWithMessage<User, REGISTER_INPUT>({
+      const { data } = await mutateWithMessage<REGISTER_RESULT, REGISTER_INPUT>({
         mutation: REGISTER,
         variables: formFields,
       });
-      profileStore.setProfile(data || null);
-      saveToLocalStorage(LOCAL_STORE_KEY.accessToken, data?.authToken);
+      profileStore.setProfile(data?.register);
+      profileStore.closeLoginDialog();
+      Message.success('Sign up successful');
     },
     [profileStore, checked],
   );

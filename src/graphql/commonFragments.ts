@@ -11,5 +11,6 @@ export const USER_FIELDS = gql`
     isLoggedIn
     favorite
     authToken
+    phoneNumber
   }
 `;

@@ -7,4 +7,7 @@ export interface User {
   isLoggedIn: string;
   favorite: string[];
   authToken: string;
+  phoneNumber?: string;
 }
+
+export interface EMPTY_RESPONSE {}

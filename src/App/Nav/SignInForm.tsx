@@ -1,49 +1,40 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useRootStores } from 'stores/index';
-import { useFormElements, useListenElements, useOnSubmit, useValidateForm } from 'shared/hooks';
-import { REGISTER_INPUT, REGISTER } from 'graphql/login';
+import { useFormElements, useOnSubmit, useValidateForm } from 'shared/hooks';
+import { LOGIN, LOGIN_INPUT, LOGIN_RESULT } from 'graphql/login';
 import { InputField } from 'components/Fields';
-import { User } from 'graphql/commonTypes';
-import { LOCAL_STORE_KEY, saveToLocalStorage } from 'shared/utils/localStorage';
 import { Size, Variant } from 'shared/enums';
 import AsyncButton from 'components/AsyncButton';
-import graphqlClient from 'graphql/client';
 import { validateEmail, validatePassword } from 'shared/utils/validate';
 import { IconButton, InputAdornment } from '@mui/material';
 import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
 import { useToggle } from 'react-use';
+import { queryWithMessage } from 'shared/utils/graphql';
+import Message from 'components/Message';
 
-const useAction = (setErrorText: (errorText: string) => void) => {
+const useAction = () => {
   const { profileStore } = useRootStores();
   return useCallback(
-    async (formFields: REGISTER_INPUT) => {
-      try {
-        const { data } = await graphqlClient.mutate<User, REGISTER_INPUT>({
-          mutation: REGISTER,
-          variables: formFields,
-        });
-        profileStore.setProfile(data || null);
-        saveToLocalStorage(LOCAL_STORE_KEY.accessToken, data?.authToken);
-      } catch (e: any) {
-        setErrorText(String(e.message));
-      }
+    async (formFields: LOGIN_INPUT) => {
+      const { data } = await queryWithMessage<LOGIN_RESULT, LOGIN_INPUT>({
+        query: LOGIN,
+        variables: formFields,
+      });
+      profileStore.setProfile(data.login);
+      profileStore.closeLoginDialog();
+      Message.success('Sign in successful');
     },
-    [profileStore, setErrorText],
+    [profileStore],
   );
 };
 
 const SignInForm = () => {
   const { profileStore } = useRootStores();
   const [isViewPassword, toggleViewPassword] = useToggle(false);
-  const [errorText, setErrorText] = useState<string>('');
-  const action = useAction(setErrorText);
-  const { formRef, onSubmit } = useOnSubmit<REGISTER_INPUT>(action);
+  const action = useAction();
+  const { formRef, onSubmit } = useOnSubmit<LOGIN_INPUT>(action);
   const elements = useFormElements(formRef);
-  const clearErrorText = useCallback(() => {
-    setErrorText('');
-  }, []);
-  useListenElements(elements, clearErrorText);
   const isValid = useValidateForm(elements);
   if (!profileStore.isSignIn) {
     return null;
@@ -72,7 +63,6 @@ const SignInForm = () => {
         type={isViewPassword ? 'text' : 'password'}
         placeholder="Minimum 6 characters"
         validate={validatePassword}
-        errorText={errorText}
         endAdornment={
           <InputAdornment position="start">
             <IconButton
@@ -92,7 +82,7 @@ const SignInForm = () => {
         }
       />
       <AsyncButton
-        disabled={!!errorText || !isValid}
+        disabled={!isValid}
         className="mt50"
         fullWidth
         variant={Variant.contained}

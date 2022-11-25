@@ -14,12 +14,21 @@ interface SelectFieldProps {
   label: string;
 }
 
-type Props = SelectProps & SelectFieldProps;
+type Props = SelectProps<string> & SelectFieldProps;
 
-const SelectField = ({ validate, className, label, required, ...restInputProps }: Props) => {
+const SelectField = ({
+  onChange,
+  value: outerValue,
+  validate,
+  className,
+  label,
+  required,
+  ...restInputProps
+}: Props) => {
   const selectWrapperRef = useRef<HTMLElement | null>(null);
-  const [value, setValue] = useState('');
+  const [innerValue, setValue] = useState('');
   const [innerError, setError] = useState('');
+  const value = outerValue || innerValue;
 
   const checkValidate = useCallback(
     (needSetError = true) => {
@@ -40,16 +49,23 @@ const SelectField = ({ validate, className, label, required, ...restInputProps }
   }, [checkValidate]);
 
   return (
-    <FieldWrapper error={innerError} label={label} required={required} className={cx(styles.wrapper, className)}>
+    <FieldWrapper
+      error={innerError}
+      label={label}
+      required={required}
+      className={cx(styles.wrapper, className, !!innerError && styles.wrapperError)}
+    >
       <Select
         ref={selectWrapperRef}
         fullWidth
         value={value}
-        onChange={(e: SelectChangeEvent<unknown>) => {
+        onChange={(e: SelectChangeEvent<string>, child: React.ReactNode) => {
+          setError('');
+          onChange?.(e, child);
           setValue(String(e.target.value));
         }}
         sx={{
-          height: '70px',
+          height: '60px',
           borderRadius: '10px',
         }}
         {...restInputProps}
