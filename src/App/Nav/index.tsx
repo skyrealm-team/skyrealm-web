@@ -1,25 +1,42 @@
 import React from 'react';
-import cx from 'classnames';
 import { observer } from 'mobx-react-lite';
-import Flex from 'components/Flex';
+import { AppBar, Box, Toolbar } from '@mui/material';
 import Logo from './Logo';
 import LoginButtons from './LoginButtons';
 import LoginDialog from './LoginDialog';
 import SignUpForm from './SignUpForm';
-import styles from './styles/index.module.scss';
 import SignInForm from './SignInForm';
 import Profile from './Profile';
 import { useRootStores } from 'stores/index';
+
+export const NavHeight = 90;
 
 const Nav = () => {
   const { profileStore } = useRootStores();
   return (
     <>
-      <Flex className={cx(styles.wrapper, 'container')}>
-        <Logo />
-        {profileStore.isLogin ? <Profile /> : <LoginButtons />}
-        <Profile />
-      </Flex>
+      <AppBar
+        color="inherit"
+        sx={{
+          boxShadow: '0px 1px 10px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <Toolbar
+          style={{
+            minHeight: NavHeight,
+          }}
+        >
+          <Logo />
+          <Box flex={1} />
+          {profileStore.isLogin ? <Profile /> : <LoginButtons />}
+          <Profile />
+        </Toolbar>
+      </AppBar>
+      <Toolbar
+        style={{
+          minHeight: NavHeight,
+        }}
+      />
       <LoginDialog>
         <SignInForm />
         <SignUpForm />

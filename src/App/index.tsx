@@ -1,5 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/material';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import theme from 'shared/theme';
 import { RootStoresProvider, rootStore } from 'stores/index';
 import { ApolloProvider } from '@apollo/client';
@@ -9,6 +10,9 @@ import Router from './Router';
 import 'reset-css';
 import 'assets/fonts/notoSans/index.css';
 import './style/index.scss';
+import GoogleMapsProvider from 'Providers/GoogleMapsProvider';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
@@ -16,8 +20,12 @@ function App() {
       <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
           <RootStoresProvider value={rootStore}>
-            <Nav />
-            <Router />
+            <QueryClientProvider client={queryClient}>
+              <GoogleMapsProvider>
+                <Nav />
+                <Router />
+              </GoogleMapsProvider>
+            </QueryClientProvider>
           </RootStoresProvider>
         </ThemeProvider>
       </ApolloProvider>

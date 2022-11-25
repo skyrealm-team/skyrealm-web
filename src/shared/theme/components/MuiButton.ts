@@ -1,7 +1,8 @@
+import { ThemeOptions } from '@mui/material';
 import { Size, Variant } from '../../enums';
 import palette from '../palette';
 
-const MuiButton = {
+const MuiButton: Required<ThemeOptions>['components']['MuiButton'] = {
   styleOverrides: {
     root: {
       boxShadow: 'none',
@@ -19,7 +20,7 @@ const MuiButton = {
     {
       props: { variant: Variant.outlined },
       style: {
-        border: `2px solid ${palette.primaryOutline.light}`,
+        border: `2px solid ${palette.border?.main}`,
         '&:hover': {
           borderWidth: '2px',
         },
