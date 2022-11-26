@@ -36,32 +36,31 @@ export function saveToLocalStorage(key: LOCAL_STORE_KEY, value: any, expire = 0)
 
 const parseJSON = (str: string | null) => {
   if (!str) {
-    return null;
+    // eslint-disable-next-line no-underscore-dangle
+    return { _v: null };
   }
   if (str === 'undefined') {
-    return undefined;
+    // eslint-disable-next-line no-underscore-dangle
+    return { _v: undefined };
   }
   try {
     const result = JSON.parse(str);
-    // eslint-disable-next-line no-underscore-dangle
-    if (result._v !== undefined) {
-      // eslint-disable-next-line no-underscore-dangle
-      return result._v;
-    }
     return result;
   } catch (e) {
-    return str;
+    return { _v: '' };
   }
 };
 export function getFromLocalStorage(key: LOCAL_STORE_KEY) {
   const str = localStorage.getItem(key);
-  return parseJSON(str);
+  return parseJSON(str)._v;
 }
 
 export function removeUserDataFromLocalStorage() {
   removeFromLocalStorage(LOCAL_STORE_KEY.user);
   removeFromLocalStorage(LOCAL_STORE_KEY.accessToken);
 }
+
+export const ONE_DAY_EXPIRE = 24 * 60 * 60 * 1000;
 
 const clearByExpire = () => {
   const len = localStorage.length;

@@ -3,6 +3,8 @@
   font-style: normal;
   font-weight: 400;
   src: local(''),
+  url('./NotoSans-Regular.woff2') format('woff2'),
+  url('./NotoSans-Regular.woff') format('woff'),
   url('./NotoSans-Regular.ttf') format('ttf');
 }
 @font-face {
@@ -10,6 +12,8 @@
   font-style: normal;
   font-weight: 500;
   src: local(''),
+  url('./NotoSans-Medium.woff2') format('woff2'),
+  url('./NotoSans-Medium.woff') format('woff'),
   url('./NotoSans-Medium.ttf') format('ttf');
 }
 @font-face {
@@ -17,5 +21,7 @@
   font-style: normal;
   font-weight: 700;
   src: local(''),
+  url('./NotoSans-Bold.woff2') format('woff2'),
+  url('./NotoSans-Bold.woff') format('woff'),
   url('./NotoSans-Regular.ttf') format('ttf');
 }

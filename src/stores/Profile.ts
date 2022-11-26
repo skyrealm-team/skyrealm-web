@@ -4,6 +4,7 @@ import {
   LOCAL_STORE_KEY,
   removeUserDataFromLocalStorage,
   saveToLocalStorage,
+  ONE_DAY_EXPIRE,
 } from 'shared/utils/localStorage';
 import { EMPTY_RESPONSE, User } from 'graphql/commonTypes';
 import graphqlClient from 'graphql/client';
@@ -82,7 +83,7 @@ class Profile {
       ...user,
     } as User;
     this.user = nextUser;
-    saveToLocalStorage(LOCAL_STORE_KEY.user, nextUser);
+    saveToLocalStorage(LOCAL_STORE_KEY.user, nextUser, ONE_DAY_EXPIRE);
     saveToLocalStorage(LOCAL_STORE_KEY.accessToken, user.authToken);
   };
 
