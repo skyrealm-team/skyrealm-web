@@ -4,15 +4,20 @@ import Flex from 'components/Flex';
 import Logo from './Logo';
 import LoginButtons from './LoginButtons';
 import LoginDialog from './LoginDialog';
-import SignInForm from './SignInForm';
+import SignUpForm from './SignUpForm';
 import styles from './styles/index.module.scss';
+import SignInForm from './SignInForm';
 
 const Nav = () => {
   return (
     <>
-      <Flex className={cx(styles.wrapper, 'container')} leftNode={<Logo />} rightNode={<LoginButtons />} />
+      <Flex className={cx(styles.wrapper, 'container')}>
+        <Logo />
+        <LoginButtons />
+      </Flex>
       <LoginDialog>
         <SignInForm />
+        <SignUpForm />
       </LoginDialog>
     </>
   );

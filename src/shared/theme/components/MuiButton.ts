@@ -10,10 +10,10 @@ const MuiButton = {
   },
   variants: [
     {
-      props: { variant: Variant.contained, size: Size.lg },
+      props: { variant: Variant.contained, size: Size.md },
       style: {
-        paddingTop: '11px',
-        paddingBottom: '11px',
+        paddingTop: '12px',
+        paddingBottom: '12px',
       },
     },
     {
@@ -26,10 +26,24 @@ const MuiButton = {
       },
     },
     {
+      props: { variant: Variant.outlined, size: Size.md },
+      style: {
+        paddingTop: '10px',
+        paddingBottom: '10px',
+      },
+    },
+    {
+      props: { variant: Variant.contained, size: Size.lg },
+      style: {
+        paddingTop: '22px',
+        paddingBottom: '22px',
+      },
+    },
+    {
       props: { variant: Variant.outlined, size: Size.lg },
       style: {
-        paddingTop: '9px',
-        paddingBottom: '9px',
+        paddingTop: '21px',
+        paddingBottom: '21px',
       },
     },
   ],

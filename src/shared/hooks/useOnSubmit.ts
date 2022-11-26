@@ -1,27 +1,32 @@
 import { useCallback, useRef } from 'react';
+import { getFormElements } from './useFormElements';
 
 export type FormFields = { [name: string]: string };
-export type SubmitAction = (form: FormFields) => Promise<void>;
 
-export const useOnSubmit = (action: SubmitAction) => {
+function useOnSubmit<T>(action: (formField: T) => Promise<void>) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const onSubmit = useCallback(() => {
-    if (!formRef.current) {
-      return null;
-    }
-    const elements = Array.from(formRef.current.elements) as HTMLFormElement[];
-    const isValid = elements.every((element) => {
+    const elements = getFormElements(formRef);
+    let isValid = true;
+    elements.forEach((element) => {
       // validate set by InputField component
-      return element.validate?.();
+      if (element.validate && !element.validate()) {
+        if (isValid) {
+          element.scrollIntoView();
+        }
+        isValid = false;
+      }
     });
     if (!isValid) {
       return;
     }
     const formFiles: FormFields = {};
     elements.forEach((element) => {
-      formFiles[element.name] = formFiles[element.value];
+      formFiles[element.name] = element.value;
     });
-    return action(formFiles);
+    return action(formFiles as T);
   }, [action]);
   return { formRef, onSubmit };
-};
+}
+
+export default useOnSubmit;
