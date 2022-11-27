@@ -1,10 +1,10 @@
-.root {
-  display: flex;
-  flex-direction: column;
-
+body {
+  .paper {
+    border-radius: 10px !important;
+  }
   .wrapper {
     position: relative;
-    padding: 70px;
+    padding: 40px;
     flex: 1;
     overflow: auto;
   }
@@ -20,4 +20,3 @@
     height: 38px;
   }
 }
-

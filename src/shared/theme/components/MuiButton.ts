@@ -35,15 +35,15 @@ const MuiButton = {
     {
       props: { variant: Variant.contained, size: Size.lg },
       style: {
-        paddingTop: '22px',
-        paddingBottom: '22px',
+        paddingTop: '17px',
+        paddingBottom: '17px',
       },
     },
     {
       props: { variant: Variant.outlined, size: Size.lg },
       style: {
-        paddingTop: '21px',
-        paddingBottom: '21px',
+        paddingTop: '16px',
+        paddingBottom: '16px',
       },
     },
   ],

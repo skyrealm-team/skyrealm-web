@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
-import { User } from './commonTypes';
 import { USER_FIELDS } from './commonFragments';
+import { User } from './commonTypes';
 
 export interface SignInInput {
   email: string;
@@ -16,6 +16,10 @@ export interface REGISTER_INPUT {
   password: string;
 }
 
+export interface REGISTER_RESULT {
+  register: User;
+}
+
 export const REGISTER = gql`
   mutation REGISTER(
     $firstName: String!
@@ -24,44 +28,49 @@ export const REGISTER = gql`
     $organization: String!
     $userType: String!
     $password: String!
+    $phoneNumber: String
   ) {
-    ...UserFields
-  }
-  ${USER_FIELDS}
-`;
-
-export const USER_SIGN_IN = gql`
-  mutation USER_SIGN_IN($email: String!, $password: String!) {
-    login: userSignIn(email: $email, password: $password) {
-      user {
-        ...UserFields
-      }
-      token
+    register(
+      firstName: $firstName
+      lastName: $lastName
+      email: $email
+      organization: $organization
+      userType: $userType
+      password: $password
+      phoneNumber: $phoneNumber
+    ) {
+      ...UserFields
     }
   }
   ${USER_FIELDS}
 `;
 
-export const USER_SIGN_OUT = gql`
-  mutation USER_SIGN_OUT {
-    userSignOut
-  }
-`;
-
-export interface GuestUserSignInReturn {
-  guestUserSignIn: {
-    user: User;
-    token: string;
-  };
+export interface LOGIN_INPUT {
+  email: string;
+  password: string;
 }
-export const GUEST_USER_SIGN_IN = gql`
-  mutation GUEST_USER_SIGN_IN {
-    guestUserSignIn {
-      user {
-        ...UserFields
-      }
-      token
+
+export interface LOGIN_RESULT {
+  login: User;
+}
+
+export const LOGIN = gql`
+  query LOGIN($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      ...UserFields
     }
   }
   ${USER_FIELDS}
+`;
+
+export interface LOGOFF_INPUT {
+  email: string;
+}
+
+export const LOGOFF = gql`
+  mutation LOGOFF($email: String!) {
+    logoff(email: $email) {
+      firstName
+    }
+  }
 `;

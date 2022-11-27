@@ -11,7 +11,12 @@ interface Props extends DialogProps {
 
 const Dialog = ({ wrapperClass, onClose, children, ...restProps }: Props) => {
   return (
-    <MuiDialog classes={{ root: styles.root }} onClose={onClose} {...restProps} maxWidth={false}>
+    <MuiDialog
+      classes={{ root: styles.root, container: styles.container, paper: styles.paper }}
+      onClose={onClose}
+      {...restProps}
+      maxWidth={false}
+    >
       <div className={cx(styles.wrapper, wrapperClass)}>{children}</div>
       <IconButton className={styles.closeIconWrapper} onClick={onClose}>
         <CloseIcon className={cx(styles.closeIcon, 'gray-main')} />

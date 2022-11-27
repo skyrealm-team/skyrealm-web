@@ -7,6 +7,7 @@ import client from 'graphql/client';
 import Nav from './Nav';
 import Router from './Router';
 import 'reset-css';
+import 'assets/fonts/notoSans/index.css';
 import './style/index.scss';
 
 function App() {

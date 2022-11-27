@@ -31,7 +31,7 @@ const timeStartLink = new ApolloLink((operation, forward) => {
   // auth page need accesstoken, if token is null, redirect to login
   operation.setContext({
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: accessToken,
       'viewer-session-id': getViewerSessionID(),
       ...context.headers,
     },

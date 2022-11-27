@@ -21,7 +21,12 @@ const ReactMessage = ({ message, severity }: Props) => {
   };
 
   return (
-    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+    <Snackbar
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      open={open}
+      autoHideDuration={6000}
+      onClose={handleClose}
+    >
       <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
         {message}
       </Alert>
