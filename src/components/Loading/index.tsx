@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { Backdrop, CircularProgress } from '@mui/material';
 
-const Loading = () => {
-  return <>loading...</>;
+const Loading: FC = () => {
+  return (
+    <Backdrop open={true}>
+      <CircularProgress />
+    </Backdrop>
+  );
 };
 
 export default Loading;

@@ -29,7 +29,6 @@ const Nav = () => {
           <Logo />
           <Box flex={1} />
           {profileStore.isLogin ? <Profile /> : <LoginButtons />}
-          <Profile />
         </Toolbar>
       </AppBar>
       <Toolbar

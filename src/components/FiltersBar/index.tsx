@@ -1,20 +1,28 @@
-import { FC } from 'react';
-import { AppBar, TextField, Toolbar, Stack, MenuItem, InputAdornment } from '@mui/material';
+import React, { FC } from 'react';
+import { AppBar, Toolbar, Stack, MenuItem, AppBarProps } from '@mui/material';
 import { useFormik } from 'formik';
 import { useUpdateEffect } from 'react-use';
-import { ReactComponent as LocationIcon } from 'assets/icons/location.svg';
-import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
+import AutocompleteTextField from 'components/AutocompleteTextField';
+import SelectField from 'components/SelectField';
 
-const FilterBar: FC = () => {
-  const formik = useFormik<{
-    address: string;
-    for: 'lease' | 'sale';
-    spaceUse: string;
-  }>({
+type FilterValues = {
+  address?: string;
+  for?: 'lease' | 'sale';
+  spaceUse?: string;
+};
+
+export type FiltersBarProps = {
+  initialValues?: FilterValues;
+  onChange?: (values: FilterValues) => void;
+  AppBarProps?: Omit<AppBarProps, 'onChange'>;
+};
+const FiltersBar: FC<FiltersBarProps> = ({ initialValues, onChange, AppBarProps }) => {
+  const formik = useFormik<FilterValues>({
     initialValues: {
       address: '',
       for: 'lease',
       spaceUse: '',
+      ...initialValues,
     },
     onSubmit: () => {},
   });
@@ -23,46 +31,34 @@ const FilterBar: FC = () => {
     formik.setFieldValue('spaceUse', '');
   }, [formik.values.for]);
 
+  useUpdateEffect(() => {
+    onChange?.(formik.values);
+  }, [formik.values]);
+
   return (
     <AppBar
       position="static"
       color="inherit"
-      sx={(theme) => ({
+      {...AppBarProps}
+      sx={{
         background: 'rgba(255, 255, 255, 0.8)',
         boxShadow: '0px 5px 7px rgba(0, 0, 0, 0.05)',
         backdropFilter: 'blur(3px)',
         zIndex: 2,
-      })}
+        ...AppBarProps?.sx,
+      }}
     >
       <Toolbar>
         <Stack direction="row" gap={2}>
-          <TextField
-            name="address"
-            value={formik.values.address}
-            onChange={formik.handleChange}
-            placeholder="Input Address"
-            color="primary"
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LocationIcon />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              minWidth: 323,
+          <AutocompleteTextField
+            defaultValue={formik.initialValues.address}
+            onChange={async (prediction) => {
+              await formik.setFieldValue('address', prediction?.structured_formatting.main_text);
             }}
           />
-          <TextField
-            name="for"
+          <SelectField
             value={formik.values.for}
-            onChange={formik.handleChange}
+            onChange={formik.handleChange('for')}
             size="small"
             select
             sx={{
@@ -83,11 +79,10 @@ const FilterBar: FC = () => {
                 {key}
               </MenuItem>
             ))}
-          </TextField>
-          <TextField
-            name="spaceUse"
+          </SelectField>
+          <SelectField
             value={formik.values.spaceUse}
-            onChange={formik.handleChange}
+            onChange={formik.handleChange('spaceUse')}
             size="small"
             select
             sx={{
@@ -160,11 +155,11 @@ const FilterBar: FC = () => {
                 {key}
               </MenuItem>
             ))}
-          </TextField>
+          </SelectField>
         </Stack>
       </Toolbar>
     </AppBar>
   );
 };
 
-export default FilterBar;
+export default FiltersBar;

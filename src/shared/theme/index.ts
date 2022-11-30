@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material';
+import { alpha, createTheme } from '@mui/material';
 import { ReactComponent as ExpandIcon } from 'assets/icons/expand.svg';
 import MuiButton from './components/MuiButton';
 import MuiOutlinedInput from './components/MuiOutlinedInput';
@@ -29,11 +29,42 @@ const theme = createTheme({
       defaultProps: {
         IconComponent: ExpandIcon,
         displayEmpty: true,
+        MenuProps: {
+          keepMounted: true,
+        },
       },
       styleOverrides: {
         icon: {
           color: palette.border?.dark,
           top: 'calc(50% - 10px)',
+          right: 12,
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            background: alpha(palette.primary.main, 0.05),
+            '&.Mui-focusVisible': {
+              background: alpha(palette.primary.main, 0.05),
+            },
+          },
+          '&.Mui-focusVisible': {
+            background: alpha(palette.primary.main, 0.05),
+          },
+          ':hover': {
+            background: `${alpha(palette.primary.main, 0.05)} !important`,
+          },
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        option: {
+          '&.Mui-focused': {
+            background: `${alpha(palette.primary.main, 0.05)} !important`,
+          },
         },
       },
     },

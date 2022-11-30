@@ -5,13 +5,26 @@ const MuiOutlinedInput: Required<ThemeOptions>['components']['MuiOutlinedInput']
   styleOverrides: {
     root: {
       color: palette.common.black,
+      background: palette.common.white,
+      borderRadius: 10,
       ':hover': {
         fieldset: {
           borderColor: `${palette.border?.main} !important`,
         },
       },
+      '&.Mui-focused': {
+        fieldset: {
+          borderColor: `${palette.border?.main} !important`,
+        },
+      },
+    },
+    input: {
+      paddingTop: 13.5,
+      paddingBottom: 13.5,
     },
     notchedOutline: {
+      paddingLeft: 12,
+      paddingRight: 12,
       borderColor: palette.border?.main,
       borderWidth: 2,
       borderRadius: 10,
