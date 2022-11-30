@@ -17,7 +17,7 @@ const FieldWrapper = ({ className, children, label, required, error }: Props) =>
         sx={{
           color: '#666',
           fontWeight: '700',
-          fontSize: '18px',
+          fontSize: '16px',
         }}
         className="mb10"
       >

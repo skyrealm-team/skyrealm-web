@@ -67,6 +67,7 @@ const SelectField = ({
         sx={{
           height: '60px',
           borderRadius: '10px',
+          fontWeight: 700,
         }}
         {...restInputProps}
         IconComponent={(props) => {

@@ -27,14 +27,15 @@ body {
     padding: 21px 24px;
     line-height: 18px;
     height: 18px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: #000;
 
     &::placeholder {
       font-size: 16px;
-      font-weight: 400;
-      color: #C4C4C4;
+      color: #aaa;
+      font-weight: 500;
+      opacity: 1;
     }
   }
 }
