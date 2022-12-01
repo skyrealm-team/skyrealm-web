@@ -25,6 +25,7 @@ const theme = createTheme({
         },
       },
     },
+    MuiOutlinedInput,
     MuiSelect: {
       defaultProps: {
         IconComponent: ExpandIcon,
@@ -77,7 +78,30 @@ const theme = createTheme({
         },
       },
     },
-    MuiOutlinedInput,
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          padding: 70,
+          paddingBottom: 50,
+        },
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          padding: 70,
+          paddingTop: 0,
+        },
+      },
+    },
+    MuiDialogActions: {
+      styleOverrides: {
+        root: {
+          padding: 70,
+          paddingTop: 0,
+        },
+      },
+    },
   },
   palette,
   spacing: 10,

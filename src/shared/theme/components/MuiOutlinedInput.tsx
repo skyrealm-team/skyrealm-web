@@ -7,16 +7,6 @@ const MuiOutlinedInput: Required<ThemeOptions>['components']['MuiOutlinedInput']
       color: palette.common.black,
       background: palette.common.white,
       borderRadius: 10,
-      ':hover': {
-        fieldset: {
-          borderColor: `${palette.border?.main} !important`,
-        },
-      },
-      '&.Mui-focused': {
-        fieldset: {
-          borderColor: `${palette.border?.main} !important`,
-        },
-      },
     },
     input: {
       paddingTop: 13.5,

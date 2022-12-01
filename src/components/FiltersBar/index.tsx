@@ -40,13 +40,12 @@ const FiltersBar: FC<FiltersBarProps> = ({ initialValues, onChange, AppBarProps 
       position="static"
       color="inherit"
       {...AppBarProps}
-      sx={{
+      sx={(theme) => ({
         background: 'rgba(255, 255, 255, 0.8)',
         boxShadow: '0px 5px 7px rgba(0, 0, 0, 0.05)',
         backdropFilter: 'blur(3px)',
-        zIndex: 2,
-        ...AppBarProps?.sx,
-      }}
+        zIndex: theme.zIndex.appBar - 1,
+      })}
     >
       <Toolbar>
         <Stack direction="row" gap={2}>

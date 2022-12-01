@@ -25,8 +25,7 @@ const Home: FC = () => {
   return (
     <Stack
       sx={{
-        position: 'relative',
-        height: `calc(100vh - 90px)`,
+        flex: 1,
       }}
     >
       <FiltersBar
@@ -39,17 +38,12 @@ const Home: FC = () => {
             currentPage: 1,
           });
         }}
-        AppBarProps={{
-          sx: {
-            zIndex: 2,
-          },
-        }}
       />
       <Stack
         direction="row"
         sx={{
           flex: 1,
-          overflow: 'hidden',
+          position: 'relative',
         }}
       >
         <ListingsCard
@@ -64,6 +58,11 @@ const Home: FC = () => {
           CardProps={{
             sx: {
               zIndex: 1,
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
             },
           }}
         />

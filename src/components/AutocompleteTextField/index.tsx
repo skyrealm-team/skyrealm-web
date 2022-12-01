@@ -57,8 +57,18 @@ const AutocompleteTextField: FC<AutocompleteTextFieldProps> = ({ defaultValue, o
         return option.place_id === prediction.place_id;
       }}
       autoComplete
-      sx={{
+      sx={(theme) => ({
         width: 323,
+        ':hover': {
+          fieldset: {
+            borderColor: `${theme.palette.border?.main} !important`,
+          },
+        },
+        '&.Mui-focused': {
+          fieldset: {
+            borderColor: `${theme.palette.border?.main} !important`,
+          },
+        },
         '.MuiOutlinedInput-root': {
           py: '0 !important',
           px: '14px !important',
@@ -73,7 +83,7 @@ const AutocompleteTextField: FC<AutocompleteTextFieldProps> = ({ defaultValue, o
             borderBottomRightRadius: 0,
           },
         }),
-      }}
+      })}
       onOpen={() => {
         setOpen(true);
       }}

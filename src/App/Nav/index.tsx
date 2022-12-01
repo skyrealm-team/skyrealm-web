@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { AppBar, Box, Toolbar } from '@mui/material';
-import Logo from './Logo';
+import { AppBar, Stack, Toolbar } from '@mui/material';
 import LoginButtons from './LoginButtons';
 import LoginDialog from './LoginDialog';
 import SignUpForm from './SignUpForm';
 import SignInForm from './SignInForm';
 import Profile from './Profile';
 import { useRootStores } from 'stores/index';
+import { ReactComponent as LogoIcon } from 'assets/icons/logo.svg';
+import { ReactComponent as SkyrealmIcon } from 'assets/icons/skyrealm.svg';
 
 export const NavHeight = 90;
 
-const Nav = () => {
+const Nav: FC = () => {
   const { profileStore } = useRootStores();
   return (
     <>
@@ -23,17 +25,22 @@ const Nav = () => {
       >
         <Toolbar
           style={{
-            minHeight: NavHeight,
+            height: NavHeight,
+            justifyContent: 'space-between',
           }}
         >
-          <Logo />
-          <Box flex={1} />
+          <Link to="/">
+            <Stack direction="row" gap={2} alignItems="center">
+              <LogoIcon />
+              <SkyrealmIcon />
+            </Stack>
+          </Link>
           {profileStore.isLogin ? <Profile /> : <LoginButtons />}
         </Toolbar>
       </AppBar>
       <Toolbar
         style={{
-          minHeight: NavHeight,
+          height: NavHeight,
         }}
       />
       <LoginDialog>

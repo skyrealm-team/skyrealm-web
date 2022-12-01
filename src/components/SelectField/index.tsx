@@ -12,7 +12,17 @@ const SelectField: FC<SelectFieldProps> = ({ ...props }) => {
       {...props}
       InputProps={{
         ...props.InputProps,
-        sx: {
+        sx: (theme) => ({
+          ':hover': {
+            fieldset: {
+              borderColor: `${theme.palette.border?.main} !important`,
+            },
+          },
+          '&.Mui-focused': {
+            fieldset: {
+              borderColor: `${theme.palette.border?.main} !important`,
+            },
+          },
           ...props.InputProps?.sx,
           ...(open && {
             fieldset: {
@@ -20,7 +30,7 @@ const SelectField: FC<SelectFieldProps> = ({ ...props }) => {
               borderBottomRightRadius: 0,
             },
           }),
-        },
+        }),
       }}
       select
       SelectProps={{

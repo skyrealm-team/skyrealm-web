@@ -27,8 +27,14 @@ type Mutation = {
   logoff: Maybe<User>;
   /** register a new user */
   register: Maybe<User>;
+  /** reset password for forget password request */
+  resetForgetPassword: Maybe<User>;
   /** Update (add or remove) listing for user */
   updateFavoriteListings: Maybe<User>;
+};
+
+type MutationForgetPasswordArgs = {
+  email: InputMaybe<Scalars['String']>;
 };
 
 type MutationLogoffArgs = {
@@ -43,6 +49,11 @@ type MutationRegisterArgs = {
   password: InputMaybe<Scalars['String']>;
   phoneNumber: InputMaybe<Scalars['String']>;
   userType: InputMaybe<Scalars['String']>;
+};
+
+type MutationResetForgetPasswordArgs = {
+  password: InputMaybe<Scalars['String']>;
+  resetToken: InputMaybe<Scalars['String']>;
 };
 
 type MutationUpdateFavoriteListingsArgs = {

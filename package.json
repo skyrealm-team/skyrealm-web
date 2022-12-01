@@ -46,7 +46,8 @@
     "husky": "^8.0.2",
     "lint-staged": "^13.0.3",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "serve": "^14.1.2"
   },
   "scripts": {
     "start": "npm-run-all --parallel codegen dev",
@@ -55,7 +56,8 @@
     "eject": "react-scripts eject",
     "prepare": "husky install",
     "codegen": "graphql-codegen",
-    "codegen:watch": "graphql-codegen -w"
+    "codegen:watch": "graphql-codegen -w",
+    "serve": "serve -s build"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,css,scss,md}": "prettier --write"
