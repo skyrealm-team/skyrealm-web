@@ -21,11 +21,16 @@ const palette = createPalette({
     main: '#18CA74',
     dark: '#108d51',
   },
+  error: {
+    light: '#ff3333',
+    main: '#FF0000',
+    dark: '#b20000',
+  },
   border: {
     light: '#F8F7FE',
     main: '#E0DEF7',
     dark: '#7065F0',
-  }
+  },
 });
 
 export default palette;

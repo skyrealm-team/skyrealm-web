@@ -7,6 +7,7 @@ import {
   InputLabelProps,
   OutlinedInput,
   OutlinedInputProps,
+  Stack,
 } from '@mui/material';
 
 export type InputFieldProps = OutlinedInputProps & {
@@ -15,38 +16,45 @@ export type InputFieldProps = OutlinedInputProps & {
 };
 const InputField: FC<InputFieldProps> = ({ InputLabelProps, FormHelperTextProps, label, fullWidth, ...props }) => {
   return (
-    <FormControl
-      fullWidth={fullWidth}
-      sx={(theme) => ({
-        gap: theme.spacing(1),
-      })}
-    >
-      <InputLabel
-        {...InputLabelProps}
-        sx={{
-          position: 'initial',
-          transform: 'initial',
-          fontSize: 16,
-          fontWeight: 700,
-          color: '#666',
-          ...InputLabelProps?.sx,
-        }}
-      >
-        {label}
-      </InputLabel>
-      <OutlinedInput
-        {...props}
-        inputProps={{
-          ...props.inputProps,
-          style: {
-            padding: 20,
-            fontSize: 18,
+    <FormControl fullWidth={fullWidth}>
+      <Stack gap={1}>
+        <InputLabel
+          focused={false}
+          shrink={true}
+          {...InputLabelProps}
+          sx={{
+            position: 'initial',
+            transform: 'initial',
+            fontSize: 16,
             fontWeight: 700,
-            ...props.inputProps?.style,
-          },
+            color: '#666',
+            ...InputLabelProps?.sx,
+          }}
+        >
+          {label}
+        </InputLabel>
+        <OutlinedInput
+          {...props}
+          inputProps={{
+            ...props.inputProps,
+            style: {
+              padding: 17,
+              fontSize: 18,
+              fontWeight: 700,
+              ...props.inputProps?.style,
+            },
+          }}
+        />
+      </Stack>
+      <FormHelperText
+        error
+        {...FormHelperTextProps}
+        sx={{
+          mx: 0,
+          mt: 0.5,
+          ...FormHelperTextProps?.sx,
         }}
       />
-      <FormHelperText {...FormHelperTextProps} />
     </FormControl>
   );
 };

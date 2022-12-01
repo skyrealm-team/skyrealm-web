@@ -7,20 +7,17 @@ import palette from './palette';
 const theme = createTheme({
   components: {
     MuiButton,
-    MuiInputLabel: {
-      defaultProps: {
-        shrink: true,
-      },
+    MuiInputBase: {
       styleOverrides: {
         root: {
-          color: palette.common.black,
           fontSize: 14,
         },
       },
     },
-    MuiInputBase: {
+    MuiFormHelperText: {
       styleOverrides: {
         root: {
+          fontWeight: 500,
           fontSize: 14,
         },
       },
@@ -81,24 +78,27 @@ const theme = createTheme({
     MuiDialogTitle: {
       styleOverrides: {
         root: {
-          padding: 70,
-          paddingBottom: 50,
+          paddingTop: 30,
+          paddingBottom: 30,
+          paddingLeft: 40,
+          paddingRight: 40,
         },
       },
     },
     MuiDialogContent: {
       styleOverrides: {
         root: {
-          padding: 70,
-          paddingTop: 0,
+          paddingTop: 30,
+          paddingBottom: 30,
+          paddingLeft: 40,
+          paddingRight: 40,
         },
       },
     },
     MuiDialogActions: {
       styleOverrides: {
         root: {
-          padding: 70,
-          paddingTop: 0,
+          padding: 40,
         },
       },
     },

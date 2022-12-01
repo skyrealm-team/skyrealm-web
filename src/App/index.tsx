@@ -16,11 +16,11 @@ import './style/index.scss';
 function App() {
   return (
     <React.StrictMode>
-      <BrowserRouter>
-        <ApolloProvider client={client}>
-          <ThemeProvider theme={theme}>
-            <RootStoresProvider value={rootStore}>
-              <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? ''} libraries={['places']}>
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <RootStoresProvider value={rootStore}>
+            <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? ''} libraries={['places']}>
+              <BrowserRouter>
                 <Stack
                   sx={{
                     minHeight: '100vh',
@@ -36,11 +36,11 @@ function App() {
                   </Stack>
                   <Footer />
                 </Stack>
-              </LoadScript>
-            </RootStoresProvider>
-          </ThemeProvider>
-        </ApolloProvider>
-      </BrowserRouter>
+              </BrowserRouter>
+            </LoadScript>
+          </RootStoresProvider>
+        </ThemeProvider>
+      </ApolloProvider>
     </React.StrictMode>
   );
 }
