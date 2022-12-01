@@ -94,7 +94,7 @@ const FiltersBar: FC<FiltersBarProps> = ({ initialValues, onChange, AppBarProps 
                 color: theme.palette.text.disabled,
               })}
             >
-              <em>Space Use</em>
+              Space Use
             </MenuItem>
             {(formik.values.for === 'lease'
               ? [

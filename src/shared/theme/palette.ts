@@ -31,6 +31,9 @@ const palette = createPalette({
     main: '#E0DEF7',
     dark: '#7065F0',
   },
+  background: {
+    default: '#fafafa',
+  },
 });
 
 export default palette;

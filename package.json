@@ -22,11 +22,11 @@
     "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
     "react-use": "^17.4.0",
-    "reset-css": "^5.0.1",
     "subscriptions-transport-ws": "^0.11.0",
     "typescript": "^4.8.4",
     "uuid": "^9.0.0",
     "validator": "^13.7.0",
+    "web-vitals": "^3.1.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -63,13 +63,17 @@
   "lint-staged": {
     "*.{ts,tsx,js,jsx,css,scss,md}": "prettier --write"
   },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
   "browserslist": {
     "production": [
-      "Chrome >= 45",
-      "Safari >= 10",
-      "iOS >= 10",
-      "Firefox >= 40",
-      "Edge >= 15"
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
     ],
     "development": [
       "last 1 chrome version",
