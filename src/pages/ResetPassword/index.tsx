@@ -15,9 +15,7 @@ const ResetPassword: FC = () => {
     },
     isInitialValid: false,
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
-
+    onSubmit: () => {
       formik.setSubmitting(false);
     },
   });

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { AppBar, Toolbar, Stack, MenuItem, AppBarProps } from '@mui/material';
 import { useFormik } from 'formik';
 import { useUpdateEffect } from 'react-use';
-import AutocompleteTextField from 'components/AutocompleteTextField';
+import PlaceField from 'components/PlaceField';
 import SelectField from 'components/SelectField';
 
 type FilterValues = {
@@ -49,7 +49,7 @@ const FiltersBar: FC<FiltersBarProps> = ({ initialValues, onChange, AppBarProps 
     >
       <Toolbar>
         <Stack direction="row" gap={2}>
-          <AutocompleteTextField
+          <PlaceField
             defaultValue={formik.initialValues.address}
             onChange={async (prediction) => {
               await formik.setFieldValue('address', prediction?.structured_formatting.main_text);

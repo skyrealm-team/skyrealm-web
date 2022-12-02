@@ -14,11 +14,11 @@ import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
 
 const AutocompleteService = new google.maps.places.AutocompleteService();
 
-export type AutocompleteTextFieldProps = {
+export type PlaceFieldProps = {
   defaultValue?: string;
   onChange?: (prediction?: google.maps.places.AutocompletePrediction) => void;
 };
-const AutocompleteTextField: FC<AutocompleteTextFieldProps> = ({ defaultValue, onChange }) => {
+const PlaceField: FC<PlaceFieldProps> = ({ defaultValue, onChange }) => {
   const [open, setOpen] = useToggle(false);
   const [inputValue, setInputValue] = useState(defaultValue);
   const [loading, setLoading] = useToggle(false);
@@ -97,59 +97,59 @@ const AutocompleteTextField: FC<AutocompleteTextFieldProps> = ({ defaultValue, o
           return;
         }
 
-        const headers = new Headers({
-          'X-Goog-Api-Key': process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? '',
-        });
+        // const headers = new Headers({
+        //   'X-Goog-Api-Key': process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? '',
+        // });
 
-        const placeTypes = [
-          {
-            place_type: 'POSTAL_CODE',
-          },
-          {
-            place_type: 'ADMINISTRATIVE_AREA_LEVEL_1',
-          },
-          {
-            place_type: 'ADMINISTRATIVE_AREA_LEVEL_2',
-          },
-          {
-            place_type: 'ADMINISTRATIVE_AREA_LEVEL_3',
-          },
-          {
-            place_type: 'ADMINISTRATIVE_AREA_LEVEL_4',
-          },
-          {
-            place_type: 'LOCALITY',
-          },
-          {
-            place_type: 'SUBLOCALITY_LEVEL_1',
-          },
-          {
-            place_type: 'NEIGHBORHOOD',
-          },
-          {
-            place_type: 'COUNTRY',
-          },
-        ];
+        // const placeTypes = [
+        //   {
+        //     place_type: 'POSTAL_CODE',
+        //   },
+        //   {
+        //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_1',
+        //   },
+        //   {
+        //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_2',
+        //   },
+        //   {
+        //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_3',
+        //   },
+        //   {
+        //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_4',
+        //   },
+        //   {
+        //     place_type: 'LOCALITY',
+        //   },
+        //   {
+        //     place_type: 'SUBLOCALITY_LEVEL_1',
+        //   },
+        //   {
+        //     place_type: 'NEIGHBORHOOD',
+        //   },
+        //   {
+        //     place_type: 'COUNTRY',
+        //   },
+        // ];
 
-        const response = await fetch('https://regionlookup.googleapis.com/v1alpha:searchRegion', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            search_values: placeTypes.map((item) => ({
-              place_id: prediction?.place_id,
-              ...item,
-            })),
-          }),
-        });
+        // const response = await fetch('https://regionlookup.googleapis.com/v1alpha:searchRegion', {
+        //   method: 'POST',
+        //   headers,
+        //   body: JSON.stringify({
+        //     search_values: placeTypes.map((item) => ({
+        //       place_id: prediction?.place_id,
+        //       ...item,
+        //     })),
+        //   }),
+        // });
 
-        const result = await response.json();
+        // const result = await response.json();
 
-        console.log(
-          placeTypes.map((item, index) => ({
-            ...item,
-            matchedPlaceId: result.matches[index].matchedPlaceId,
-          })),
-        );
+        // console.log(
+        //   placeTypes.map((item, index) => ({
+        //     ...item,
+        //     matchedPlaceId: result.matches[index].matchedPlaceId,
+        //   })),
+        // );
       }}
       inputValue={inputValue}
       onInputChange={(event, input, reason) => {
@@ -206,4 +206,4 @@ const AutocompleteTextField: FC<AutocompleteTextFieldProps> = ({ defaultValue, o
   );
 };
 
-export default AutocompleteTextField;
+export default PlaceField;
