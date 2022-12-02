@@ -8,6 +8,7 @@ import {
   OutlinedInput,
   OutlinedInputProps,
   Stack,
+  Typography,
 } from '@mui/material';
 
 export type InputFieldProps = OutlinedInputProps & {
@@ -18,27 +19,36 @@ const InputField: FC<InputFieldProps> = ({ InputLabelProps, FormHelperTextProps,
   return (
     <FormControl fullWidth={fullWidth}>
       <Stack gap={1}>
-        <InputLabel
-          focused={false}
-          shrink={true}
-          {...InputLabelProps}
-          sx={{
-            position: 'initial',
-            transform: 'initial',
-            fontSize: 16,
-            fontWeight: 700,
-            color: '#666',
-            ...InputLabelProps?.sx,
-          }}
-        >
-          {label}
-        </InputLabel>
+        {label && (
+          <InputLabel
+            focused={false}
+            shrink={true}
+            {...InputLabelProps}
+            sx={{
+              position: 'initial',
+              transform: 'initial',
+              fontSize: 16,
+              fontWeight: 700,
+              color: '#666',
+              ...InputLabelProps?.sx,
+            }}
+          >
+            {props.required && (
+              <Typography variant="inherit" component="span" color="error">
+                *
+              </Typography>
+            )}
+            {label}
+          </InputLabel>
+        )}
         <OutlinedInput
+          error={!!FormHelperTextProps?.children}
           {...props}
           inputProps={{
             ...props.inputProps,
             style: {
-              padding: 17,
+              height: 'auto',
+              padding: 20,
               fontSize: 18,
               fontWeight: 700,
               ...props.inputProps?.style,
@@ -46,15 +56,17 @@ const InputField: FC<InputFieldProps> = ({ InputLabelProps, FormHelperTextProps,
           }}
         />
       </Stack>
-      <FormHelperText
-        error
-        {...FormHelperTextProps}
-        sx={{
-          mx: 0,
-          mt: 0.5,
-          ...FormHelperTextProps?.sx,
-        }}
-      />
+      {FormHelperTextProps?.children && (
+        <FormHelperText
+          error
+          {...FormHelperTextProps}
+          sx={{
+            mx: 0,
+            mt: 0.5,
+            ...FormHelperTextProps?.sx,
+          }}
+        />
+      )}
     </FormControl>
   );
 };

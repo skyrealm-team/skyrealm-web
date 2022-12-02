@@ -23,13 +23,13 @@ const ResetPassword: FC = () => {
   return (
     <Dialog
       open
+      scroll="body"
       fullWidth
       hideBackdrop
       PaperProps={{
         elevation: 0,
         sx: (theme) => ({
           maxWidth: 710,
-          borderRadius: theme.spacing(1),
         }),
       }}
       sx={(theme) => ({
@@ -39,13 +39,13 @@ const ResetPassword: FC = () => {
       <DialogContent>
         <form onSubmit={formik.handleSubmit}>
           <Stack
-            gap={5}
+            gap={2}
             sx={{
-              px: 2,
-              py: 4,
+              p: 3,
             }}
           >
             <Typography
+              paragraph
               sx={{
                 fontSize: 40,
                 fontWeight: 700,
@@ -60,10 +60,12 @@ const ResetPassword: FC = () => {
               onChange={formik.handleChange('password')}
               onBlur={formik.handleBlur('password')}
               FormHelperTextProps={{
-                children: formik.errors.password,
+                children: formik.touched.password && formik.errors.password,
               }}
+              autoComplete="current-password"
               fullWidth
             />
+            <br />
             <br />
             <Button
               type="submit"

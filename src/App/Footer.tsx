@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { AppBar, Divider, Link, Stack } from '@mui/material';
 import { ReactComponent as LogoIcon } from 'assets/icons/logo.svg';
+import { TermsOfService, PrivacyPolicy } from 'constants/links';
 
 const Footer: FC = () => {
   return (
@@ -24,7 +25,7 @@ const Footer: FC = () => {
       >
         <LogoIcon />
         <Stack direction="row" gap={2} alignItems="center">
-          <Link color="inherit" underline="none">
+          <Link color="inherit" underline="none" href="">
             Contact Us
           </Link>
           <Divider
@@ -34,7 +35,7 @@ const Footer: FC = () => {
               borderColor: 'common.black',
             }}
           />
-          <Link color="inherit" underline="none">
+          <Link color="inherit" underline="none" href={TermsOfService}>
             Terms of Use
           </Link>
           <Divider
@@ -44,7 +45,7 @@ const Footer: FC = () => {
               borderColor: 'common.black',
             }}
           />
-          <Link color="inherit" underline="none">
+          <Link color="inherit" underline="none" href={PrivacyPolicy}>
             Privacy Policy
           </Link>
         </Stack>

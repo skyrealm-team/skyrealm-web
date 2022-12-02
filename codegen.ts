@@ -7,7 +7,7 @@ dotenv.config({
 const config: CodegenConfig = {
   schema: process.env.REACT_APP_BACKEND_API,
   generates: {
-    './src/types/gql.d.ts': {
+    './src/graphql/types.d.ts': {
       plugins: ['typescript'],
       config: {
         avoidOptionals: true,

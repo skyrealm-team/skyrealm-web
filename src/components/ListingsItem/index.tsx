@@ -1,10 +1,11 @@
 import { FC, useRef } from 'react';
 import { Avatar, IconButton, Typography, Stack } from '@mui/material';
-import { useHoverDirty, useSetState, useUpdateEffect } from 'react-use';
+import { useHoverDirty, useUpdateEffect } from 'react-use';
 import { ReactComponent as ListingIcon } from 'assets/icons/listing.svg';
 import { ReactComponent as FavoriteIcon } from 'assets/icons/favorite.svg';
 import { ReactComponent as FavoriteSelectedIcon } from 'assets/icons/favorite-selected.svg';
 import useUpdateFavoriteListings from 'graphql/useUpdateFavoriteListings';
+import useUserInfo from 'graphql/useUserInfo';
 
 const formatter = Intl.NumberFormat('en', { notation: 'compact' });
 
@@ -14,9 +15,11 @@ export type ListingsItemProps = {
 };
 
 const ListingsItem: FC<ListingsItemProps> = ({ listing, onHoverChange }) => {
-  const [data, setData] = useSetState(listing);
-  const [mutate, { loading }] = useUpdateFavoriteListings();
+  const { data: userInfo, refetch: refetchUserInfo } = useUserInfo();
+  const { mutateAsync: updateFavoriteListings, isLoading: updateFavoriteListingsIsLoading } =
+    useUpdateFavoriteListings();
 
+  const isFavorite = userInfo?.getUserUserInfo.favorite?.includes(listing?.listingId);
   const ref = useRef<HTMLDivElement>(null);
   const isHovered = useHoverDirty(ref);
 
@@ -66,21 +69,21 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, onHoverChange }) => {
             }}
             noWrap
           >
-            {data?.address}
+            {listing?.address}
           </Typography>
           <Stack direction="row" gap={4}>
             {[
               {
                 key: 'Visitors',
-                value: data?.visitors,
+                value: listing?.visitors,
               },
               {
                 key: 'Frequency',
-                value: data?.frequency,
+                value: listing?.frequency,
               },
               {
                 key: 'Medium income',
-                value: data?.mediumIncome,
+                value: listing?.mediumIncome,
               },
             ].map(({ key, value }) => (
               <Stack key={key}>
@@ -113,29 +116,22 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, onHoverChange }) => {
           onClick={async (event) => {
             event.stopPropagation();
             try {
-              setData({
-                isFavorite: !data?.isFavorite,
-              });
-
-              await mutate({
-                variables: {
-                  listingId: data?.listingId,
-                  toLike: !data?.isFavorite,
-                },
+              await updateFavoriteListings({
+                listingId: listing?.listingId,
+                toLike: !isFavorite,
               });
             } catch {
-              setData({
-                isFavorite: data?.isFavorite,
-              });
+            } finally {
+              refetchUserInfo();
             }
           }}
           disableFocusRipple
-          disabled={loading}
+          disabled={updateFavoriteListingsIsLoading}
           sx={{
             p: 0,
           }}
         >
-          {data?.isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon />}
+          {isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon />}
         </IconButton>
       </Stack>
     </Stack>

@@ -59,7 +59,6 @@ const FiltersBar: FC<FiltersBarProps> = ({ initialValues, onChange, AppBarProps 
             value={formik.values.for}
             onChange={formik.handleChange('for')}
             size="small"
-            select
             sx={{
               minWidth: 142,
             }}
@@ -83,7 +82,6 @@ const FiltersBar: FC<FiltersBarProps> = ({ initialValues, onChange, AppBarProps 
             value={formik.values.spaceUse}
             onChange={formik.handleChange('spaceUse')}
             size="small"
-            select
             sx={{
               minWidth: 142,
             }}
