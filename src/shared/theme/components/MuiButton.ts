@@ -1,7 +1,7 @@
-import { Size, Variant } from '../../enums';
+import { ThemeOptions } from '@mui/material';
 import palette from '../palette';
 
-const MuiButton = {
+const MuiButton: Required<ThemeOptions>['components']['MuiButton'] = {
   styleOverrides: {
     root: {
       boxShadow: 'none',
@@ -10,40 +10,40 @@ const MuiButton = {
   },
   variants: [
     {
-      props: { variant: Variant.contained, size: Size.md },
+      props: { variant: 'outlined' },
       style: {
-        paddingTop: '12px',
-        paddingBottom: '12px',
-      },
-    },
-    {
-      props: { variant: Variant.outlined },
-      style: {
-        border: `2px solid ${palette.primaryOutline.light}`,
+        border: `2px solid ${palette.border?.main}`,
         '&:hover': {
-          borderWidth: '2px',
+          borderWidth: 2,
         },
       },
     },
     {
-      props: { variant: Variant.outlined, size: Size.md },
+      props: { variant: 'outlined', size: 'medium' },
       style: {
-        paddingTop: '10px',
-        paddingBottom: '10px',
+        paddingTop: 10,
+        paddingBottom: 10,
       },
     },
     {
-      props: { variant: Variant.contained, size: Size.lg },
+      props: { variant: 'outlined', size: 'large' },
       style: {
-        paddingTop: '17px',
-        paddingBottom: '17px',
+        paddingTop: 16,
+        paddingBottom: 16,
       },
     },
     {
-      props: { variant: Variant.outlined, size: Size.lg },
+      props: { variant: 'contained', size: 'medium' },
       style: {
-        paddingTop: '16px',
-        paddingBottom: '16px',
+        paddingTop: 12,
+        paddingBottom: 12,
+      },
+    },
+    {
+      props: { variant: 'contained', size: 'large' },
+      style: {
+        paddingTop: 17,
+        paddingBottom: 17,
       },
     },
   ],

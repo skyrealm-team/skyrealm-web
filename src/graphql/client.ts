@@ -11,7 +11,6 @@ import {
   removeUserDataFromLocalStorage,
   saveToLocalStorage,
 } from 'shared/utils/localStorage';
-import { envInfo, isDev } from 'shared/constants';
 
 const getViewerSessionID = () => {
   let viewerSessionID = getFromLocalStorage(LOCAL_STORE_KEY.viewerSessionID);
@@ -40,7 +39,7 @@ const timeStartLink = new ApolloLink((operation, forward) => {
 });
 
 const wsLink = new WebSocketLink({
-  uri: `wss:${envInfo.backendApi}`,
+  uri: `wss:${process.env.REACT_APP_BACKEND_API}`,
   options: {
     reconnect: true,
     lazy: true,
@@ -85,7 +84,7 @@ const httpLink = ApolloLink.from([
     )
     .concat(
       createUploadLink({
-        uri: envInfo.backendApi,
+        uri: process.env.REACT_APP_BACKEND_API,
         credentials: 'same-origin',
         fetch: customFetch as any,
       }),
@@ -107,7 +106,6 @@ const link = split(
 const client = new ApolloClient({
   link,
   cache: new InMemoryCache(),
-  connectToDevTools: isDev,
   defaultOptions: {
     watchQuery: {
       fetchPolicy: 'no-cache',

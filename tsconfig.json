@@ -20,14 +20,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "./src",
-    "paths": {
-      "components/*": ["components/*"],
-      "theme": ["theme"],
-      "shared/*": ["shared/*"],
-      "assets/*": ["assets/*"],
-      "graphql/*": ["graphql/*"],
-      "stores/*": ["stores/*"],
-    }
   },
   "include": [
     "src"
