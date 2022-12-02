@@ -14,7 +14,7 @@ const Home: FC = () => {
     listingId: undefined,
     addressState: undefined,
   });
-  const { data, loading } = useQueryListings(variables);
+  const { data, isLoading } = useQueryListings(variables);
   const previousQueryListings = usePrevious(data?.queryListings);
   const queryListings = useMemo(
     () => data?.queryListings ?? previousQueryListings,
@@ -47,7 +47,7 @@ const Home: FC = () => {
         }}
       >
         <ListingsCard
-          loading={loading}
+          loading={isLoading}
           queryListing={queryListings}
           onHoverChange={setHovering}
           onPageChange={(currentPage) => {
@@ -76,7 +76,7 @@ const Home: FC = () => {
           MarkersProps={{
             selection: hovering,
             MarkerProps: {
-              clickable: !loading,
+              clickable: !isLoading,
             },
           }}
         />
