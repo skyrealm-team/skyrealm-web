@@ -12,6 +12,7 @@ const Footer: FC = () => {
       sx={(theme) => ({
         zIndex: theme.zIndex.appBar,
         boxShadow: 'none',
+        filter: 'drop-shadow(0px 1px 10px rgba(0, 0, 0, 0.15))',
       })}
     >
       <Stack

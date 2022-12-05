@@ -3,16 +3,19 @@ import {
   Autocomplete,
   CircularProgress,
   InputAdornment,
+  ListItemIcon,
   MenuItem,
+  Stack,
   TextField,
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useDebounce, useList, useToggle } from 'react-use';
+import { LocationOn } from '@mui/icons-material';
+import { useToggle } from 'react-use';
+import parse from 'autosuggest-highlight/parse';
 import { ReactComponent as LocationIcon } from 'assets/icons/location.svg';
 import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
-
-const AutocompleteService = new google.maps.places.AutocompleteService();
+import usePlacePredictions from 'hooks/usePlacePredictions';
 
 export type PlaceFieldProps = {
   defaultValue?: string;
@@ -21,38 +24,18 @@ export type PlaceFieldProps = {
 const PlaceField: FC<PlaceFieldProps> = ({ defaultValue, onChange }) => {
   const [open, setOpen] = useToggle(false);
   const [inputValue, setInputValue] = useState(defaultValue);
-  const [loading, setLoading] = useToggle(false);
-  const [placePredictions, setPlacePredictions] = useList<google.maps.places.AutocompletePrediction>([]);
 
-  useDebounce(
-    async () => {
-      if (!inputValue) {
-        return;
-      }
-
-      setLoading(true);
-
-      try {
-        const response = await AutocompleteService.getPlacePredictions({
-          input: inputValue,
-          language: 'en',
-        });
-        setPlacePredictions.set(response.predictions);
-      } finally {
-        setLoading(false);
-      }
-    },
-    200,
-    [inputValue],
-  );
+  const { data: placePredictions, isLoading } = usePlacePredictions({
+    input: inputValue ?? '',
+  });
 
   return (
     <Autocomplete<google.maps.places.AutocompletePrediction>
       getOptionLabel={(option) => {
         return option.structured_formatting.main_text;
       }}
-      options={placePredictions}
-      loading={loading}
+      options={placePredictions ?? []}
+      loading={isLoading}
       isOptionEqualToValue={(option, prediction) => {
         return option.place_id === prediction.place_id;
       }}
@@ -92,65 +75,6 @@ const PlaceField: FC<PlaceFieldProps> = ({ defaultValue, onChange }) => {
       }}
       onChange={async (event, prediction) => {
         onChange?.(prediction ?? undefined);
-
-        if (!prediction) {
-          return;
-        }
-
-        const headers = new Headers({
-          'X-Goog-Api-Key': process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? '',
-        });
-
-        const placeTypes = [
-          {
-            place_type: 'POSTAL_CODE',
-          },
-          {
-            place_type: 'ADMINISTRATIVE_AREA_LEVEL_1',
-          },
-          {
-            place_type: 'ADMINISTRATIVE_AREA_LEVEL_2',
-          },
-          {
-            place_type: 'ADMINISTRATIVE_AREA_LEVEL_3',
-          },
-          {
-            place_type: 'ADMINISTRATIVE_AREA_LEVEL_4',
-          },
-          {
-            place_type: 'LOCALITY',
-          },
-          {
-            place_type: 'SUBLOCALITY_LEVEL_1',
-          },
-          {
-            place_type: 'NEIGHBORHOOD',
-          },
-          {
-            place_type: 'COUNTRY',
-          },
-        ];
-
-        const response = await fetch('https://regionlookup.googleapis.com/v1alpha:searchRegion', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            search_values: placeTypes.map((item) => ({
-              region_code: 'US',
-              address: prediction.description,
-              ...item,
-            })),
-          }),
-        });
-
-        const result = await response.json();
-
-        console.log(
-          placeTypes.map((item, index) => ({
-            ...item,
-            matchedPlaceId: result.matches[index].matchedPlaceId,
-          })),
-        );
       }}
       inputValue={inputValue}
       onInputChange={(event, input, reason) => {
@@ -160,7 +84,7 @@ const PlaceField: FC<PlaceFieldProps> = ({ defaultValue, onChange }) => {
       }}
       renderInput={(params) => (
         <TextField
-          placeholder="Input Address"
+          placeholder="City, Neighborhood, ZIP"
           color="primary"
           {...params}
           size="small"
@@ -173,23 +97,54 @@ const PlaceField: FC<PlaceFieldProps> = ({ defaultValue, onChange }) => {
             ),
             endAdornment: (
               <InputAdornment position="end">
-                {loading ? <CircularProgress color="inherit" size={20} /> : <SearchIcon />}
+                {isLoading ? <CircularProgress color="inherit" size={20} /> : <SearchIcon />}
               </InputAdornment>
             ),
           }}
         />
       )}
-      renderOption={(props, option) => (
-        <MenuItem
-          {...props}
-          key={option.structured_formatting.main_text}
-          value={option.structured_formatting.main_text}
-        >
-          <Tooltip title={option.structured_formatting.main_text} placement="right" arrow>
-            <Typography noWrap>{option.structured_formatting.main_text}</Typography>
-          </Tooltip>
-        </MenuItem>
-      )}
+      renderOption={(props, option) => {
+        const matches = option.structured_formatting.main_text_matched_substrings;
+        const parts = parse(
+          option.structured_formatting.main_text,
+          matches.map((match: any) => [match.offset, match.offset + match.length]),
+        );
+
+        return (
+          <MenuItem {...props} key={option.place_id} value={option.structured_formatting.main_text}>
+            <ListItemIcon>
+              <LocationOn fontSize="small" />
+            </ListItemIcon>
+            <Stack
+              sx={{
+                flex: 1,
+                overflow: 'hidden',
+              }}
+            >
+              <Tooltip title={option.structured_formatting.main_text} placement="right" arrow>
+                <Typography noWrap>
+                  {parts.map((part, index) => (
+                    <Typography
+                      key={index}
+                      component="span"
+                      sx={{
+                        fontWeight: part.highlight ? 700 : 400,
+                      }}
+                    >
+                      {part.text}
+                    </Typography>
+                  ))}
+                </Typography>
+              </Tooltip>
+              <Tooltip title={option.structured_formatting.secondary_text} placement="right" arrow>
+                <Typography variant="body2" color="text.secondary" noWrap>
+                  {option.structured_formatting.secondary_text}
+                </Typography>
+              </Tooltip>
+            </Stack>
+          </MenuItem>
+        );
+      }}
       componentsProps={{
         popper: {
           placement: 'bottom',

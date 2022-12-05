@@ -15,6 +15,7 @@ const SignInButton: FC = () => {
         onClick={() => {
           setSignInOpen(true);
         }}
+        size="small"
       >
         Sign in
       </Button>

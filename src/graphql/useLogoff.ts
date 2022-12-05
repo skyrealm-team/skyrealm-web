@@ -34,9 +34,6 @@ export const useLogoff = (
       onSuccess: (data, variables, context) => {
         removeAuthToken();
         queryClient.setQueryData([useUserInfo.name], undefined);
-        // queryClient.refetchQueries({
-        //   queryKey: [useUserInfo.name]
-        // })
 
         options?.onSuccess?.(data, variables, context);
       },

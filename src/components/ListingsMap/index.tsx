@@ -1,31 +1,25 @@
-import React, { FC, useMemo } from 'react';
+import React, { ClassAttributes, FC } from 'react';
 import { GoogleMap, GoogleMapProps } from '@react-google-maps/api';
 import Markers, { MarkersProps } from './Markers';
 
 export type ListingsMapProps = {
   listings?: Maybe<SingleListing>[];
-  GoogleMapProps?: GoogleMapProps;
+  GoogleMapProps?: GoogleMapProps & ClassAttributes<GoogleMap>;
   MarkersProps?: MarkersProps;
 };
 const ListingsMap: FC<ListingsMapProps> = ({ listings, GoogleMapProps, MarkersProps }) => {
-  const center = useMemo(
-    () => ({
-      lat: Number(listings?.[0]?.latitude ?? 40.776676),
-      lng: Number(listings?.[0]?.longitude ?? -73.971321) - 1,
-    }),
-    [listings],
-  );
-
   return (
     <GoogleMap
-      center={center}
-      zoom={10}
+      zoom={5}
       clickableIcons={false}
       {...GoogleMapProps}
       options={{
+        controlSize: 30,
+        disableDefaultUI: false,
         fullscreenControl: false,
         mapTypeControl: false,
         streetViewControl: false,
+        mapId: '7f6f32d2bee3f4d',
         ...GoogleMapProps?.options,
       }}
     >

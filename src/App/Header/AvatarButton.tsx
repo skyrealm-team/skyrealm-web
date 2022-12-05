@@ -44,7 +44,6 @@ const AvatarButton: FC = () => {
           sx: (theme) => ({
             borderRadius: `0 0 ${theme.spacing(1)} ${theme.spacing(1)}`,
             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-            transform: 'translateY(17px) !important',
           }),
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}

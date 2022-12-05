@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import {
   Card,
   List,
@@ -8,104 +8,111 @@ import {
   ListItemButton,
   ListItem,
   CardProps,
-  LinearProgress,
+  Divider,
+  Typography,
 } from '@mui/material';
-import ListingsItem from 'components/ListingsItem';
-import { useUpdateEffect } from 'react-use';
+import ListingsItem, { ListingsItemProps } from 'components/ListingsItem';
+import { ReactComponent as EmptyIcon } from 'assets/icons/empty.svg';
 
 export type ListingsCardProps = {
-  loading?: boolean;
+  isLoading?: boolean;
   queryListing?: QueryListing;
   onPageChange?: (page: number) => void;
-  onHoverChange?: (hovering?: SingleListing['listingId']) => void;
   CardProps?: CardProps;
+  ListingsItemProps?: (listingId: SingleListing['listingId']) => ListingsItemProps;
 };
 
-const ListingsCard: FC<ListingsCardProps> = ({ loading, queryListing, onPageChange, onHoverChange, CardProps }) => {
-  const [hovering, setHovering] = useState<SingleListing['listingId']>();
-
-  useUpdateEffect(() => {
-    onHoverChange?.(hovering);
-  }, [hovering]);
-
+const ListingsCard: FC<ListingsCardProps> = ({
+  isLoading,
+  queryListing,
+  onPageChange,
+  CardProps,
+  ListingsItemProps,
+}) => {
   return (
     <Card
       square
       {...CardProps}
       sx={{
-        width: 620,
         boxShadow: '0px 0px 30px rgba(0, 0, 0, 0.15)',
         ...CardProps?.sx,
       }}
     >
-      <Stack
-        sx={{
-          height: '100%',
-        }}
-      >
-        {loading && <LinearProgress />}
-        <List
-          disablePadding
-          sx={{
-            flex: 1,
-            overflow: 'auto',
-          }}
-        >
-          {queryListing?.listings?.map((listing) => (
-            <ListItem key={listing?.listingId} divider disablePadding>
-              <ListItemButton
-                onClick={() => {}}
-                disableRipple
-                sx={{
-                  px: 3,
-                  py: 2,
-                  justifyContent: 'space-between',
-                }}
-                disabled={loading}
-              >
-                <Stack
-                  direction="row"
-                  gap={2}
-                  sx={{
-                    flex: 1,
-                    overflow: 'hidden',
-                  }}
-                >
-                  <ListingsItem
-                    listing={listing}
-                    onHoverChange={(hovered) => {
-                      if (hovered) {
-                        setHovering(listing?.listingId);
-                      } else if (hovering === listing?.listingId) {
-                        setHovering(undefined);
-                      }
-                    }}
-                  />
-                </Stack>
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        {!!queryListing?.pageNumbers && (
-          <CardActions
+      {queryListing?.listings?.length === 0 ? (
+        <Stack alignItems="center">
+          <EmptyIcon />
+          <Typography
+            variant="body2"
             sx={{
-              p: 2,
-              justifyContent: 'center',
+              color: '#999',
             }}
           >
-            <Pagination
-              shape="rounded"
-              color="primary"
-              count={queryListing?.pageNumbers}
-              page={queryListing?.currentPage ?? 1}
-              onChange={(event, page) => {
-                onPageChange?.(page);
-              }}
-              disabled={loading}
-            />
-          </CardActions>
-        )}
-      </Stack>
+            There is nothing for you to search, please re-enter your address
+          </Typography>
+        </Stack>
+      ) : (
+        <Stack
+          sx={{
+            height: '100%',
+          }}
+        >
+          <List
+            disablePadding
+            sx={{
+              flex: 1,
+              overflow: 'auto',
+            }}
+          >
+            {queryListing?.listings?.map((listing) => (
+              <ListItem key={listing?.listingId} divider disablePadding>
+                <ListItemButton
+                  onClick={() => {}}
+                  disableRipple
+                  sx={{
+                    px: 3,
+                    py: 1.5,
+                    justifyContent: 'space-between',
+                  }}
+                  disabled={isLoading}
+                >
+                  <Stack
+                    direction="row"
+                    gap={2}
+                    sx={{
+                      flex: 1,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <ListingsItem {...ListingsItemProps?.(listing?.listingId)} listing={listing} />
+                  </Stack>
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+          {!!queryListing?.pageNumbers && (
+            <>
+              <Divider />
+              <CardActions
+                sx={{
+                  p: 2,
+                  justifyContent: 'center',
+                }}
+              >
+                <Pagination
+                  shape="rounded"
+                  color="primary"
+                  count={queryListing?.pageNumbers}
+                  page={queryListing?.currentPage ?? 1}
+                  onChange={(event, page) => {
+                    onPageChange?.(page);
+                  }}
+                  disabled={isLoading}
+                />
+              </CardActions>
+            </>
+          )}
+        </Stack>
+      )}
     </Card>
   );
 };
