@@ -5,16 +5,15 @@ import InfoMarker, { InfoMarkerProps } from './InfoMarker';
 export type MarkersProps = {
   listings?: Maybe<SingleListing>[];
   MarkerProps?: InfoMarkerProps;
-  selection?: SingleListing['listingId'];
+  hovering?: SingleListing['listingId'];
+  selections?: Array<SingleListing['listingId']>;
 };
-const Markers: FC<MarkersProps> = ({ listings, MarkerProps, selection }) => {
+const Markers: FC<MarkersProps> = ({ listings, MarkerProps, hovering, selections }) => {
   const [selected, setSelected] = useState<SingleListing['listingId']>();
 
   useUpdateEffect(() => {
-    if (selection) {
-      setSelected(selection);
-    }
-  }, [selection]);
+    setSelected(selections?.[selections?.length - 1]);
+  }, [selections]);
 
   return (
     <>
@@ -23,6 +22,7 @@ const Markers: FC<MarkersProps> = ({ listings, MarkerProps, selection }) => {
           key={listing?.listingId}
           {...MarkerProps}
           listing={listing}
+          hovered={hovering === listing?.listingId}
           selected={selected === listing?.listingId}
           onClick={() => {
             setSelected(listing?.listingId);

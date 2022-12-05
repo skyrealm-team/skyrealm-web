@@ -22,23 +22,22 @@ export const queryListings = gql`
   }
 `;
 
-export const useQueryListings = <TVariables = QueriesQueryListingsArgs>(
-  variables?: TVariables,
-  options?: UseQueryOptions<
-    QueriesQueryListingsArgs,
-    ClientError,
-    {
-      queryListings: QueryListing;
-    },
-    any
-  >,
+export const useQueryListings = <
+  TData = {
+    queryListings: QueryListing;
+  },
+>(
+  variables?: QueriesQueryListingsArgs,
+  options?: UseQueryOptions<TData, ClientError>,
 ) => {
-  return useQuery(
+  return useQuery<TData, ClientError>(
     [useQueryListings.name, variables],
     () => {
       return client.request(queryListings, variables);
     },
-    options,
+    {
+      ...options,
+    },
   );
 };
 

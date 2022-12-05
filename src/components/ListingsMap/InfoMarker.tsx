@@ -1,27 +1,38 @@
 import React, { FC, useRef } from 'react';
 import { InfoWindowF, InfoWindowProps, Marker, MarkerProps } from '@react-google-maps/api';
 import ListingsItem from 'components/ListingsItem';
-import pin from 'assets/icons/pin.svg';
-import pinSelected from 'assets/icons/pin-selected.svg';
+import pinLarge from 'assets/icons/pin-large.svg';
+import pinFocused from 'assets/icons/pin-focused.svg';
+import { useToggle } from 'react-use';
 
 export type InfoMarkerProps = Omit<MarkerProps, 'position'> &
   Partial<Pick<MarkerProps, 'position'>> & {
     listing?: SingleListing;
+    hovered?: boolean;
     selected?: boolean;
     InfoWindowProps?: InfoWindowProps;
   };
-const InfoMarker: FC<InfoMarkerProps> = ({ listing, selected, InfoWindowProps, ...props }) => {
+const InfoMarker: FC<InfoMarkerProps> = ({ listing, hovered, selected, InfoWindowProps, ...props }) => {
   const ref = useRef<Marker>(null);
+  const [hovering, setHovering] = useToggle(false);
 
   return (
     <Marker
       ref={ref}
-      icon={selected ? pinSelected : pin}
+      icon={hovering || hovered || selected ? pinFocused : pinLarge}
       {...props}
       position={{
         lat: Number(listing?.latitude),
         lng: Number(listing?.longitude),
         ...props.position,
+      }}
+      onMouseOver={(event) => {
+        setHovering(true);
+        props.onMouseOver?.(event);
+      }}
+      onMouseOut={(event) => {
+        setHovering(false);
+        props.onMouseOut?.(event);
       }}
     >
       {ref.current?.marker && selected && (

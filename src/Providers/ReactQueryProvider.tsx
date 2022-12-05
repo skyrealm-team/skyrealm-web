@@ -5,6 +5,7 @@ import { ClientError } from 'graphql-request';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      refetchOnWindowFocus: false,
       retry: (failureCount, error) => {
         const clientError = error as ClientError;
         return !clientError.response.errors?.find((error) => error.message.includes('Invalid Token'));

@@ -7,11 +7,12 @@ import useUserInfo from 'graphql/useUserInfo';
 import SignInButton from './SignInButton';
 import AvatarButton from './AvatarButton';
 import SignUpButton from './SignUpButton';
-
-export const NavHeight = 90;
+import { useMeasure } from 'react-use';
 
 const Header: FC = () => {
-  const { data: userInfo, isLoading: userInfoIsLoading } = useUserInfo();
+  const { data: userInfo, isLoading } = useUserInfo();
+
+  const [ref, { height }] = useMeasure<HTMLDivElement>();
 
   return (
     <>
@@ -22,8 +23,9 @@ const Header: FC = () => {
         }}
       >
         <Toolbar
+          ref={ref}
           style={{
-            height: NavHeight,
+            minHeight: 60,
             justifyContent: 'space-between',
           }}
         >
@@ -34,7 +36,7 @@ const Header: FC = () => {
             </Stack>
           </Link>
           <Stack direction="row" gap={3}>
-            {!userInfo && !userInfoIsLoading && (
+            {!isLoading && !userInfo && (
               <>
                 <SignInButton />
                 <SignUpButton />
@@ -46,7 +48,7 @@ const Header: FC = () => {
       </AppBar>
       <Toolbar
         style={{
-          height: NavHeight,
+          height,
         }}
       />
     </>

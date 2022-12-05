@@ -33,6 +33,7 @@ const SignUpButton: FC = () => {
         onClick={() => {
           setOpen(true);
         }}
+        size="small"
       >
         Sign up
       </Button>

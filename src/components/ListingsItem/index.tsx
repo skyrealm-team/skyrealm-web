@@ -1,6 +1,5 @@
 import { FC, useRef } from 'react';
-import { Avatar, IconButton, Typography, Stack } from '@mui/material';
-import { useHoverDirty, useUpdateEffect } from 'react-use';
+import { Avatar, IconButton, Typography, Stack, BoxProps } from '@mui/material';
 import { ReactComponent as ListingIcon } from 'assets/icons/listing.svg';
 import { ReactComponent as FavoriteIcon } from 'assets/icons/favorite.svg';
 import { ReactComponent as FavoriteSelectedIcon } from 'assets/icons/favorite-selected.svg';
@@ -9,33 +8,29 @@ import useUserInfo from 'graphql/useUserInfo';
 
 const formatter = Intl.NumberFormat('en', { notation: 'compact' });
 
-export type ListingsItemProps = {
+export type ListingsItemProps = BoxProps & {
   listing?: SingleListing;
-  onHoverChange?: (hovered: boolean) => void;
 };
 
-const ListingsItem: FC<ListingsItemProps> = ({ listing, onHoverChange }) => {
+const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
   const { data: userInfo, refetch: refetchUserInfo } = useUserInfo();
   const { mutateAsync: updateFavoriteListings, isLoading: updateFavoriteListingsIsLoading } =
     useUpdateFavoriteListings();
 
   const isFavorite = userInfo?.getUserUserInfo.favorite?.includes(listing?.listingId);
   const ref = useRef<HTMLDivElement>(null);
-  const isHovered = useHoverDirty(ref);
-
-  useUpdateEffect(() => {
-    onHoverChange?.(isHovered);
-  }, [isHovered]);
-
   return (
     <Stack
       ref={ref}
       direction="row"
       gap={2}
+      alignItems="center"
       justifyContent="space-between"
+      {...props}
       sx={{
         flex: 1,
         overflow: 'hidden',
+        ...props.sx,
       }}
     >
       <Stack
@@ -86,7 +81,12 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, onHoverChange }) => {
                 value: listing?.mediumIncome,
               },
             ].map(({ key, value }) => (
-              <Stack key={key}>
+              <Stack
+                key={key}
+                sx={{
+                  overflow: 'hidden',
+                }}
+              >
                 <Typography
                   variant="subtitle1"
                   color="primary"
@@ -99,6 +99,7 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, onHoverChange }) => {
                 </Typography>
                 <Typography
                   variant="subtitle2"
+                  noWrap
                   sx={(theme) => ({
                     color: theme.palette.text.disabled,
                     fontWeight: 400,

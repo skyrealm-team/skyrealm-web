@@ -13,10 +13,11 @@ type FilterValues = {
 
 export type FiltersBarProps = {
   initialValues?: FilterValues;
-  onChange?: (values: FilterValues) => void;
   AppBarProps?: Omit<AppBarProps, 'onChange'>;
+  onChange?: (values: FilterValues) => void;
+  onPredictionChange?: (prediction?: google.maps.places.AutocompletePrediction) => void;
 };
-const FiltersBar: FC<FiltersBarProps> = ({ initialValues, onChange, AppBarProps }) => {
+const FiltersBar: FC<FiltersBarProps> = ({ initialValues, AppBarProps, onChange, onPredictionChange }) => {
   const formik = useFormik<FilterValues>({
     initialValues: {
       address: '',
@@ -53,6 +54,7 @@ const FiltersBar: FC<FiltersBarProps> = ({ initialValues, onChange, AppBarProps 
             defaultValue={formik.initialValues.address}
             onChange={async (prediction) => {
               await formik.setFieldValue('address', prediction?.structured_formatting.main_text);
+              onPredictionChange?.(prediction);
             }}
           />
           <SelectField

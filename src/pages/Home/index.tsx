@@ -1,87 +1,247 @@
-import React, { FC, useMemo, useState } from 'react';
-import { Stack } from '@mui/material';
-import { usePrevious, useSetState } from 'react-use';
+import React, { FC, useState } from 'react';
+import { LinearProgress, Stack, useTheme } from '@mui/material';
+import { useSetState } from 'react-use';
 import ListingsCard from 'components/ListingsCard';
 import FiltersBar from 'components/FiltersBar';
 import useQueryListings from 'graphql/useQueryListings';
 import ListingsMap from 'components/ListingsMap';
+import useGeoJSON from 'hooks/useGeoJSON';
+import usePlaceDetails from 'hooks/usePlaceDetails';
 
 const Home: FC = () => {
+  const [map, setMap] = useState<google.maps.Map>();
+
   const [variables, setVariables] = useSetState<QueriesQueryListingsArgs>({
-    // freeText: 'Manhattan, New York, NY',
-    freeText: 'NY',
+    freeText: 'Manhattan',
     currentPage: 1,
     listingId: undefined,
     addressState: undefined,
   });
-  const { data, isLoading } = useQueryListings(variables);
-  const previousQueryListings = usePrevious(data?.queryListings);
-  const queryListings = useMemo(
-    () => data?.queryListings ?? previousQueryListings,
-    [data?.queryListings, previousQueryListings],
-  );
+  const { data: queryListings, isFetching } = useQueryListings(variables, {
+    keepPreviousData: true,
+  });
+  const [prediction, setPrediction] = useState<Partial<google.maps.places.AutocompletePrediction>>({
+    description: variables.freeText,
+  });
+
   const [hovering, setHovering] = useState<SingleListing['listingId']>();
+  const [selections, setSelections] = useState<Array<SingleListing['listingId']>>();
+
+  const theme = useTheme();
+
+  useGeoJSON(
+    {
+      q: prediction.description,
+    },
+    {
+      onSuccess: (geoJSONs) => {
+        (map?.get('data-features') as google.maps.Data.Feature[] | undefined)?.forEach((feature) => {
+          map?.data.remove(feature);
+        });
+
+        map?.set(
+          'data-features',
+          geoJSONs
+            ?.reverse()
+            .map((item) => {
+              if (item.osm_type === 'node') {
+                return [];
+              }
+
+              const features = map?.data.addGeoJson({
+                type: 'FeatureCollection',
+                features: [
+                  {
+                    type: 'Feature',
+                    geometry: item.geojson,
+                  },
+                ],
+              });
+
+              map?.fitBounds(
+                new google.maps.LatLngBounds(
+                  {
+                    lat: Number(item.boundingbox[0]),
+                    lng: Number(item.boundingbox[2]),
+                  },
+                  {
+                    lat: Number(item.boundingbox[1]),
+                    lng: Number(item.boundingbox[3]),
+                  },
+                ),
+              );
+              map?.setCenter({
+                lat: Number(item.lat),
+                lng: Number(item.lon),
+              });
+
+              return features;
+            })
+            .reduce((acc, cur) => [...(acc ?? []), ...(cur ?? [])], []),
+        );
+
+        map?.data.setStyle({
+          fillColor: theme.palette.primary.main,
+          strokeWeight: 1,
+        });
+      },
+    },
+  );
+
+  usePlaceDetails(
+    {
+      map,
+      place_id: prediction.place_id,
+    },
+    {
+      onSuccess: (result) => {
+        const { geometry } = result;
+
+        if (geometry?.location) {
+          map?.setCenter(geometry?.location);
+        }
+
+        if (!!geometry?.viewport) {
+          map?.fitBounds(geometry?.viewport);
+        }
+      },
+    },
+  );
 
   return (
-    <Stack
-      sx={{
-        flex: 1,
-      }}
-    >
+    <>
       <FiltersBar
-        initialValues={{
-          address: variables.freeText ?? '',
-        }}
-        onChange={(values) => {
+        onChange={({ address }) => {
           setVariables({
-            freeText: values.address,
+            freeText: address,
             currentPage: 1,
           });
         }}
+        onPredictionChange={(prediction) => {
+          if (!prediction) {
+            return;
+          }
+          setPrediction(prediction);
+
+          // const headers = new Headers({
+          //   'X-Goog-Api-Key': process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? '',
+          // });
+
+          // const placeTypes = [
+          //   {
+          //     place_type: 'POSTAL_CODE',
+          //   },
+          //   {
+          //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_1',
+          //   },
+          //   {
+          //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_2',
+          //   },
+          //   {
+          //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_3',
+          //   },
+          //   {
+          //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_4',
+          //   },
+          //   {
+          //     place_type: 'LOCALITY',
+          //   },
+          //   {
+          //     place_type: 'SUBLOCALITY_LEVEL_1',
+          //   },
+          //   {
+          //     place_type: 'NEIGHBORHOOD',
+          //   },
+          //   {
+          //     place_type: 'COUNTRY',
+          //   },
+          // ];
+
+          // const response = await fetch('https://regionlookup.googleapis.com/v1alpha:searchRegion', {
+          //   method: 'POST',
+          //   headers,
+          //   body: JSON.stringify({
+          //     search_values: placeTypes.map((item) => ({
+          //       region_code: 'US',
+          //       address: prediction.description,
+          //       ...item,
+          //     })),
+          //   }),
+          // });
+
+          // const result = await response.json();
+
+          // console.log(
+          //   placeTypes.map((item, index) => ({
+          //     ...item,
+          //     matchedPlaceId: result.matches[index].matchedPlaceId,
+          //   })),
+          // );
+        }}
       />
+      {isFetching && <LinearProgress />}
       <Stack
         direction="row"
         sx={{
           flex: 1,
-          position: 'relative',
         }}
       >
-        <ListingsCard
-          loading={isLoading}
-          queryListing={queryListings}
-          onHoverChange={setHovering}
-          onPageChange={(currentPage) => {
-            setVariables({
-              currentPage,
-            });
+        <Stack
+          sx={{
+            width: 620,
+            position: 'relative',
           }}
-          CardProps={{
-            sx: {
-              zIndex: 1,
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-            },
-          }}
-        />
+        >
+          <ListingsCard
+            isLoading={isFetching}
+            queryListing={queryListings?.queryListings}
+            onPageChange={(currentPage) => {
+              setVariables({
+                currentPage,
+              });
+            }}
+            CardProps={{
+              sx: {
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                zIndex: 1,
+              },
+            }}
+            ListingsItemProps={(listingId) => ({
+              onMouseOver: () => {
+                setHovering(listingId);
+              },
+              onMouseOut: () => {
+                if (hovering === listingId) {
+                  setHovering(undefined);
+                }
+              },
+              onClick: () => {
+                setSelections([listingId]);
+              },
+            })}
+          />
+        </Stack>
         <ListingsMap
-          listings={queryListings?.listings}
+          listings={queryListings?.queryListings.listings}
           GoogleMapProps={{
             mapContainerStyle: {
               flex: 1,
             },
+            onLoad: (map) => {
+              setMap(map);
+            },
           }}
           MarkersProps={{
-            selection: hovering,
-            MarkerProps: {
-              clickable: !isLoading,
-            },
+            hovering,
+            selections,
           }}
         />
       </Stack>
-    </Stack>
+    </>
   );
 };
 
