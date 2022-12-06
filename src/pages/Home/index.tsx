@@ -1,11 +1,11 @@
 import React, { FC, useState } from 'react';
-import { LinearProgress, Stack, useTheme } from '@mui/material';
+import { LinearProgress, Stack } from '@mui/material';
 import { useSetState } from 'react-use';
 import ListingsCard from 'components/ListingsCard';
 import FiltersBar from 'components/FiltersBar';
 import useQueryListings from 'graphql/useQueryListings';
 import ListingsMap from 'components/ListingsMap';
-import useGeoJSON from 'hooks/useGeoJSON';
+import usePlaceDetails from 'hooks/usePlaceDetails';
 
 const Home: FC = () => {
   const [map, setMap] = useState<google.maps.Map>();
@@ -26,63 +26,22 @@ const Home: FC = () => {
   const [hovering, setHovering] = useState<SingleListing['listingId']>();
   const [selections, setSelections] = useState<Array<SingleListing['listingId']>>();
 
-  const theme = useTheme();
-
-  useGeoJSON(
+  usePlaceDetails(
     {
-      q: prediction.description,
+      map,
+      place_id: prediction.place_id,
     },
     {
-      onSuccess: (geoJSONs) => {
-        (map?.get('data-features') as google.maps.Data.Feature[] | undefined)?.forEach((feature) => {
-          map?.data.remove(feature);
-        });
+      onSuccess: (result) => {
+        const { geometry } = result;
 
-        map?.set(
-          'data-features',
-          geoJSONs
-            ?.reverse()
-            .map((item) => {
-              if (item.osm_type === 'node') {
-                return [];
-              }
+        if (geometry?.location) {
+          map?.setCenter(geometry?.location);
+        }
 
-              const features = map?.data.addGeoJson({
-                type: 'FeatureCollection',
-                features: [
-                  {
-                    type: 'Feature',
-                    geometry: item.geojson,
-                  },
-                ],
-              });
-
-              map?.fitBounds(
-                new google.maps.LatLngBounds(
-                  {
-                    lat: Number(item.boundingbox[0]),
-                    lng: Number(item.boundingbox[2]),
-                  },
-                  {
-                    lat: Number(item.boundingbox[1]),
-                    lng: Number(item.boundingbox[3]),
-                  },
-                ),
-              );
-              map?.setCenter({
-                lat: Number(item.lat),
-                lng: Number(item.lon),
-              });
-
-              return features;
-            })
-            .reduce((acc, cur) => [...(acc ?? []), ...(cur ?? [])], []),
-        );
-
-        map?.data.setStyle({
-          fillColor: theme.palette.primary.main,
-          strokeWeight: 1,
-        });
+        if (!!geometry?.viewport) {
+          map?.fitBounds(geometry?.viewport);
+        }
       },
     },
   );
