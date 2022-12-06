@@ -20,6 +20,7 @@ const Home: FC = () => {
     keepPreviousData: true,
   });
   const [prediction, setPrediction] = useState<Partial<google.maps.places.AutocompletePrediction>>({
+    place_id: 'ChIJYeZuBI9YwokRjMDs_IEyCwo',
     description: variables.freeText,
   });
 
