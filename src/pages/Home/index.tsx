@@ -6,7 +6,6 @@ import FiltersBar from 'components/FiltersBar';
 import useQueryListings from 'graphql/useQueryListings';
 import ListingsMap from 'components/ListingsMap';
 import useGeoJSON from 'hooks/useGeoJSON';
-import usePlaceDetails from 'hooks/usePlaceDetails';
 
 const Home: FC = () => {
   const [map, setMap] = useState<google.maps.Map>();
@@ -84,26 +83,6 @@ const Home: FC = () => {
           fillColor: theme.palette.primary.main,
           strokeWeight: 1,
         });
-      },
-    },
-  );
-
-  usePlaceDetails(
-    {
-      map,
-      place_id: prediction.place_id,
-    },
-    {
-      onSuccess: (result) => {
-        const { geometry } = result;
-
-        if (geometry?.location) {
-          map?.setCenter(geometry?.location);
-        }
-
-        if (!!geometry?.viewport) {
-          map?.fitBounds(geometry?.viewport);
-        }
       },
     },
   );
