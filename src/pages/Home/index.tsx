@@ -19,11 +19,11 @@ const Home: FC = () => {
   const { data: queryListings, isFetching } = useQueryListings(variables, {
     keepPreviousData: true,
   });
+
   const [prediction, setPrediction] = useState<Partial<google.maps.places.AutocompletePrediction>>({
     place_id: 'ChIJYeZuBI9YwokRjMDs_IEyCwo',
     description: variables.freeText,
   });
-
   const [hovering, setHovering] = useState<SingleListing['listingId']>();
   const [selections, setSelections] = useState<Array<SingleListing['listingId']>>();
 
@@ -127,7 +127,7 @@ const Home: FC = () => {
       >
         <Stack
           sx={{
-            width: 620,
+            width: 485,
             position: 'relative',
           }}
         >

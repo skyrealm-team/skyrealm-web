@@ -27,7 +27,6 @@ const SelectField: FC<PropsWithChildren<SelectFieldProps>> = ({
   label,
   fullWidth,
   children,
-  size = 'medium',
   ...props
 }) => {
   const [open, setOpen] = useToggle(false);
@@ -64,7 +63,7 @@ const SelectField: FC<PropsWithChildren<SelectFieldProps>> = ({
             <OutlinedInput
               {...props}
               sx={(theme) => ({
-                ...(size === 'medium' && {
+                ...(props.size === 'medium' && {
                   '.MuiSelect-select': {
                     minHeight: 'auto !important',
                     p: 2,

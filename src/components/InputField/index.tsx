@@ -48,7 +48,6 @@ const InputField: FC<InputFieldProps> = ({ InputLabelProps, FormHelperTextProps,
             ...props.inputProps,
             style: {
               height: 'auto',
-              padding: 20,
               fontSize: 18,
               fontWeight: 700,
               ...props.inputProps?.style,

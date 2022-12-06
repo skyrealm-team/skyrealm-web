@@ -35,7 +35,8 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
     >
       <Stack
         direction="row"
-        gap={2}
+        alignItems="center"
+        gap={1.5}
         sx={{
           overflow: 'hidden',
         }}
@@ -45,28 +46,29 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
           sx={{
             width: 'auto',
             height: 'auto',
-            p: 2,
+            p: 1,
             background: '#F0F0F0',
+            borderRadius: '10px',
           }}
         >
           <ListingIcon />
         </Avatar>
         <Stack
-          gap={2}
+          gap={0.5}
           sx={{
             overflow: 'hidden',
           }}
         >
           <Typography
             sx={{
-              fontSize: 18,
+              fontSize: 14,
               fontWeight: 700,
             }}
             noWrap
           >
             {listing?.address}
           </Typography>
-          <Stack direction="row" gap={4}>
+          <Stack direction="row" gap={3}>
             {[
               {
                 key: 'Visitors',
@@ -91,7 +93,7 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
                   variant="subtitle1"
                   color="primary"
                   sx={{
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: 700,
                   }}
                 >

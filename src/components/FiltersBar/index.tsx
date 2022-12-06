@@ -48,7 +48,14 @@ const FiltersBar: FC<FiltersBarProps> = ({ initialValues, AppBarProps, onChange,
         zIndex: theme.zIndex.appBar - 1,
       })}
     >
-      <Toolbar>
+      <Toolbar
+        sx={{
+          py: 0.8,
+        }}
+        style={{
+          minHeight: 'initial',
+        }}
+      >
         <Stack direction="row" gap={2}>
           <PlaceField
             defaultValue={formik.initialValues.address}

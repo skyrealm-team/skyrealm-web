@@ -7,6 +7,7 @@ import {
   MenuItem,
   Stack,
   TextField,
+  TextFieldProps,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -20,8 +21,9 @@ import usePlacePredictions from 'hooks/usePlacePredictions';
 export type PlaceFieldProps = {
   defaultValue?: string;
   onChange?: (prediction?: google.maps.places.AutocompletePrediction) => void;
+  TextFieldProps?: TextFieldProps;
 };
-const PlaceField: FC<PlaceFieldProps> = ({ defaultValue, onChange }) => {
+const PlaceField: FC<PlaceFieldProps> = ({ defaultValue, onChange, TextFieldProps }) => {
   const [open, setOpen] = useToggle(false);
   const [inputValue, setInputValue] = useState(defaultValue);
 
@@ -53,12 +55,7 @@ const PlaceField: FC<PlaceFieldProps> = ({ defaultValue, onChange }) => {
           },
         },
         '.MuiOutlinedInput-root': {
-          py: '0 !important',
           px: '14px !important',
-        },
-        '.MuiAutocomplete-input': {
-          py: '13.5px !important',
-          px: '0 !important',
         },
         ...(open && {
           fieldset: {
@@ -88,8 +85,14 @@ const PlaceField: FC<PlaceFieldProps> = ({ defaultValue, onChange }) => {
           color="primary"
           {...params}
           size="small"
+          {...TextFieldProps}
           InputProps={{
             ...params.InputProps,
+            sx: {
+              ...(TextFieldProps?.size === 'small' && {
+                py: '0 7.5px !important',
+              }),
+            },
             startAdornment: (
               <InputAdornment position="start">
                 <LocationIcon />

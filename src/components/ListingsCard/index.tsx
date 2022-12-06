@@ -4,15 +4,17 @@ import {
   List,
   Stack,
   CardActions,
-  Pagination,
   ListItemButton,
   ListItem,
   CardProps,
   Divider,
   Typography,
+  IconButton,
+  Avatar,
 } from '@mui/material';
 import ListingsItem, { ListingsItemProps } from 'components/ListingsItem';
 import { ReactComponent as EmptyIcon } from 'assets/icons/empty.svg';
+import { NavigateBefore, NavigateNext } from '@mui/icons-material';
 
 export type ListingsCardProps = {
   isLoading?: boolean;
@@ -29,6 +31,8 @@ const ListingsCard: FC<ListingsCardProps> = ({
   CardProps,
   ListingsItemProps,
 }) => {
+  const currentPage = queryListing?.currentPage ?? 1;
+
   return (
     <Card
       square
@@ -69,7 +73,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
                   onClick={() => {}}
                   disableRipple
                   sx={{
-                    px: 3,
+                    px: 2,
                     py: 1.5,
                     justifyContent: 'space-between',
                   }}
@@ -92,22 +96,36 @@ const ListingsCard: FC<ListingsCardProps> = ({
           {!!queryListing?.pageNumbers && (
             <>
               <Divider />
-              <CardActions
-                sx={{
-                  p: 2,
-                  justifyContent: 'center',
-                }}
-              >
-                <Pagination
-                  shape="rounded"
-                  color="primary"
-                  count={queryListing?.pageNumbers}
-                  page={queryListing?.currentPage ?? 1}
-                  onChange={(event, page) => {
-                    onPageChange?.(page);
-                  }}
-                  disabled={isLoading}
-                />
+              <CardActions>
+                <Stack direction="row" alignItems="center" justifyContent="center" width="100%">
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      onPageChange?.(currentPage - 1);
+                    }}
+                    disabled={currentPage === 1}
+                  >
+                    <NavigateBefore />
+                  </IconButton>
+                  <Avatar
+                    variant="rounded"
+                    color="primary"
+                    sx={{
+                      width: 30,
+                      height: 30,
+                    }}
+                  >
+                    <Typography variant="caption">{currentPage}</Typography>
+                  </Avatar>
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      onPageChange?.(currentPage + 1);
+                    }}
+                  >
+                    <NavigateNext />
+                  </IconButton>
+                </Stack>
               </CardActions>
             </>
           )}

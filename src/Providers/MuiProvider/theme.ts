@@ -61,6 +61,14 @@ const theme = responsiveFontSizes(
 );
 
 theme.components = {
+  MuiToolbar: {
+    styleOverrides: {
+      gutters: {
+        paddingLeft: `${theme.spacing(2)} !important`,
+        paddingRight: `${theme.spacing(2)} !important`,
+      },
+    },
+  },
   MuiButton: {
     styleOverrides: {
       root: {
@@ -104,6 +112,18 @@ theme.components = {
     ],
   },
   MuiInputBase: {
+    variants: [
+      {
+        props: {
+          size: 'medium',
+        },
+        style: {
+          input: {
+            padding: 20,
+          },
+        },
+      },
+    ],
     styleOverrides: {
       root: {
         fontSize: 14,
@@ -116,10 +136,6 @@ theme.components = {
         color: theme.palette.common.black,
         background: theme.palette.common.white,
         borderRadius: theme.spacing(1),
-      },
-      input: {
-        paddingTop: 13.5,
-        paddingBottom: 13.5,
       },
       notchedOutline: {
         paddingLeft: 12,

@@ -1,22 +1,39 @@
 import { FC } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, CircularProgress, Dialog, DialogContent, Typography, Stack } from '@mui/material';
-import InputField from 'components/InputField';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import InputField from 'components/InputField';
+import useResetForgetPassword from 'graphql/useResetForgetPassword';
 
 const validationSchema = Yup.object().shape({
   password: Yup.string().min(6, 'Too Short!').max(50, 'Too Long!').required('Required'),
+  resetToken: Yup.string().uuid().required(),
 });
 
 const ResetPassword: FC = () => {
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+
+  const { mutateAsync: resetForgetPassword } = useResetForgetPassword();
+
   const formik = useFormik({
     initialValues: {
       password: '',
+      resetToken: params.get('token') ?? '',
     },
     isInitialValid: false,
     validationSchema,
-    onSubmit: () => {
-      formik.setSubmitting(false);
+    onSubmit: async (values) => {
+      try {
+        await resetForgetPassword(values);
+      } catch {
+      } finally {
+        formik.setSubmitting(false);
+        navigate('/', {
+          replace: true,
+        });
+      }
     },
   });
 
