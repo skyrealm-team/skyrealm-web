@@ -2,7 +2,7 @@ import { gql, ClientError } from 'graphql-request';
 import { useQuery, UseQueryOptions } from 'react-query';
 import client from './client';
 
-export const queryListings = gql`
+export const queryListingsQuery = gql`
   query queryListings($currentPage: Int, $addressState: String, $freeText: String) {
     queryListings(currentPage: $currentPage, addressState: $addressState, freeText: $freeText) {
       currentPage
@@ -22,6 +22,10 @@ export const queryListings = gql`
   }
 `;
 
+export const queryListingsRequest = (variables?: QueriesQueryListingsArgs, requestHeaders?: HeadersInit) => {
+  return client.request(queryListingsQuery, variables, requestHeaders);
+};
+
 export const useQueryListings = <
   TData = {
     queryListings: QueryListing;
@@ -33,7 +37,7 @@ export const useQueryListings = <
   return useQuery<TData, ClientError>(
     [useQueryListings.name, variables],
     () => {
-      return client.request(queryListings, variables);
+      return queryListingsRequest(variables);
     },
     {
       ...options,

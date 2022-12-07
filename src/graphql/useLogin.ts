@@ -4,13 +4,17 @@ import { useLocalStorage } from 'react-use';
 import client from './client';
 import useUserInfo from './useUserInfo';
 
-export const login = gql`
+export const loginQuery = gql`
   query login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       authToken
     }
   }
 `;
+
+export const loginRequest = (variables: QueriesLoginArgs, requestHeaders?: HeadersInit) => {
+  return client.request(loginQuery, variables, requestHeaders);
+};
 
 export const useLogin = (
   options?: UseMutationOptions<
@@ -24,21 +28,15 @@ export const useLogin = (
   const [, setAuthToken] = useLocalStorage<string>('auth-token');
   const queryClient = useQueryClient();
 
-  return useMutation(
-    [useLogin.name],
-    (variables) => {
-      return client.request(login, variables);
-    },
-    {
-      ...options,
-      onSuccess: async (data, variables, context) => {
-        setAuthToken(data.login.authToken);
-        await queryClient.refetchQueries([useUserInfo.name]);
+  return useMutation([useLogin.name], loginRequest, {
+    ...options,
+    onSuccess: async (data, variables, context) => {
+      setAuthToken(data.login.authToken);
+      await queryClient.refetchQueries([useUserInfo.name]);
 
-        options?.onSuccess?.(data, variables, context);
-      },
+      options?.onSuccess?.(data, variables, context);
     },
-  );
+  });
 };
 
 export default useLogin;

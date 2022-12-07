@@ -4,7 +4,7 @@ import { useLocalStorage } from 'react-use';
 import client from './client';
 import useUserInfo from './useUserInfo';
 
-export const register = gql`
+export const registerMutation = gql`
   mutation register(
     $firstName: String!
     $lastName: String!
@@ -28,6 +28,10 @@ export const register = gql`
   }
 `;
 
+export const registerRequest = (variables: MutationRegisterArgs, requestHeaders?: HeadersInit) => {
+  return client.request(registerMutation, variables, requestHeaders);
+};
+
 export const useRegister = (
   options?: UseMutationOptions<
     {
@@ -40,21 +44,15 @@ export const useRegister = (
   const [, setAuthToken] = useLocalStorage<string>('auth-token');
   const queryClient = useQueryClient();
 
-  return useMutation(
-    [useRegister.name],
-    (variables) => {
-      return client.request(register, variables);
-    },
-    {
-      ...options,
-      onSuccess: async (data, variables, context) => {
-        setAuthToken(data.register.authToken);
-        await queryClient.refetchQueries([useUserInfo.name]);
+  return useMutation([useRegister.name], registerRequest, {
+    ...options,
+    onSuccess: async (data, variables, context) => {
+      setAuthToken(data.register.authToken);
+      await queryClient.refetchQueries([useUserInfo.name]);
 
-        options?.onSuccess?.(data, variables, context);
-      },
+      options?.onSuccess?.(data, variables, context);
     },
-  );
+  });
 };
 
 export default useRegister;

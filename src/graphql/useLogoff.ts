@@ -4,13 +4,17 @@ import { useLocalStorage } from 'react-use';
 import client from './client';
 import useUserInfo from './useUserInfo';
 
-export const logoff = gql`
+export const logoffMutation = gql`
   mutation logoff($email: String!) {
     logoff(email: $email) {
       userId
     }
   }
 `;
+
+export const logoffRequest = (variables: MutationLogoffArgs, requestHeaders?: HeadersInit) => {
+  return client.request(logoffMutation, variables, requestHeaders);
+};
 
 export const useLogoff = (
   options?: UseMutationOptions<
@@ -24,21 +28,15 @@ export const useLogoff = (
   const [, , removeAuthToken] = useLocalStorage<string>('auth-token');
   const queryClient = useQueryClient();
 
-  return useMutation(
-    [useLogoff.name],
-    (variables) => {
-      return client.request(logoff, variables);
-    },
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        removeAuthToken();
-        queryClient.setQueryData([useUserInfo.name], undefined);
+  return useMutation([useLogoff.name], logoffRequest, {
+    ...options,
+    onSuccess: (data, variables, context) => {
+      removeAuthToken();
+      queryClient.setQueryData([useUserInfo.name], undefined);
 
-        options?.onSuccess?.(data, variables, context);
-      },
+      options?.onSuccess?.(data, variables, context);
     },
-  );
+  });
 };
 
 export default useLogoff;

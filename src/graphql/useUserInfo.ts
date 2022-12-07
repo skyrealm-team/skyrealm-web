@@ -3,7 +3,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import { useLocalStorage } from 'react-use';
 import client from './client';
 
-export const getUserUserInfo = gql`
+export const getUserUserInfoQuery = gql`
   query getUserUserInfo {
     getUserUserInfo {
       email
@@ -18,6 +18,10 @@ export const getUserUserInfo = gql`
   }
 `;
 
+export const getUserUserInfoRequest = (requestHeaders?: HeadersInit) => {
+  return client.request(getUserUserInfoQuery, requestHeaders);
+};
+
 export const useUserInfo = <
   TData = {
     getUserUserInfo: User;
@@ -30,7 +34,7 @@ export const useUserInfo = <
   return useQuery<TData, ClientError>(
     [useUserInfo.name],
     () => {
-      return client.request(getUserUserInfo);
+      return getUserUserInfoRequest();
     },
     {
       enabled: !!authToken,
