@@ -52,4 +52,4 @@ EXPOSE 80
 
 ENV PORT 80
 
-CMD ["yarn", "serve"]
+CMD ["yarn", "start"]
