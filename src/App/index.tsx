@@ -1,8 +1,11 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
+
 import { Stack } from '@mui/material';
+
 import Providers from 'Providers';
-import Header from './Header';
+
 import Footer from './Footer';
+import Header from './Header';
 import Router from './Router';
 
 const App: FC = () => {

@@ -1,8 +1,10 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
+
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
+
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg';
-import useUserInfo from 'graphql/useUserInfo';
 import useLogoff from 'graphql/useLogoff';
+import useUserInfo from 'graphql/useUserInfo';
 
 const AvatarButton: FC = () => {
   const { data: userInfo } = useUserInfo();

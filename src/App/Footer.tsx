@@ -1,7 +1,9 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
+
 import { AppBar, Divider, Link, Stack } from '@mui/material';
+
 import { ReactComponent as LogoIcon } from 'assets/icons/logo.svg';
-import { TermsOfService, PrivacyPolicy } from 'constants/links';
+import { PrivacyPolicy, TermsOfService } from 'constants/links';
 
 const Footer: FC = () => {
   return (

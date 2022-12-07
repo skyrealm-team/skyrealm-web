@@ -1,5 +1,6 @@
-import React, { FC, lazy, Suspense } from 'react';
+import { FC, lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+
 import Loading from 'components/Loading';
 
 const Home = lazy(() => import('pages/Home'));

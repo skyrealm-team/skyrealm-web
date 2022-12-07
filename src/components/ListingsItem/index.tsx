@@ -1,8 +1,10 @@
 import { FC, useRef } from 'react';
-import { Avatar, IconButton, Typography, Stack, BoxProps } from '@mui/material';
-import { ReactComponent as ListingIcon } from 'assets/icons/listing.svg';
-import { ReactComponent as FavoriteIcon } from 'assets/icons/favorite.svg';
+
+import { Avatar, BoxProps, IconButton, Stack, Typography } from '@mui/material';
+
 import { ReactComponent as FavoriteSelectedIcon } from 'assets/icons/favorite-selected.svg';
+import { ReactComponent as FavoriteIcon } from 'assets/icons/favorite.svg';
+import { ReactComponent as ListingIcon } from 'assets/icons/listing.svg';
 import useUpdateFavoriteListings from 'graphql/useUpdateFavoriteListings';
 import useUserInfo from 'graphql/useUserInfo';
 

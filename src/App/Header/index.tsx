@@ -1,13 +1,16 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
+import { useMeasure } from 'react-use';
+
 import { AppBar, Stack, Toolbar } from '@mui/material';
+
 import { ReactComponent as LogoIcon } from 'assets/icons/logo.svg';
 import { ReactComponent as SkyrealmIcon } from 'assets/icons/skyrealm.svg';
 import useUserInfo from 'graphql/useUserInfo';
-import SignInButton from './SignInButton';
+
 import AvatarButton from './AvatarButton';
+import SignInButton from './SignInButton';
 import SignUpButton from './SignUpButton';
-import { useMeasure } from 'react-use';
 
 const Header: FC = () => {
   const { data: userInfo, isLoading } = useUserInfo();

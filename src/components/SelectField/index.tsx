@@ -1,4 +1,6 @@
-import React, { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react';
+import { useToggle } from 'react-use';
+
 import {
   FormControl,
   FormHelperText,
@@ -11,7 +13,6 @@ import {
   SelectProps,
   Typography,
 } from '@mui/material';
-import { useToggle } from 'react-use';
 import { Stack } from '@mui/system';
 
 export type SelectFieldProps = OutlinedInputProps & {

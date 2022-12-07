@@ -1,4 +1,5 @@
-import { alpha, createTheme, responsiveFontSizes, PaletteColor, PaletteColorOptions } from '@mui/material';
+import { alpha, createTheme, PaletteColor, PaletteColorOptions, responsiveFontSizes } from '@mui/material';
+
 import { ReactComponent as ExpandIcon } from 'assets/icons/expand.svg';
 
 declare module '@mui/material/styles' {

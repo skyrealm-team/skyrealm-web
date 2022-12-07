@@ -1,5 +1,6 @@
-import React, { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+
 import { ClientError } from 'graphql-request';
 
 const queryClient = new QueryClient({

@@ -1,5 +1,6 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { useUpdateEffect } from 'react-use';
+
 import InfoMarker, { InfoMarkerProps } from './InfoMarker';
 
 export type MarkersProps = {

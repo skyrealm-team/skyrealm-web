@@ -1,9 +1,10 @@
-import React, { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import ReactQueryProvider from './ReactQueryProvider';
+
+import GoogleMapsProvider from './GoogleMapsProvider';
 import MuiProvider from './MuiProvider';
 import NotistackProvider from './NotistackProvider';
-import GoogleMapsProvider from './GoogleMapsProvider';
+import ReactQueryProvider from './ReactQueryProvider';
 
 const Providers: FC<PropsWithChildren> = ({ children }) => {
   return (

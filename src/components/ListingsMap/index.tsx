@@ -1,5 +1,7 @@
-import React, { ClassAttributes, FC } from 'react';
+import { ClassAttributes, FC } from 'react';
+
 import { GoogleMap, GoogleMapProps } from '@react-google-maps/api';
+
 import Markers, { MarkersProps } from './Markers';
 
 export type ListingsMapProps = {

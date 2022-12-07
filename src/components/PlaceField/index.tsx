@@ -1,4 +1,7 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
+import { useToggle } from 'react-use';
+
+import { LocationOn } from '@mui/icons-material';
 import {
   Autocomplete,
   CircularProgress,
@@ -11,9 +14,9 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { LocationOn } from '@mui/icons-material';
-import { useToggle } from 'react-use';
+
 import parse from 'autosuggest-highlight/parse';
+
 import { ReactComponent as LocationIcon } from 'assets/icons/location.svg';
 import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
 import usePlacePredictions from 'hooks/usePlacePredictions';

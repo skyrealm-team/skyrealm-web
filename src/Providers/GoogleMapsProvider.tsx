@@ -1,5 +1,7 @@
-import React, { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react';
+
 import { LoadScript } from '@react-google-maps/api';
+
 import Loading from 'components/Loading';
 
 const GoogleMapsProvider: FC<PropsWithChildren> = ({ children }) => {

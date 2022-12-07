@@ -1,5 +1,6 @@
 import { CodegenConfig } from '@graphql-codegen/cli';
 import * as dotenv from 'dotenv-flow';
+
 dotenv.config({
   node_env: 'development',
 });

@@ -1,8 +1,11 @@
 import { FC } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Button, CircularProgress, Dialog, DialogContent, Typography, Stack } from '@mui/material';
+
+import { Button, CircularProgress, Dialog, DialogContent, Stack, Typography } from '@mui/material';
+
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+
 import InputField from 'components/InputField';
 import useResetForgetPassword from 'graphql/useResetForgetPassword';
 

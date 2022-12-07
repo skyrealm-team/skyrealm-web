@@ -1,9 +1,11 @@
-import React, { FC, useRef } from 'react';
-import { InfoWindowF, InfoWindowProps, Marker, MarkerProps } from '@react-google-maps/api';
-import ListingsItem from 'components/ListingsItem';
-import pinLarge from 'assets/icons/pin-large.svg';
-import pinFocused from 'assets/icons/pin-focused.svg';
+import { FC, useRef } from 'react';
 import { useToggle } from 'react-use';
+
+import { InfoWindowF, InfoWindowProps, Marker, MarkerProps } from '@react-google-maps/api';
+
+import pinFocused from 'assets/icons/pin-focused.svg';
+import pinLarge from 'assets/icons/pin-large.svg';
+import ListingsItem from 'components/ListingsItem';
 
 export type InfoMarkerProps = Omit<MarkerProps, 'position'> &
   Partial<Pick<MarkerProps, 'position'>> & {

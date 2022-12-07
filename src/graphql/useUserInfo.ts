@@ -1,6 +1,8 @@
-import { gql, ClientError } from 'graphql-request';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { useLocalStorage } from 'react-use';
+
+import { ClientError, gql } from 'graphql-request';
+
 import client from './client';
 
 export const getUserUserInfoQuery = gql`

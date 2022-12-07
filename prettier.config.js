@@ -1,3 +1,8 @@
+const fs = require('fs');
+const src = fs.readdirSync('./src');
+
+console.log(src);
+
 module.exports = {
   // Max 120 charactor for one line
   printWidth: 120,
@@ -31,4 +36,6 @@ module.exports = {
   htmlWhitespaceSensitivity: 'css',
   // Newline using lf
   endOfLine: 'lf',
+  importOrder: ['^react(.*)$', '^@mui/(.*)$', '<THIRD_PARTY_MODULES>', `^(${src.join('|')})/(.*)$`, '^[./]'],
+  importOrderSeparation: true,
 };

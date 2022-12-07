@@ -1,10 +1,12 @@
-import React, { FC, useState } from 'react';
-import { LinearProgress, Stack } from '@mui/material';
+import { FC, useState } from 'react';
 import { useSetState } from 'react-use';
-import ListingsCard from 'components/ListingsCard';
+
+import { LinearProgress, Stack } from '@mui/material';
+
 import FiltersBar from 'components/FiltersBar';
-import useQueryListings from 'graphql/useQueryListings';
+import ListingsCard from 'components/ListingsCard';
 import ListingsMap from 'components/ListingsMap';
+import useQueryListings from 'graphql/useQueryListings';
 import usePlaceDetails from 'hooks/usePlaceDetails';
 
 const Home: FC = () => {

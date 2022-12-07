@@ -1,7 +1,9 @@
-import { gql, ClientError } from 'graphql-request';
 import { useMutation, UseMutationOptions } from 'react-query';
-import client from './client';
+
+import { ClientError, gql } from 'graphql-request';
 import { useSnackbar } from 'notistack';
+
+import client from './client';
 
 export const forgetPasswordMutation = gql`
   mutation forgetPassword($email: String!) {

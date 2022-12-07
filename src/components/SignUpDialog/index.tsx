@@ -1,4 +1,6 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
+import { useToggle, useUpdateEffect } from 'react-use';
+
 import {
   Button,
   Checkbox,
@@ -13,14 +15,15 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import InputField from 'components/InputField';
-import useRegister from 'graphql/useRegister';
+
 import { ReactComponent as CloseIcon } from 'assets/icons/close.svg';
-import { useToggle, useUpdateEffect } from 'react-use';
+import InputField from 'components/InputField';
 import SelectField from 'components/SelectField';
-import { TermsOfService, PrivacyPolicy } from 'constants/links';
+import { PrivacyPolicy, TermsOfService } from 'constants/links';
+import useRegister from 'graphql/useRegister';
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required('Required'),

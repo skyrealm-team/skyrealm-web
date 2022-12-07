@@ -1,8 +1,10 @@
-import React, { FC } from 'react';
-import { Button, Dialog, DialogContent, Stack, Typography } from '@mui/material';
+import { FC } from 'react';
 import { useCounter, useInterval, useToggle, useUpdateEffect } from 'react-use';
-import SignUpDialog from 'components/SignUpDialog';
+
+import { Button, Dialog, DialogContent, Stack, Typography } from '@mui/material';
+
 import { ReactComponent as SuccessIcon } from 'assets/icons/success.svg';
+import SignUpDialog from 'components/SignUpDialog';
 
 const SignUpButton: FC = () => {
   const [open, setOpen] = useToggle(false);

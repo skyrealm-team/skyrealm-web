@@ -1,5 +1,7 @@
-import { gql, ClientError } from 'graphql-request';
 import { useMutation, UseMutationOptions } from 'react-query';
+
+import { ClientError, gql } from 'graphql-request';
+
 import client from './client';
 
 export const updateFavoriteListingsMutation = gql`

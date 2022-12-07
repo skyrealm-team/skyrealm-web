@@ -1,7 +1,10 @@
-import React, { FC } from 'react';
-import { AppBar, Toolbar, Stack, MenuItem, AppBarProps } from '@mui/material';
-import { useFormik } from 'formik';
+import { FC } from 'react';
 import { useUpdateEffect } from 'react-use';
+
+import { AppBar, AppBarProps, MenuItem, Stack, Toolbar } from '@mui/material';
+
+import { useFormik } from 'formik';
+
 import PlaceField from 'components/PlaceField';
 import SelectField from 'components/SelectField';
 

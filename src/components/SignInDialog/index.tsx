@@ -1,4 +1,6 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
+import { useUpdateEffect } from 'react-use';
+
 import {
   Button,
   CircularProgress,
@@ -10,12 +12,13 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useUpdateEffect } from 'react-use';
+
+import { ReactComponent as CloseIcon } from 'assets/icons/close.svg';
 import InputField from 'components/InputField';
 import useLogin from 'graphql/useLogin';
-import { ReactComponent as CloseIcon } from 'assets/icons/close.svg';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email('please use your corporate email').required('Required'),

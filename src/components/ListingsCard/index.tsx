@@ -1,20 +1,22 @@
 import { FC } from 'react';
+
+import { NavigateBefore, NavigateNext } from '@mui/icons-material';
 import {
+  Avatar,
   Card,
-  List,
-  Stack,
   CardActions,
-  ListItemButton,
-  ListItem,
   CardProps,
   Divider,
-  Typography,
   IconButton,
-  Avatar,
+  List,
+  ListItem,
+  ListItemButton,
+  Stack,
+  Typography,
 } from '@mui/material';
-import ListingsItem, { ListingsItemProps } from 'components/ListingsItem';
+
 import { ReactComponent as EmptyIcon } from 'assets/icons/empty.svg';
-import { NavigateBefore, NavigateNext } from '@mui/icons-material';
+import ListingsItem, { ListingsItemProps } from 'components/ListingsItem';
 
 export type ListingsCardProps = {
   isLoading?: boolean;

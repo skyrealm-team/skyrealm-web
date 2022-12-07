@@ -1,4 +1,6 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
+import { useUpdateEffect } from 'react-use';
+
 import {
   Button,
   CircularProgress,
@@ -9,11 +11,12 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useUpdateEffect } from 'react-use';
-import InputField from 'components/InputField';
+
 import { ReactComponent as BackIcon } from 'assets/icons/back.svg';
+import InputField from 'components/InputField';
 import { useForgetPassword } from 'graphql/useForgetPassword';
 
 const validationSchema = Yup.object().shape({
