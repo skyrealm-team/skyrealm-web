@@ -30,7 +30,7 @@ const Home: FC = () => {
   usePlaceDetails(
     {
       map,
-      place_id: prediction.place_id,
+      placeId: prediction.place_id ?? '',
     },
     {
       onSuccess: (result) => {

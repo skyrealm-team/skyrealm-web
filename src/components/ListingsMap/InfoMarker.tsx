@@ -16,10 +16,15 @@ const InfoMarker: FC<InfoMarkerProps> = ({ listing, hovered, selected, InfoWindo
   const ref = useRef<Marker>(null);
   const [hovering, setHovering] = useToggle(false);
 
+  const focused = hovering || hovered || selected;
+
   return (
     <Marker
       ref={ref}
-      icon={hovering || hovered || selected ? pinFocused : pinLarge}
+      icon={focused ? pinFocused : pinLarge}
+      {...(focused && {
+        zIndex: Number.MAX_SAFE_INTEGER,
+      })}
       {...props}
       position={{
         lat: Number(listing?.latitude),

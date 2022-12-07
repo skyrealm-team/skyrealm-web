@@ -14,12 +14,12 @@ const ListingsMap: FC<ListingsMapProps> = ({ listings, GoogleMapProps, MarkersPr
       clickableIcons={false}
       {...GoogleMapProps}
       options={{
+        mapId: process.env.REACT_APP_GOOGLE_MAPS_ID,
         controlSize: 30,
         disableDefaultUI: false,
         fullscreenControl: false,
         mapTypeControl: false,
         streetViewControl: false,
-        mapId: '7f6f32d2bee3f4d',
         ...GoogleMapProps?.options,
       }}
     >

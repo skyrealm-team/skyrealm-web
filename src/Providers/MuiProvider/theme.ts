@@ -94,7 +94,7 @@ theme.components = {
       {
         props: { size: 'small' },
         style: {
-          padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+          padding: `${theme.spacing(0.7)} ${theme.spacing(1.4)}`,
         },
       },
       {

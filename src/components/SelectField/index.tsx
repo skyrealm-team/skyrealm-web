@@ -63,7 +63,7 @@ const SelectField: FC<PropsWithChildren<SelectFieldProps>> = ({
             <OutlinedInput
               {...props}
               sx={(theme) => ({
-                ...(props.size === 'medium' && {
+                ...(props.size !== 'small' && {
                   '.MuiSelect-select': {
                     minHeight: 'auto !important',
                     p: 2,
