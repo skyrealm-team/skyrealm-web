@@ -1,5 +1,5 @@
-import { FC, useState } from 'react';
-import { useToggle, useUpdateEffect } from 'react-use';
+import { FC, useState } from "react";
+import { useToggle, useUpdateEffect } from "react-use";
 
 import {
   Button,
@@ -14,25 +14,30 @@ import {
   MenuItem,
   Stack,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-import { ReactComponent as CloseIcon } from 'assets/icons/close.svg';
-import InputField from 'components/InputField';
-import SelectField from 'components/SelectField';
-import { PrivacyPolicy, TermsOfService } from 'constants/links';
-import useRegister from 'graphql/useRegister';
+import CloseIcon from "assets/icons/close.svg";
+import InputField from "components/InputField";
+import SelectField from "components/SelectField";
+import { PrivacyPolicy, TermsOfService } from "constants/links";
+import useRegister from "graphql/useRegister";
 
 const validationSchema = Yup.object().shape({
-  firstName: Yup.string().required('Required'),
-  lastName: Yup.string().required('Required'),
-  organization: Yup.string().required('Required'),
+  firstName: Yup.string().required("Required"),
+  lastName: Yup.string().required("Required"),
+  organization: Yup.string().required("Required"),
   phoneNumber: Yup.string(),
-  userType: Yup.string().required('Required'),
-  email: Yup.string().email('please use your corporate email').required('Required'),
-  password: Yup.string().min(6, 'Too Short!').max(50, 'Too Long!').required('Required'),
+  userType: Yup.string().required("Required"),
+  email: Yup.string()
+    .email("please use your corporate email")
+    .required("Required"),
+  password: Yup.string()
+    .min(6, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
 });
 
 export type SignUpDialogProps = DialogProps & {
@@ -56,13 +61,13 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
 
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
-      organization: '',
-      phoneNumber: '',
-      userType: '',
-      email: '',
-      password: '',
+      firstName: "",
+      lastName: "",
+      organization: "",
+      phoneNumber: "",
+      userType: "",
+      email: "",
+      password: "",
     },
     isInitialValid: false,
     validationSchema,
@@ -76,7 +81,7 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
     },
   });
 
-  const [userType, setUserType] = useState('');
+  const [userType, setUserType] = useState("");
   const [checked, setChecked] = useToggle(false);
 
   useUpdateEffect(() => {
@@ -97,10 +102,10 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
     >
       <IconButton
         onClick={(event) => {
-          props.onClose?.(event, 'backdropClick');
+          props.onClose?.(event, "backdropClick");
         }}
         sx={{
-          position: 'absolute',
+          position: "absolute",
           top: 10,
           right: 10,
         }}
@@ -128,8 +133,8 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
               <InputField
                 label="First Name"
                 value={formik.values.firstName}
-                onChange={formik.handleChange('firstName')}
-                onBlur={formik.handleBlur('firstName')}
+                onChange={formik.handleChange("firstName")}
+                onBlur={formik.handleBlur("firstName")}
                 FormHelperTextProps={{
                   children: formik.touched.firstName && formik.errors.firstName,
                 }}
@@ -140,8 +145,8 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
               <InputField
                 label="Last Name"
                 value={formik.values.lastName}
-                onChange={formik.handleChange('lastName')}
-                onBlur={formik.handleBlur('lastName')}
+                onChange={formik.handleChange("lastName")}
+                onBlur={formik.handleBlur("lastName")}
                 FormHelperTextProps={{
                   children: formik.touched.lastName && formik.errors.lastName,
                 }}
@@ -154,10 +159,11 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
               <InputField
                 label="Organization"
                 value={formik.values.organization}
-                onChange={formik.handleChange('organization')}
-                onBlur={formik.handleBlur('organization')}
+                onChange={formik.handleChange("organization")}
+                onBlur={formik.handleBlur("organization")}
                 FormHelperTextProps={{
-                  children: formik.touched.organization && formik.errors.organization,
+                  children:
+                    formik.touched.organization && formik.errors.organization,
                 }}
                 autoComplete="organization"
                 required
@@ -166,10 +172,11 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
               <InputField
                 label="Phone Number"
                 value={formik.values.phoneNumber}
-                onChange={formik.handleChange('phoneNumber')}
-                onBlur={formik.handleBlur('phoneNumber')}
+                onChange={formik.handleChange("phoneNumber")}
+                onBlur={formik.handleBlur("phoneNumber")}
                 FormHelperTextProps={{
-                  children: formik.touched.phoneNumber && formik.errors.phoneNumber,
+                  children:
+                    formik.touched.phoneNumber && formik.errors.phoneNumber,
                 }}
                 autoComplete="tel"
                 fullWidth
@@ -181,35 +188,41 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
                 value={userType}
                 onChange={(event) => {
                   setUserType(event.target?.value);
-                  formik.setFieldValue('userType', event.target.value !== 'Others' ? event.target.value : '');
+                  formik.setFieldValue(
+                    "userType",
+                    event.target.value !== "Others" ? event.target.value : ""
+                  );
                 }}
-                onBlur={formik.handleBlur('userType')}
+                onBlur={formik.handleBlur("userType")}
                 FormHelperTextProps={{
-                  children: userType !== 'Others' && formik.touched.userType && formik.errors.userType,
+                  children:
+                    userType !== "Others" &&
+                    formik.touched.userType &&
+                    formik.errors.userType,
                 }}
                 required
                 fullWidth
               >
                 {[
                   {
-                    key: 'Broker',
-                    value: 'Broker',
+                    key: "Broker",
+                    value: "Broker",
                   },
                   {
-                    key: 'Tenant',
-                    value: 'Tenant',
+                    key: "Tenant",
+                    value: "Tenant",
                   },
                   {
-                    key: 'Landlord',
-                    value: 'Landlord',
+                    key: "Landlord",
+                    value: "Landlord",
                   },
                   {
-                    key: 'Real Estate Fund',
-                    value: 'Real Estate Fund',
+                    key: "Real Estate Fund",
+                    value: "Real Estate Fund",
                   },
                   {
-                    key: 'Others',
-                    value: 'Others',
+                    key: "Others",
+                    value: "Others",
                   },
                 ].map(({ key, value }) => (
                   <MenuItem key={key} value={value}>
@@ -217,13 +230,13 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
                   </MenuItem>
                 ))}
               </SelectField>
-              {userType === 'Others' && (
+              {userType === "Others" && (
                 <InputField
                   label={<br />}
                   placeholder="Please specify"
                   value={formik.values.userType}
-                  onChange={formik.handleChange('userType')}
-                  onBlur={formik.handleBlur('userType')}
+                  onChange={formik.handleChange("userType")}
+                  onBlur={formik.handleBlur("userType")}
                   fullWidth
                 />
               )}
@@ -233,8 +246,8 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
               label="Email"
               placeholder="Corporate email only"
               value={formik.values.email}
-              onChange={formik.handleChange('email')}
-              onBlur={formik.handleBlur('email')}
+              onChange={formik.handleChange("email")}
+              onBlur={formik.handleBlur("email")}
               FormHelperTextProps={{
                 children: formik.touched.email && formik.errors.email,
               }}
@@ -245,8 +258,8 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
               type="password"
               label="Password"
               value={formik.values.password}
-              onChange={formik.handleChange('password')}
-              onBlur={formik.handleBlur('password')}
+              onChange={formik.handleChange("password")}
+              onBlur={formik.handleBlur("password")}
               FormHelperTextProps={{
                 children: formik.touched.password && formik.errors.password,
               }}
@@ -265,15 +278,16 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
               }
               label={
                 <Typography color="#999999">
-                  Creating an account means you’re okay with our{' '}
+                  Creating an account means you’re okay with our{" "}
                   <Link color="primary" href={TermsOfService}>
                     Terms of Service
                   </Link>
-                  ,{' '}
+                  ,{" "}
                   <Link color="primary" href={PrivacyPolicy}>
                     Privacy Policy
                   </Link>
-                  , and our default <Link color="primary">Notification Settings</Link>.
+                  , and our default{" "}
+                  <Link color="primary">Notification Settings</Link>.
                 </Typography>
               }
             />

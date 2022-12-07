@@ -1,9 +1,9 @@
-import { FC } from 'react';
+import { FC } from "react";
 
-import { AppBar, Divider, Link, Stack } from '@mui/material';
+import { AppBar, Divider, Link, Stack } from "@mui/material";
 
-import { ReactComponent as LogoIcon } from 'assets/icons/logo.svg';
-import { PrivacyPolicy, TermsOfService } from 'constants/links';
+import LogoIcon from "assets/icons/logo.svg";
+import { PrivacyPolicy, TermsOfService } from "constants/links";
 
 const Footer: FC = () => {
   return (
@@ -13,8 +13,8 @@ const Footer: FC = () => {
       color="inherit"
       sx={(theme) => ({
         zIndex: theme.zIndex.appBar,
-        boxShadow: 'none',
-        filter: 'drop-shadow(0px 1px 10px rgba(0, 0, 0, 0.15))',
+        boxShadow: "none",
+        filter: "drop-shadow(0px 1px 10px rgba(0, 0, 0, 0.15))",
       })}
     >
       <Stack
@@ -35,7 +35,7 @@ const Footer: FC = () => {
             orientation="vertical"
             flexItem
             sx={{
-              borderColor: 'common.black',
+              borderColor: "common.black",
             }}
           />
           <Link color="inherit" underline="none" href={TermsOfService}>
@@ -45,7 +45,7 @@ const Footer: FC = () => {
             orientation="vertical"
             flexItem
             sx={{
-              borderColor: 'common.black',
+              borderColor: "common.black",
             }}
           />
           <Link color="inherit" underline="none" href={PrivacyPolicy}>

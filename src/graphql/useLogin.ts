@@ -1,10 +1,10 @@
-import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
-import { useLocalStorage } from 'react-use';
+import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
+import { useLocalStorage } from "react-use";
 
-import { ClientError, gql } from 'graphql-request';
+import { ClientError, gql } from "graphql-request";
 
-import client from './client';
-import useUserInfo from './useUserInfo';
+import client from "./client";
+import useUserInfo from "./useUserInfo";
 
 export const loginQuery = gql`
   query login($email: String!, $password: String!) {
@@ -14,7 +14,10 @@ export const loginQuery = gql`
   }
 `;
 
-export const loginRequest = (variables: QueriesLoginArgs, requestHeaders?: HeadersInit) => {
+export const loginRequest = (
+  variables: QueriesLoginArgs,
+  requestHeaders?: HeadersInit
+) => {
   return client.request(loginQuery, variables, requestHeaders);
 };
 
@@ -25,9 +28,9 @@ export const useLogin = (
     },
     ClientError,
     QueriesLoginArgs
-  >,
+  >
 ) => {
-  const [, setAuthToken] = useLocalStorage<string>('auth-token');
+  const [, setAuthToken] = useLocalStorage<string>("auth-token");
   const queryClient = useQueryClient();
 
   return useMutation([useLogin.name], loginRequest, {

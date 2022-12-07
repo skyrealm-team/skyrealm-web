@@ -1,10 +1,10 @@
-import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
-import { useLocalStorage } from 'react-use';
+import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
+import { useLocalStorage } from "react-use";
 
-import { ClientError, gql } from 'graphql-request';
+import { ClientError, gql } from "graphql-request";
 
-import client from './client';
-import useUserInfo from './useUserInfo';
+import client from "./client";
+import useUserInfo from "./useUserInfo";
 
 export const registerMutation = gql`
   mutation register(
@@ -30,7 +30,10 @@ export const registerMutation = gql`
   }
 `;
 
-export const registerRequest = (variables: MutationRegisterArgs, requestHeaders?: HeadersInit) => {
+export const registerRequest = (
+  variables: MutationRegisterArgs,
+  requestHeaders?: HeadersInit
+) => {
   return client.request(registerMutation, variables, requestHeaders);
 };
 
@@ -41,9 +44,9 @@ export const useRegister = (
     },
     ClientError,
     MutationRegisterArgs
-  >,
+  >
 ) => {
-  const [, setAuthToken] = useLocalStorage<string>('auth-token');
+  const [, setAuthToken] = useLocalStorage<string>("auth-token");
   const queryClient = useQueryClient();
 
   return useMutation([useRegister.name], registerRequest, {

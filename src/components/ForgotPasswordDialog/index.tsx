@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { useUpdateEffect } from 'react-use';
+import { FC } from "react";
+import { useUpdateEffect } from "react-use";
 
 import {
   Button,
@@ -10,24 +10,30 @@ import {
   IconButton,
   Stack,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-import { ReactComponent as BackIcon } from 'assets/icons/back.svg';
-import InputField from 'components/InputField';
-import { useForgetPassword } from 'graphql/useForgetPassword';
+import BackIcon from "assets/icons/back.svg";
+import InputField from "components/InputField";
+import { useForgetPassword } from "graphql/useForgetPassword";
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email('please use your corporate email').required('Required'),
+  email: Yup.string()
+    .email("please use your corporate email")
+    .required("Required"),
 });
 
 export type ForgotPasswordDialogProps = DialogProps & {
   onBack?: () => void;
   onSuccess?: () => void;
 };
-const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({ onBack, onSuccess, ...props }) => {
+const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({
+  onBack,
+  onSuccess,
+  ...props
+}) => {
   const { mutateAsync: forgetPassword } = useForgetPassword({
     onSuccess: async () => {
       onSuccess?.();
@@ -45,7 +51,7 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({ onBack, onSuccess
 
   const formik = useFormik({
     initialValues: {
-      email: '',
+      email: "",
     },
     isInitialValid: false,
     validationSchema,
@@ -81,7 +87,7 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({ onBack, onSuccess
           onBack?.();
         }}
         sx={{
-          position: 'absolute',
+          position: "absolute",
           top: 10,
           left: 10,
         }}
@@ -107,23 +113,24 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({ onBack, onSuccess
             </Typography>
             <Typography
               sx={{
-                color: '#333',
+                color: "#333",
                 fontSize: 18,
                 fontWeight: 600,
               }}
             >
-              Enter the email address you used when you joined and we’ll send you instructions to reset your password.
+              Enter the email address you used when you joined and we’ll send
+              you instructions to reset your password.
               <br />
               <br />
-              For security reasons, we do NOT store your password. So rest assured that we will never send your password
-              via email.
+              For security reasons, we do NOT store your password. So rest
+              assured that we will never send your password via email.
             </Typography>
             <InputField
               type="email"
               label="Email Address"
               value={formik.values.email}
-              onChange={formik.handleChange('email')}
-              onBlur={formik.handleBlur('email')}
+              onChange={formik.handleChange("email")}
+              onBlur={formik.handleBlur("email")}
               FormHelperTextProps={{
                 children: formik.touched.email && formik.errors.email,
               }}
@@ -137,7 +144,11 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({ onBack, onSuccess
               size="large"
               fullWidth
             >
-              {formik.isSubmitting ? <CircularProgress /> : <>Send Reset Instructions</>}
+              {formik.isSubmitting ? (
+                <CircularProgress />
+              ) : (
+                <>Send Reset Instructions</>
+              )}
             </Button>
           </Stack>
         </form>

@@ -1,10 +1,16 @@
-import { FC, useState } from 'react';
+import { FC, useState } from "react";
 
-import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
+import {
+  Avatar,
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 
-import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg';
-import useLogoff from 'graphql/useLogoff';
-import useUserInfo from 'graphql/useUserInfo';
+import LogoutIcon from "assets/icons/logout.svg";
+import useLogoff from "graphql/useLogoff";
+import useUserInfo from "graphql/useUserInfo";
 
 const AvatarButton: FC = () => {
   const { data: userInfo } = useUserInfo();
@@ -27,8 +33,8 @@ const AvatarButton: FC = () => {
             bgcolor: theme.palette.primary.main,
           })}
         >
-          {userInfo.getUserUserInfo.firstName?.[0].toUpperCase() ?? ''}
-          {userInfo.getUserUserInfo.lastName?.[0].toUpperCase() ?? ''}
+          {userInfo.getUserUserInfo.firstName?.[0].toUpperCase() ?? ""}
+          {userInfo.getUserUserInfo.lastName?.[0].toUpperCase() ?? ""}
         </Avatar>
       </IconButton>
       <Menu
@@ -45,11 +51,11 @@ const AvatarButton: FC = () => {
           square: true,
           sx: (theme) => ({
             borderRadius: `0 0 ${theme.spacing(1)} ${theme.spacing(1)}`,
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
           }),
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem
           onClick={async () => {

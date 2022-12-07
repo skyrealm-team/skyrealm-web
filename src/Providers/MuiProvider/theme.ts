@@ -1,8 +1,23 @@
-import { alpha, createTheme, PaletteColor, PaletteColorOptions, responsiveFontSizes } from '@mui/material';
+import { Noto_Sans } from "@next/font/google";
 
-import { ReactComponent as ExpandIcon } from 'assets/icons/expand.svg';
+import {
+  alpha,
+  createTheme,
+  PaletteColor,
+  PaletteColorOptions,
+  responsiveFontSizes,
+} from "@mui/material";
 
-declare module '@mui/material/styles' {
+import ExpandIcon from "assets/icons/expand.svg";
+
+export const noto = Noto_Sans({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  fallback: ["Helvetica", "Arial", "sans-serif"],
+});
+
+declare module "@mui/material/styles" {
   interface Palette {
     border?: PaletteColor;
   }
@@ -15,50 +30,38 @@ const theme = responsiveFontSizes(
   createTheme({
     typography: {
       fontSize: 14,
-      fontFamily: [
-        'NotoSans',
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(','),
+      fontFamily: noto.style.fontFamily,
       fontWeightLight: 400,
       fontWeightRegular: 500,
       fontWeightBold: 700,
     },
     palette: {
       primary: {
-        light: '#5977db',
-        main: '#3056D3',
-        dark: '#213c93',
+        light: "#5977db",
+        main: "#3056D3",
+        dark: "#213c93",
       },
       success: {
-        light: '#46d48f',
-        main: '#18CA74',
-        dark: '#108d51',
+        light: "#46d48f",
+        main: "#18CA74",
+        dark: "#108d51",
       },
       error: {
-        light: '#ff3333',
-        main: '#FF0000',
-        dark: '#b20000',
+        light: "#ff3333",
+        main: "#FF0000",
+        dark: "#b20000",
       },
       border: {
-        light: '#F8F7FE',
-        main: '#E0DEF7',
-        dark: '#7065F0',
+        light: "#F8F7FE",
+        main: "#E0DEF7",
+        dark: "#7065F0",
       },
       background: {
-        default: '#fafafa',
+        default: "#fafafa",
       },
     },
     spacing: 10,
-  }),
+  })
 );
 
 theme.components = {
@@ -74,9 +77,9 @@ theme.components = {
     styleOverrides: {
       root: {
         fontWeight: 700,
-        boxShadow: 'none',
+        boxShadow: "none",
         borderRadius: theme.spacing(1),
-        textTransform: 'initial',
+        textTransform: "initial",
       },
     },
     defaultProps: {
@@ -84,28 +87,28 @@ theme.components = {
     },
     variants: [
       {
-        props: { variant: 'outlined' },
+        props: { variant: "outlined" },
         style: {
           border: `2px solid ${theme.palette.border?.main}`,
-          '&:hover': {
+          "&:hover": {
             borderWidth: 2,
           },
         },
       },
       {
-        props: { size: 'small' },
+        props: { size: "small" },
         style: {
           padding: `${theme.spacing(0.7)} ${theme.spacing(1.4)}`,
         },
       },
       {
-        props: { size: 'medium' },
+        props: { size: "medium" },
         style: {
           padding: `${theme.spacing(1.7)} ${theme.spacing(3.4)}`,
         },
       },
       {
-        props: { size: 'large' },
+        props: { size: "large" },
         style: {
           padding: `${theme.spacing(2.2)} ${theme.spacing(4.4)}`,
         },
@@ -116,7 +119,7 @@ theme.components = {
     variants: [
       {
         props: {
-          size: 'medium',
+          size: "medium",
         },
         style: {
           input: {
@@ -158,7 +161,7 @@ theme.components = {
     styleOverrides: {
       icon: {
         color: theme.palette.border?.dark,
-        top: 'calc(50% - 10px)',
+        top: "calc(50% - 10px)",
         right: 12,
       },
     },
@@ -166,16 +169,16 @@ theme.components = {
   MuiMenuItem: {
     styleOverrides: {
       root: {
-        '&.Mui-selected': {
+        "&.Mui-selected": {
           background: alpha(theme.palette.primary.main, 0.05),
-          '&.Mui-focusVisible': {
+          "&.Mui-focusVisible": {
             background: alpha(theme.palette.primary.main, 0.05),
           },
         },
-        '&.Mui-focusVisible': {
+        "&.Mui-focusVisible": {
           background: alpha(theme.palette.primary.main, 0.05),
         },
-        ':hover': {
+        ":hover": {
           background: `${alpha(theme.palette.primary.main, 0.05)} !important`,
         },
       },
@@ -184,7 +187,7 @@ theme.components = {
   MuiAutocomplete: {
     styleOverrides: {
       option: {
-        '&.Mui-focused': {
+        "&.Mui-focused": {
           background: `${alpha(theme.palette.primary.main, 0.05)} !important`,
         },
       },
@@ -193,7 +196,7 @@ theme.components = {
   MuiListItemButton: {
     styleOverrides: {
       root: {
-        '&.Mui-selected': {
+        "&.Mui-selected": {
           background: theme.palette.border?.light,
         },
       },

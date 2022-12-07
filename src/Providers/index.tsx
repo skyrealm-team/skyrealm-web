@@ -1,19 +1,25 @@
-import { FC, PropsWithChildren } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { FC, PropsWithChildren } from "react";
 
-import GoogleMapsProvider from './GoogleMapsProvider';
-import MuiProvider from './MuiProvider';
-import NotistackProvider from './NotistackProvider';
-import ReactQueryProvider from './ReactQueryProvider';
+import GoogleMapsProvider, {
+  GoogleMapsProviderProps,
+} from "./GoogleMapsProvider";
+import MuiProvider, { MuiProviderProps } from "./MuiProvider";
+import NotistackProvider, { NotistackProviderProps } from "./NotistackProvider";
+import ReactQueryProvider, {
+  ReactQueryProviderProps,
+} from "./ReactQueryProvider";
 
-const Providers: FC<PropsWithChildren> = ({ children }) => {
+export type ProvidersProps = ReactQueryProviderProps &
+  MuiProviderProps &
+  NotistackProviderProps &
+  GoogleMapsProviderProps;
+
+const Providers: FC<PropsWithChildren<ProvidersProps>> = ({ children }) => {
   return (
     <ReactQueryProvider>
       <MuiProvider>
         <NotistackProvider>
-          <GoogleMapsProvider>
-            <BrowserRouter>{children}</BrowserRouter>
-          </GoogleMapsProvider>
+          <GoogleMapsProvider>{children}</GoogleMapsProvider>
         </NotistackProvider>
       </MuiProvider>
     </ReactQueryProvider>

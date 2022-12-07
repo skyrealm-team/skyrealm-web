@@ -1,29 +1,40 @@
-import { FC } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { FC } from "react";
 
-import { Button, CircularProgress, Dialog, DialogContent, Stack, Typography } from '@mui/material';
+import { useRouter } from "next/router";
 
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  Stack,
+  Typography,
+} from "@mui/material";
 
-import InputField from 'components/InputField';
-import useResetForgetPassword from 'graphql/useResetForgetPassword';
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+import InputField from "components/InputField";
+import useResetForgetPassword from "graphql/useResetForgetPassword";
 
 const validationSchema = Yup.object().shape({
-  password: Yup.string().min(6, 'Too Short!').max(50, 'Too Long!').required('Required'),
+  password: Yup.string()
+    .min(6, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
   resetToken: Yup.string().uuid().required(),
 });
 
 const ResetPassword: FC = () => {
-  const [params] = useSearchParams();
-  const navigate = useNavigate();
+  const router = useRouter();
+  const { token } = router.query;
 
   const { mutateAsync: resetForgetPassword } = useResetForgetPassword();
 
   const formik = useFormik({
     initialValues: {
-      password: '',
-      resetToken: params.get('token') ?? '',
+      password: "",
+      resetToken: String(token),
     },
     isInitialValid: false,
     validationSchema,
@@ -33,9 +44,7 @@ const ResetPassword: FC = () => {
       } catch {
       } finally {
         formik.setSubmitting(false);
-        navigate('/', {
-          replace: true,
-        });
+        router.replace("/");
       }
     },
   });
@@ -77,8 +86,8 @@ const ResetPassword: FC = () => {
               label="New Password"
               placeholder="Minimum 6 characters"
               value={formik.values.password}
-              onChange={formik.handleChange('password')}
-              onBlur={formik.handleBlur('password')}
+              onChange={formik.handleChange("password")}
+              onBlur={formik.handleBlur("password")}
               FormHelperTextProps={{
                 children: formik.touched.password && formik.errors.password,
               }}

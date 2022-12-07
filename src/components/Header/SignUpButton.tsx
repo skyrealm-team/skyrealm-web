@@ -1,10 +1,16 @@
-import { FC } from 'react';
-import { useCounter, useInterval, useToggle, useUpdateEffect } from 'react-use';
+import { FC } from "react";
+import { useCounter, useInterval, useToggle, useUpdateEffect } from "react-use";
 
-import { Button, Dialog, DialogContent, Stack, Typography } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  Stack,
+  Typography,
+} from "@mui/material";
 
-import { ReactComponent as SuccessIcon } from 'assets/icons/success.svg';
-import SignUpDialog from 'components/SignUpDialog';
+import SuccessIcon from "assets/icons/success.svg";
+import SignUpDialog from "components/SignUpDialog";
 
 const SignUpButton: FC = () => {
   const [open, setOpen] = useToggle(false);
@@ -17,7 +23,7 @@ const SignUpButton: FC = () => {
     () => {
       inc(1);
     },
-    isRunning ? 1000 : null,
+    isRunning ? 1000 : null
   );
 
   useUpdateEffect(() => {

@@ -1,16 +1,22 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-
-const AutocompleteService = new google.maps.places.AutocompleteService();
+import { useMemo } from "react";
+import { useQuery, UseQueryOptions } from "react-query";
 
 export const usePlacePredictions = (
   variables: google.maps.places.AutocompletionRequest,
-  options?: UseQueryOptions<google.maps.places.AutocompleteResponse['predictions']>,
+  options?: UseQueryOptions<
+    google.maps.places.AutocompleteResponse["predictions"]
+  >
 ) => {
-  return useQuery<google.maps.places.AutocompleteResponse['predictions']>(
+  const AutocompleteService = useMemo(
+    () => new google.maps.places.AutocompleteService(),
+    []
+  );
+
+  return useQuery<google.maps.places.AutocompleteResponse["predictions"]>(
     [usePlacePredictions.name, variables],
     async () => {
       const res = await AutocompleteService.getPlacePredictions({
-        language: 'en',
+        language: "en",
         ...variables,
       });
 
@@ -19,7 +25,7 @@ export const usePlacePredictions = (
     {
       enabled: !!variables.input,
       ...options,
-    },
+    }
   );
 };
 

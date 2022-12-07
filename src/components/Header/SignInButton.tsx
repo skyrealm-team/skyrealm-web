@@ -1,10 +1,10 @@
-import { FC } from 'react';
-import { useToggle } from 'react-use';
+import { FC } from "react";
+import { useToggle } from "react-use";
 
-import { Button } from '@mui/material';
+import { Button } from "@mui/material";
 
-import ForgotPasswordDialog from 'components/ForgotPasswordDialog';
-import SignInDialog from 'components/SignInDialog';
+import ForgotPasswordDialog from "components/ForgotPasswordDialog";
+import SignInDialog from "components/SignInDialog";
 
 const SignInButton: FC = () => {
   const [signInOpen, setSignInOpen] = useToggle(false);

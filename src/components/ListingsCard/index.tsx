@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import { FC } from "react";
 
-import { NavigateBefore, NavigateNext } from '@mui/icons-material';
+import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import {
   Avatar,
   Card,
@@ -13,17 +13,19 @@ import {
   ListItemButton,
   Stack,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import { ReactComponent as EmptyIcon } from 'assets/icons/empty.svg';
-import ListingsItem, { ListingsItemProps } from 'components/ListingsItem';
+import EmptyIcon from "assets/icons/empty.svg";
+import ListingsItem, { ListingsItemProps } from "components/ListingsItem";
 
 export type ListingsCardProps = {
   isLoading?: boolean;
   queryListing?: QueryListing;
   onPageChange?: (page: number) => void;
   CardProps?: CardProps;
-  ListingsItemProps?: (listingId: SingleListing['listingId']) => ListingsItemProps;
+  ListingsItemProps?: (
+    listingId: SingleListing["listingId"]
+  ) => ListingsItemProps;
 };
 
 const ListingsCard: FC<ListingsCardProps> = ({
@@ -40,7 +42,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
       square
       {...CardProps}
       sx={{
-        boxShadow: '0px 0px 30px rgba(0, 0, 0, 0.15)',
+        boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.15)",
         ...CardProps?.sx,
       }}
     >
@@ -50,7 +52,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
           <Typography
             variant="body2"
             sx={{
-              color: '#999',
+              color: "#999",
             }}
           >
             There is nothing for you to search, please re-enter your address
@@ -59,14 +61,14 @@ const ListingsCard: FC<ListingsCardProps> = ({
       ) : (
         <Stack
           sx={{
-            height: '100%',
+            height: "100%",
           }}
         >
           <List
             disablePadding
             sx={{
               flex: 1,
-              overflow: 'auto',
+              overflow: "auto",
             }}
           >
             {queryListing?.listings?.map((listing) => (
@@ -77,7 +79,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
                   sx={{
                     px: 2,
                     py: 1.5,
-                    justifyContent: 'space-between',
+                    justifyContent: "space-between",
                   }}
                   disabled={isLoading}
                 >
@@ -86,10 +88,13 @@ const ListingsCard: FC<ListingsCardProps> = ({
                     gap={2}
                     sx={{
                       flex: 1,
-                      overflow: 'hidden',
+                      overflow: "hidden",
                     }}
                   >
-                    <ListingsItem {...ListingsItemProps?.(listing?.listingId)} listing={listing} />
+                    <ListingsItem
+                      {...ListingsItemProps?.(listing?.listingId)}
+                      listing={listing}
+                    />
                   </Stack>
                 </ListItemButton>
               </ListItem>
@@ -99,7 +104,12 @@ const ListingsCard: FC<ListingsCardProps> = ({
             <>
               <Divider />
               <CardActions>
-                <Stack direction="row" alignItems="center" justifyContent="center" width="100%">
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="center"
+                  width="100%"
+                >
                   <IconButton
                     size="small"
                     onClick={() => {

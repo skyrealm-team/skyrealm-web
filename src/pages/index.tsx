@@ -1,19 +1,19 @@
-import { FC, useState } from 'react';
-import { useSetState } from 'react-use';
+import { FC, useState } from "react";
+import { useSetState } from "react-use";
 
-import { LinearProgress, Stack } from '@mui/material';
+import { LinearProgress, Stack } from "@mui/material";
 
-import FiltersBar from 'components/FiltersBar';
-import ListingsCard from 'components/ListingsCard';
-import ListingsMap from 'components/ListingsMap';
-import useQueryListings from 'graphql/useQueryListings';
-import usePlaceDetails from 'hooks/usePlaceDetails';
+import FiltersBar from "components/FiltersBar";
+import ListingsCard from "components/ListingsCard";
+import ListingsMap from "components/ListingsMap";
+import useQueryListings from "graphql/useQueryListings";
+import usePlaceDetails from "hooks/usePlaceDetails";
 
 const Home: FC = () => {
   const [map, setMap] = useState<google.maps.Map>();
 
   const [variables, setVariables] = useSetState<QueriesQueryListingsArgs>({
-    freeText: 'Manhattan',
+    freeText: "Manhattan",
     currentPage: 1,
     listingId: undefined,
     addressState: undefined,
@@ -22,17 +22,20 @@ const Home: FC = () => {
     keepPreviousData: true,
   });
 
-  const [prediction, setPrediction] = useState<Partial<google.maps.places.AutocompletePrediction>>({
-    place_id: 'ChIJYeZuBI9YwokRjMDs_IEyCwo',
+  const [prediction, setPrediction] = useState<
+    Partial<google.maps.places.AutocompletePrediction>
+  >({
+    place_id: "ChIJYeZuBI9YwokRjMDs_IEyCwo",
     description: variables.freeText,
   });
-  const [hovering, setHovering] = useState<SingleListing['listingId']>();
-  const [selections, setSelections] = useState<Array<SingleListing['listingId']>>();
+  const [hovering, setHovering] = useState<SingleListing["listingId"]>();
+  const [selections, setSelections] =
+    useState<Array<SingleListing["listingId"]>>();
 
   usePlaceDetails(
     {
       map,
-      placeId: prediction.place_id ?? '',
+      placeId: prediction.place_id ?? "",
     },
     {
       onSuccess: (result) => {
@@ -46,7 +49,7 @@ const Home: FC = () => {
           map?.fitBounds(geometry?.viewport);
         }
       },
-    },
+    }
   );
 
   return (
@@ -65,7 +68,7 @@ const Home: FC = () => {
           setPrediction(prediction);
 
           // const headers = new Headers({
-          //   'X-Goog-Api-Key': process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? '',
+          //   'X-Goog-Api-Key': process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
           // });
 
           // const placeTypes = [
@@ -130,7 +133,7 @@ const Home: FC = () => {
         <Stack
           sx={{
             width: 485,
-            position: 'relative',
+            position: "relative",
           }}
         >
           <ListingsCard
@@ -143,7 +146,7 @@ const Home: FC = () => {
             }}
             CardProps={{
               sx: {
-                position: 'absolute',
+                position: "absolute",
                 top: 0,
                 right: 0,
                 bottom: 0,

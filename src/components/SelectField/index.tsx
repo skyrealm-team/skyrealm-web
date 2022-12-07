@@ -1,5 +1,5 @@
-import { FC, PropsWithChildren } from 'react';
-import { useToggle } from 'react-use';
+import { FC, PropsWithChildren } from "react";
+import { useToggle } from "react-use";
 
 import {
   FormControl,
@@ -12,8 +12,8 @@ import {
   Select,
   SelectProps,
   Typography,
-} from '@mui/material';
-import { Stack } from '@mui/system';
+} from "@mui/material";
+import { Stack } from "@mui/system";
 
 export type SelectFieldProps = OutlinedInputProps & {
   InputLabelProps?: InputLabelProps;
@@ -41,11 +41,11 @@ const SelectField: FC<PropsWithChildren<SelectFieldProps>> = ({
             shrink={true}
             {...InputLabelProps}
             sx={{
-              position: 'initial',
-              transform: 'initial',
+              position: "initial",
+              transform: "initial",
               fontSize: 16,
               fontWeight: 700,
-              color: '#666',
+              color: "#666",
               ...InputLabelProps?.sx,
             }}
           >
@@ -64,20 +64,20 @@ const SelectField: FC<PropsWithChildren<SelectFieldProps>> = ({
             <OutlinedInput
               {...props}
               sx={(theme) => ({
-                ...(props.size !== 'small' && {
-                  '.MuiSelect-select': {
-                    minHeight: 'auto !important',
+                ...(props.size !== "small" && {
+                  ".MuiSelect-select": {
+                    minHeight: "auto !important",
                     p: 2,
                     fontSize: 18,
                     fontWeight: 700,
                   },
                 }),
-                ':hover': {
+                ":hover": {
                   fieldset: {
                     borderColor: `${theme.palette.border?.main} !important`,
                   },
                 },
-                '&.Mui-focused': {
+                "&.Mui-focused": {
                   fieldset: {
                     borderColor: `${theme.palette.border?.main} !important`,
                   },
@@ -98,8 +98,8 @@ const SelectField: FC<PropsWithChildren<SelectFieldProps>> = ({
               ...SelectProps?.MenuProps?.PaperProps,
               sx: (theme) => ({
                 borderRadius: `0 0 ${theme.spacing(1)} ${theme.spacing(1)}`,
-                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-                transform: 'translateY(-2px) !important',
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                transform: "translateY(-2px) !important",
               }),
             },
             MenuListProps: {

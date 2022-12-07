@@ -1,16 +1,17 @@
-import { FC } from 'react';
-import { Link } from 'react-router-dom';
-import { useMeasure } from 'react-use';
+import { FC } from "react";
+import { useMeasure } from "react-use";
 
-import { AppBar, Stack, Toolbar } from '@mui/material';
+import Link from "next/link";
 
-import { ReactComponent as LogoIcon } from 'assets/icons/logo.svg';
-import { ReactComponent as SkyrealmIcon } from 'assets/icons/skyrealm.svg';
-import useUserInfo from 'graphql/useUserInfo';
+import { AppBar, Stack, Toolbar } from "@mui/material";
 
-import AvatarButton from './AvatarButton';
-import SignInButton from './SignInButton';
-import SignUpButton from './SignUpButton';
+import LogoIcon from "assets/icons/logo.svg";
+import SkyrealmIcon from "assets/icons/skyrealm.svg";
+import useUserInfo from "graphql/useUserInfo";
+
+import AvatarButton from "./AvatarButton";
+import SignInButton from "./SignInButton";
+import SignUpButton from "./SignUpButton";
 
 const Header: FC = () => {
   const { data: userInfo, isLoading } = useUserInfo();
@@ -22,17 +23,17 @@ const Header: FC = () => {
       <AppBar
         color="inherit"
         sx={{
-          boxShadow: '0px 1px 10px rgba(0, 0, 0, 0.1)',
+          boxShadow: "0px 1px 10px rgba(0, 0, 0, 0.1)",
         }}
       >
         <Toolbar
           ref={ref}
           style={{
             minHeight: 60,
-            justifyContent: 'space-between',
+            justifyContent: "space-between",
           }}
         >
-          <Link to="/">
+          <Link href="/">
             <Stack direction="row" gap={2} alignItems="center">
               <LogoIcon />
               <SkyrealmIcon />

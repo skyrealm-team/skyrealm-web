@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 import {
   FormControl,
@@ -10,13 +10,19 @@ import {
   OutlinedInputProps,
   Stack,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
 export type InputFieldProps = OutlinedInputProps & {
   InputLabelProps?: InputLabelProps;
   FormHelperTextProps?: FormHelperTextProps;
 };
-const InputField: FC<InputFieldProps> = ({ InputLabelProps, FormHelperTextProps, label, fullWidth, ...props }) => {
+const InputField: FC<InputFieldProps> = ({
+  InputLabelProps,
+  FormHelperTextProps,
+  label,
+  fullWidth,
+  ...props
+}) => {
   return (
     <FormControl fullWidth={fullWidth}>
       <Stack gap={1}>
@@ -26,11 +32,11 @@ const InputField: FC<InputFieldProps> = ({ InputLabelProps, FormHelperTextProps,
             shrink={true}
             {...InputLabelProps}
             sx={{
-              position: 'initial',
-              transform: 'initial',
+              position: "initial",
+              transform: "initial",
               fontSize: 16,
               fontWeight: 700,
-              color: '#666',
+              color: "#666",
               ...InputLabelProps?.sx,
             }}
           >
@@ -48,7 +54,7 @@ const InputField: FC<InputFieldProps> = ({ InputLabelProps, FormHelperTextProps,
           inputProps={{
             ...props.inputProps,
             style: {
-              height: 'auto',
+              height: "auto",
               fontSize: 18,
               fontWeight: 700,
               ...props.inputProps?.style,

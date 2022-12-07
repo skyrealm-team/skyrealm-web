@@ -1,9 +1,9 @@
-import { useQuery, UseQueryOptions } from 'react-query';
-import { useLocalStorage } from 'react-use';
+import { useQuery, UseQueryOptions } from "react-query";
+import { useLocalStorage } from "react-use";
 
-import { ClientError, gql } from 'graphql-request';
+import { ClientError, gql } from "graphql-request";
 
-import client from './client';
+import client from "./client";
 
 export const getUserUserInfoQuery = gql`
   query getUserUserInfo {
@@ -27,11 +27,11 @@ export const getUserUserInfoRequest = (requestHeaders?: HeadersInit) => {
 export const useUserInfo = <
   TData = {
     getUserUserInfo: User;
-  },
+  }
 >(
-  options?: UseQueryOptions<TData, ClientError>,
+  options?: UseQueryOptions<TData, ClientError>
 ) => {
-  const [authToken] = useLocalStorage<string>('auth-token');
+  const [authToken] = useLocalStorage<string>("auth-token");
 
   return useQuery<TData, ClientError>(
     [useUserInfo.name],
@@ -41,7 +41,7 @@ export const useUserInfo = <
     {
       enabled: !!authToken,
       ...options,
-    },
+    }
   );
 };
 

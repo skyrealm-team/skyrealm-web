@@ -1,20 +1,31 @@
-import { FC, useRef } from 'react';
-import { useToggle } from 'react-use';
+import { FC, useRef } from "react";
+import { useToggle } from "react-use";
 
-import { InfoWindowF, InfoWindowProps, Marker, MarkerProps } from '@react-google-maps/api';
+import {
+  InfoWindowF,
+  InfoWindowProps,
+  Marker,
+  MarkerProps,
+} from "@react-google-maps/api";
 
-import pinFocused from 'assets/icons/pin-focused.svg';
-import pinLarge from 'assets/icons/pin-large.svg';
-import ListingsItem from 'components/ListingsItem';
+import pinFocused from "assets/icons/pin-focused.svg";
+import pinLarge from "assets/icons/pin-large.svg";
+import ListingsItem from "components/ListingsItem";
 
-export type InfoMarkerProps = Omit<MarkerProps, 'position'> &
-  Partial<Pick<MarkerProps, 'position'>> & {
+export type InfoMarkerProps = Omit<MarkerProps, "position"> &
+  Partial<Pick<MarkerProps, "position">> & {
     listing?: SingleListing;
     hovered?: boolean;
     selected?: boolean;
     InfoWindowProps?: InfoWindowProps;
   };
-const InfoMarker: FC<InfoMarkerProps> = ({ listing, hovered, selected, InfoWindowProps, ...props }) => {
+const InfoMarker: FC<InfoMarkerProps> = ({
+  listing,
+  hovered,
+  selected,
+  InfoWindowProps,
+  ...props
+}) => {
   const ref = useRef<Marker>(null);
   const [hovering, setHovering] = useToggle(false);
 

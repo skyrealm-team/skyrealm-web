@@ -1,12 +1,20 @@
-import { useQuery, UseQueryOptions } from 'react-query';
+import { useQuery, UseQueryOptions } from "react-query";
 
-import { ClientError, gql } from 'graphql-request';
+import { ClientError, gql } from "graphql-request";
 
-import client from './client';
+import client from "./client";
 
 export const queryListingsQuery = gql`
-  query queryListings($currentPage: Int, $addressState: String, $freeText: String) {
-    queryListings(currentPage: $currentPage, addressState: $addressState, freeText: $freeText) {
+  query queryListings(
+    $currentPage: Int
+    $addressState: String
+    $freeText: String
+  ) {
+    queryListings(
+      currentPage: $currentPage
+      addressState: $addressState
+      freeText: $freeText
+    ) {
       currentPage
       pageNumbers
       listings {
@@ -24,17 +32,20 @@ export const queryListingsQuery = gql`
   }
 `;
 
-export const queryListingsRequest = (variables?: QueriesQueryListingsArgs, requestHeaders?: HeadersInit) => {
+export const queryListingsRequest = (
+  variables?: QueriesQueryListingsArgs,
+  requestHeaders?: HeadersInit
+) => {
   return client.request(queryListingsQuery, variables, requestHeaders);
 };
 
 export const useQueryListings = <
   TData = {
     queryListings: QueryListing;
-  },
+  }
 >(
   variables?: QueriesQueryListingsArgs,
-  options?: UseQueryOptions<TData, ClientError>,
+  options?: UseQueryOptions<TData, ClientError>
 ) => {
   return useQuery<TData, ClientError>(
     [useQueryListings.name, variables],
@@ -43,7 +54,7 @@ export const useQueryListings = <
     },
     {
       ...options,
-    },
+    }
   );
 };
 

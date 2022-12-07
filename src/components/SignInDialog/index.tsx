@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { useUpdateEffect } from 'react-use';
+import { FC } from "react";
+import { useUpdateEffect } from "react-use";
 
 import {
   Button,
@@ -11,25 +11,31 @@ import {
   Link,
   Stack,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-import { ReactComponent as CloseIcon } from 'assets/icons/close.svg';
-import InputField from 'components/InputField';
-import useLogin from 'graphql/useLogin';
+import CloseIcon from "assets/icons/close.svg";
+import InputField from "components/InputField";
+import useLogin from "graphql/useLogin";
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email('please use your corporate email').required('Required'),
-  password: Yup.string().required('Required'),
+  email: Yup.string()
+    .email("please use your corporate email")
+    .required("Required"),
+  password: Yup.string().required("Required"),
 });
 
 export type SignInDialogProps = DialogProps & {
   onSuccess?: () => void;
   onForgotPassword?: () => void;
 };
-const SignInDialog: FC<SignInDialogProps> = ({ onSuccess, onForgotPassword, ...props }) => {
+const SignInDialog: FC<SignInDialogProps> = ({
+  onSuccess,
+  onForgotPassword,
+  ...props
+}) => {
   const { mutateAsync: login } = useLogin({
     onSuccess: async () => {
       onSuccess?.();
@@ -47,8 +53,8 @@ const SignInDialog: FC<SignInDialogProps> = ({ onSuccess, onForgotPassword, ...p
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     isInitialValid: false,
     validationSchema,
@@ -80,10 +86,10 @@ const SignInDialog: FC<SignInDialogProps> = ({ onSuccess, onForgotPassword, ...p
     >
       <IconButton
         onClick={(event) => {
-          props.onClose?.(event, 'backdropClick');
+          props.onClose?.(event, "backdropClick");
         }}
         sx={{
-          position: 'absolute',
+          position: "absolute",
           top: 10,
           right: 10,
         }}
@@ -112,8 +118,8 @@ const SignInDialog: FC<SignInDialogProps> = ({ onSuccess, onForgotPassword, ...p
               label="Email"
               placeholder="Corporate email only"
               value={formik.values.email}
-              onChange={formik.handleChange('email')}
-              onBlur={formik.handleBlur('email')}
+              onChange={formik.handleChange("email")}
+              onBlur={formik.handleBlur("email")}
               FormHelperTextProps={{
                 children: formik.touched.email && formik.errors.email,
               }}
@@ -124,8 +130,8 @@ const SignInDialog: FC<SignInDialogProps> = ({ onSuccess, onForgotPassword, ...p
               type="password"
               label="Password"
               value={formik.values.password}
-              onChange={formik.handleChange('password')}
-              onBlur={formik.handleBlur('password')}
+              onChange={formik.handleChange("password")}
+              onBlur={formik.handleBlur("password")}
               FormHelperTextProps={{
                 children: formik.touched.password && formik.errors.password,
               }}

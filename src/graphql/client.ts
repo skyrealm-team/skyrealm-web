@@ -1,8 +1,8 @@
-import { GraphQLClient } from 'graphql-request';
+import { GraphQLClient } from "graphql-request";
 
-const client = new GraphQLClient(process.env.REACT_APP_BACKEND_API ?? '', {
+const client = new GraphQLClient(process.env.NEXT_PUBLIC_BACKEND_API ?? "", {
   requestMiddleware: (request) => {
-    const authToken = window.localStorage.getItem('auth-token');
+    const authToken = window.localStorage.getItem("auth-token");
 
     return {
       ...request,
@@ -16,8 +16,8 @@ const client = new GraphQLClient(process.env.REACT_APP_BACKEND_API ?? '', {
   },
   responseMiddleware: (response) => {
     if (response instanceof Error) {
-      if (response.message.includes('Invalid Token')) {
-        window.localStorage.removeItem('auth-token');
+      if (response.message.includes("Invalid Token")) {
+        window.localStorage.removeItem("auth-token");
       }
     }
   },

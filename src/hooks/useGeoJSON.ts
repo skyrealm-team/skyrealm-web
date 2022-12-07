@@ -1,4 +1,4 @@
-import { QueryObserverOptions, useQuery } from 'react-query';
+import { QueryObserverOptions, useQuery } from "react-query";
 
 export type GeoJSON = {
   geojson: {
@@ -15,20 +15,20 @@ export const useGeoJSON = (
   variables: {
     q?: string;
   },
-  options?: QueryObserverOptions<GeoJSON[]>,
+  options?: QueryObserverOptions<GeoJSON[]>
 ) => {
   return useQuery<GeoJSON[]>(
     [useGeoJSON.name, variables],
     async () => {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/search.php?q=${variables.q}&polygon_geojson=1&format=json`,
+        `https://nominatim.openstreetmap.org/search.php?q=${variables.q}&polygon_geojson=1&format=json`
       );
       return res.json();
     },
     {
       enabled: !!variables.q,
       ...options,
-    },
+    }
   );
 };
 

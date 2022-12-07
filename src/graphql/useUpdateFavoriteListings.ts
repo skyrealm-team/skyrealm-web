@@ -1,8 +1,8 @@
-import { useMutation, UseMutationOptions } from 'react-query';
+import { useMutation, UseMutationOptions } from "react-query";
 
-import { ClientError, gql } from 'graphql-request';
+import { ClientError, gql } from "graphql-request";
 
-import client from './client';
+import client from "./client";
 
 export const updateFavoriteListingsMutation = gql`
   mutation updateFavoriteListings($listingId: String, $toLike: Boolean) {
@@ -14,9 +14,13 @@ export const updateFavoriteListingsMutation = gql`
 
 export const updateFavoriteListingsRequest = (
   variables: MutationUpdateFavoriteListingsArgs,
-  requestHeaders?: HeadersInit,
+  requestHeaders?: HeadersInit
 ) => {
-  return client.request(updateFavoriteListingsMutation, variables, requestHeaders);
+  return client.request(
+    updateFavoriteListingsMutation,
+    variables,
+    requestHeaders
+  );
 };
 
 export const useUpdateFavoriteListings = (
@@ -26,9 +30,13 @@ export const useUpdateFavoriteListings = (
     },
     ClientError,
     MutationUpdateFavoriteListingsArgs
-  >,
+  >
 ) => {
-  return useMutation([useUpdateFavoriteListings.name], updateFavoriteListingsRequest, options);
+  return useMutation(
+    [useUpdateFavoriteListings.name],
+    updateFavoriteListingsRequest,
+    options
+  );
 };
 
 export default useUpdateFavoriteListings;

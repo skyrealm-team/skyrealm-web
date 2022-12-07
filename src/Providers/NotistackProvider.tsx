@@ -1,14 +1,18 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from "react";
 
-import { SnackbarProvider } from 'notistack';
+import { SnackbarProvider } from "notistack";
 
-const NotistackProvider: FC<PropsWithChildren> = ({ children }) => {
+export type NotistackProviderProps = {};
+
+const NotistackProvider: FC<PropsWithChildren<NotistackProviderProps>> = ({
+  children,
+}) => {
   return (
     <SnackbarProvider
       maxSnack={3}
       anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'center',
+        vertical: "top",
+        horizontal: "center",
       }}
     >
       {children}
