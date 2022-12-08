@@ -129,7 +129,6 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
                 listingId: listing?.listingId,
                 toLike: !isFavorite,
               });
-            } catch {
             } finally {
               refetchUserInfo();
             }

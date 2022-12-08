@@ -1,5 +1,7 @@
 import { FC } from "react";
 
+import Link from "next/link";
+
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import {
   Avatar,
@@ -73,30 +75,36 @@ const ListingsCard: FC<ListingsCardProps> = ({
           >
             {queryListing?.listings?.map((listing) => (
               <ListItem key={listing?.listingId} divider disablePadding>
-                <ListItemButton
-                  onClick={() => {}}
-                  disableRipple
-                  sx={{
-                    px: 2,
-                    py: 1.5,
-                    justifyContent: "space-between",
+                <Link
+                  href={{
+                    pathname: `/listing/${listing?.listingId}/property-info`,
                   }}
-                  disabled={isLoading}
+                  legacyBehavior
                 >
-                  <Stack
-                    direction="row"
-                    gap={2}
+                  <ListItemButton
+                    disableRipple
                     sx={{
-                      flex: 1,
-                      overflow: "hidden",
+                      px: 2,
+                      py: 1.5,
+                      justifyContent: "space-between",
                     }}
+                    disabled={isLoading}
                   >
-                    <ListingsItem
-                      {...ListingsItemProps?.(listing?.listingId)}
-                      listing={listing}
-                    />
-                  </Stack>
-                </ListItemButton>
+                    <Stack
+                      direction="row"
+                      gap={2}
+                      sx={{
+                        flex: 1,
+                        overflow: "hidden",
+                      }}
+                    >
+                      <ListingsItem
+                        {...ListingsItemProps?.(listing?.listingId)}
+                        listing={listing}
+                      />
+                    </Stack>
+                  </ListItemButton>
+                </Link>
               </ListItem>
             ))}
           </List>

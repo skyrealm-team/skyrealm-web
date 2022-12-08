@@ -8,8 +8,6 @@ import {
   MarkerProps,
 } from "@react-google-maps/api";
 
-import pinFocused from "assets/icons/pin-focused.svg";
-import pinLarge from "assets/icons/pin-large.svg";
 import ListingsItem from "components/ListingsItem";
 
 export type InfoMarkerProps = Omit<MarkerProps, "position"> &
@@ -34,7 +32,7 @@ const InfoMarker: FC<InfoMarkerProps> = ({
   return (
     <Marker
       ref={ref}
-      icon={focused ? pinFocused : pinLarge}
+      icon={focused ? "/icons/pin-focused.svg" : "/icons/pin.svg"}
       {...(focused && {
         zIndex: Number.MAX_SAFE_INTEGER,
       })}
@@ -58,7 +56,7 @@ const InfoMarker: FC<InfoMarkerProps> = ({
           {...InfoWindowProps}
           anchor={ref.current?.marker}
           options={{
-            minWidth: 560,
+            minWidth: 485,
           }}
         >
           <ListingsItem listing={listing} />

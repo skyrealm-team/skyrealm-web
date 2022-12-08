@@ -12,7 +12,7 @@ import Providers from "Providers";
 import Footer from "components/Footer";
 import Header from "components/Header";
 
-type MyAppProps = AppProps & {
+export type MyAppProps = AppProps & {
   emotionCache?: EmotionCache;
 };
 

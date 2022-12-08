@@ -1,19 +1,27 @@
 import { FC, PropsWithChildren } from "react";
 
-import { LoadScriptNext } from "@react-google-maps/api";
+import {
+  LoadScriptNext,
+  LoadScriptNextProps,
+  LoadScriptProps,
+} from "@react-google-maps/api";
 
 import Loading from "components/Loading";
 
-export type GoogleMapsProviderProps = {};
+const libraries: LoadScriptProps["libraries"] = ["places"];
+
+export type GoogleMapsProviderProps = Partial<LoadScriptNextProps>;
 
 const GoogleMapsProvider: FC<PropsWithChildren<GoogleMapsProviderProps>> = ({
   children,
+  ...props
 }) => {
   return (
     <LoadScriptNext
-      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}
-      libraries={["places"]}
+      libraries={libraries}
       loadingElement={<Loading />}
+      {...props}
+      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}
     >
       <>{children}</>
     </LoadScriptNext>

@@ -1,13 +1,18 @@
-import * as React from "react";
+import React from "react";
 
+import { AppType } from "next/app";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 
-import createEmotionServer from "@emotion/server/create-instance";
+import createEmotionServer, {
+  EmotionCriticalToChunks,
+} from "@emotion/server/create-instance";
 
 import createEmotionCache from "Providers/MuiProvider/createEmotionCache";
 import theme, { noto } from "Providers/MuiProvider/theme";
 
-export default class MyDocument extends Document {
+export default class MyDocument extends Document<{
+  emotionStyleTags: EmotionCriticalToChunks["styles"];
+}> {
   render() {
     return (
       <Html lang="en" className={noto.className}>
@@ -16,9 +21,13 @@ export default class MyDocument extends Document {
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link rel="shortcut icon" href="/favicon.ico" />
           <meta name="emotion-insertion-point" content="" />
-          {(this.props as any).emotionStyleTags}
+          <>{this.props.emotionStyleTags}</>
         </Head>
-        <body>
+        <body
+          style={{
+            overscrollBehavior: "none",
+          }}
+        >
           <Main />
           <NextScript />
         </body>
@@ -61,9 +70,16 @@ MyDocument.getInitialProps = async (ctx) => {
 
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: (App: any) =>
+      enhanceApp: (App: AppType) =>
         function EnhanceApp(props) {
-          return <App emotionCache={cache} {...props} />;
+          return (
+            <App
+              {...{
+                emotionCache: cache,
+              }}
+              {...props}
+            />
+          );
         },
     });
 

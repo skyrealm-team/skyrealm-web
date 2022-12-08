@@ -60,9 +60,9 @@ const SignUpButton: FC = () => {
         open={success}
         fullWidth
         PaperProps={{
-          sx: (theme) => ({
+          sx: {
             maxWidth: 420,
-          }),
+          },
         }}
       >
         <DialogContent>

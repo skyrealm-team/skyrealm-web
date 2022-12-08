@@ -1,5 +1,3 @@
-import { FC } from "react";
-
 import { useRouter } from "next/router";
 
 import {
@@ -12,6 +10,7 @@ import {
 } from "@mui/material";
 
 import { useFormik } from "formik";
+import { NextPage } from "next";
 import * as Yup from "yup";
 
 import InputField from "components/InputField";
@@ -25,7 +24,7 @@ const validationSchema = Yup.object().shape({
   resetToken: Yup.string().uuid().required(),
 });
 
-const ResetPassword: FC = () => {
+const ResetPassword: NextPage = () => {
   const router = useRouter();
   const { token } = router.query;
 
@@ -36,12 +35,10 @@ const ResetPassword: FC = () => {
       password: "",
       resetToken: String(token),
     },
-    isInitialValid: false,
     validationSchema,
     onSubmit: async (values) => {
       try {
         await resetForgetPassword(values);
-      } catch {
       } finally {
         formik.setSubmitting(false);
         router.replace("/");
@@ -57,9 +54,9 @@ const ResetPassword: FC = () => {
       hideBackdrop
       PaperProps={{
         elevation: 0,
-        sx: (theme) => ({
+        sx: {
           maxWidth: 710,
-        }),
+        },
       }}
       sx={(theme) => ({
         zIndex: theme.zIndex.appBar - 1,

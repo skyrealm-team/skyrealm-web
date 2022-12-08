@@ -1,7 +1,8 @@
 const fs = require("fs");
 const src = fs.readdirSync("./src");
 
-module.exports = {
+/** @type {import('prettier').Config & import('@trivago/prettier-plugin-sort-imports').PluginConfig} */
+const prettierConfig = {
   importOrder: [
     "^react(.*)$",
     "^next/(.*)$",
@@ -14,3 +15,5 @@ module.exports = {
   ],
   importOrderSeparation: true,
 };
+
+module.exports = prettierConfig;

@@ -29,7 +29,6 @@ const Header: FC = () => {
         <Toolbar
           ref={ref}
           style={{
-            minHeight: 60,
             justifyContent: "space-between",
           }}
         >

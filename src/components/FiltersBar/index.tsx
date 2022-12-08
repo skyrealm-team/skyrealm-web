@@ -21,12 +21,14 @@ export type FiltersBarProps = {
   onPredictionChange?: (
     prediction?: google.maps.places.AutocompletePrediction
   ) => void;
+  onSubmit?: (values: FilterValues) => void;
 };
 const FiltersBar: FC<FiltersBarProps> = ({
   initialValues,
   AppBarProps,
   onChange,
   onPredictionChange,
+  onSubmit,
 }) => {
   const formik = useFormik<FilterValues>({
     initialValues: {
@@ -35,7 +37,9 @@ const FiltersBar: FC<FiltersBarProps> = ({
       spaceUse: "",
       ...initialValues,
     },
-    onSubmit: () => {},
+    onSubmit: (values) => {
+      onSubmit?.(values);
+    },
   });
 
   useUpdateEffect(() => {

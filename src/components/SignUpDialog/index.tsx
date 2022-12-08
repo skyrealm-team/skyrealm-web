@@ -69,12 +69,10 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
       email: "",
       password: "",
     },
-    isInitialValid: false,
     validationSchema,
     onSubmit: async (values) => {
       try {
         await register(values);
-      } catch {
       } finally {
         formik.setSubmitting(false);
       }
@@ -95,9 +93,9 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ onSuccess, ...props }) => {
       {...props}
       PaperProps={{
         ...props.PaperProps,
-        sx: (theme) => ({
+        sx: {
           maxWidth: 710,
-        }),
+        },
       }}
     >
       <IconButton

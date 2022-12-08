@@ -53,12 +53,10 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({
     initialValues: {
       email: "",
     },
-    isInitialValid: false,
     validationSchema,
     onSubmit: async (values) => {
       try {
         await forgetPassword(values);
-      } catch {
       } finally {
         formik.setSubmitting(false);
       }
@@ -76,9 +74,9 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({
       {...props}
       PaperProps={{
         ...props.PaperProps,
-        sx: (theme) => ({
+        sx: {
           maxWidth: 710,
-        }),
+        },
       }}
     >
       <IconButton

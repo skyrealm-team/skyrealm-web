@@ -1,5 +1,9 @@
 import { FC, PropsWithChildren } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryClientProviderProps,
+} from "react-query";
 
 import { ClientError } from "graphql-request";
 
@@ -17,13 +21,16 @@ const queryClient = new QueryClient({
   },
 });
 
-export type ReactQueryProviderProps = {};
+export type ReactQueryProviderProps = Partial<QueryClientProviderProps>;
 
 const ReactQueryProvider: FC<PropsWithChildren<ReactQueryProviderProps>> = ({
   children,
+  ...props
 }) => {
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider {...props} client={queryClient}>
+      {children}
+    </QueryClientProvider>
   );
 };
 

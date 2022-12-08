@@ -122,10 +122,7 @@ const PlaceField: FC<PlaceFieldProps> = ({
           option.structured_formatting.main_text_matched_substrings;
         const parts = parse(
           option.structured_formatting.main_text,
-          matches.map((match: any) => [
-            match.offset,
-            match.offset + match.length,
-          ])
+          matches.map((match) => [match.offset, match.offset + match.length])
         );
 
         return (
