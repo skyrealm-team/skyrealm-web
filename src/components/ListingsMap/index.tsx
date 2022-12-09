@@ -20,6 +20,7 @@ const ListingsMap: FC<ListingsMapProps> = ({
       clickableIcons={false}
       {...GoogleMapProps}
       options={{
+        minZoom: 2,
         mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID,
         controlSize: 30,
         disableDefaultUI: false,

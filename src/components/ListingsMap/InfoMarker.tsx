@@ -1,8 +1,8 @@
-import { FC, useRef } from "react";
+import { FC, useState } from "react";
 import { useToggle } from "react-use";
 
 import {
-  InfoWindowF,
+  InfoWindow,
   InfoWindowProps,
   Marker,
   MarkerProps,
@@ -24,23 +24,29 @@ const InfoMarker: FC<InfoMarkerProps> = ({
   InfoWindowProps,
   ...props
 }) => {
-  const ref = useRef<Marker>(null);
+  const [marker, setMarker] = useState<google.maps.Marker>();
   const [hovering, setHovering] = useToggle(false);
 
   const focused = hovering || hovered || selected;
 
   return (
     <Marker
-      ref={ref}
       icon={focused ? "/icons/pin-focused.svg" : "/icons/pin.svg"}
       {...(focused && {
         zIndex: Number.MAX_SAFE_INTEGER,
       })}
       {...props}
+      options={{
+        optimized: true,
+        ...props.options,
+      }}
       position={{
         lat: Number(listing?.latitude),
         lng: Number(listing?.longitude),
         ...props.position,
+      }}
+      onLoad={(marker) => {
+        setMarker(marker);
       }}
       onMouseOver={(event) => {
         setHovering(true);
@@ -51,16 +57,16 @@ const InfoMarker: FC<InfoMarkerProps> = ({
         props.onMouseOut?.(event);
       }}
     >
-      {ref.current?.marker && selected && (
-        <InfoWindowF
+      {marker && selected && (
+        <InfoWindow
           {...InfoWindowProps}
-          anchor={ref.current?.marker}
+          anchor={marker}
           options={{
             minWidth: 485,
           }}
         >
           <ListingsItem listing={listing} />
-        </InfoWindowF>
+        </InfoWindow>
       )}
     </Marker>
   );

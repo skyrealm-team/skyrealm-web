@@ -1,9 +1,11 @@
 import { FC, useState } from "react";
 import { useUpdateEffect } from "react-use";
 
+import { MarkerClusterer, MarkerClustererProps } from "@react-google-maps/api";
+
 import InfoMarker, { InfoMarkerProps } from "./InfoMarker";
 
-export type MarkersProps = {
+export type MarkersProps = Omit<MarkerClustererProps, "children"> & {
   listings?: Maybe<SingleListing>[];
   MarkerProps?: InfoMarkerProps;
   hovering?: SingleListing["listingId"];
@@ -14,6 +16,7 @@ const Markers: FC<MarkersProps> = ({
   MarkerProps,
   hovering,
   selections,
+  ...props
 }) => {
   const [selected, setSelected] = useState<SingleListing["listingId"]>();
 
@@ -22,27 +25,32 @@ const Markers: FC<MarkersProps> = ({
   }, [selections]);
 
   return (
-    <>
-      {listings?.map((listing) => (
-        <InfoMarker
-          key={listing?.listingId}
-          {...MarkerProps}
-          listing={listing}
-          hovered={hovering === listing?.listingId}
-          selected={selected === listing?.listingId}
-          onClick={() => {
-            setSelected(listing?.listingId);
-          }}
-          InfoWindowProps={{
-            ...MarkerProps?.InfoWindowProps,
-            onCloseClick: () => {
-              setSelected(undefined);
-              MarkerProps?.InfoWindowProps?.onCloseClick?.();
-            },
-          }}
-        />
-      ))}
-    </>
+    <MarkerClusterer minimumClusterSize={5} enableRetinaIcons {...props}>
+      {(clusterer) => (
+        <>
+          {listings?.map((listing) => (
+            <InfoMarker
+              key={listing?.listingId}
+              {...MarkerProps}
+              clusterer={clusterer}
+              listing={listing}
+              hovered={hovering === listing?.listingId}
+              selected={selected === listing?.listingId}
+              onClick={() => {
+                setSelected(listing?.listingId);
+              }}
+              InfoWindowProps={{
+                ...MarkerProps?.InfoWindowProps,
+                onCloseClick: () => {
+                  setSelected(undefined);
+                  MarkerProps?.InfoWindowProps?.onCloseClick?.();
+                },
+              }}
+            />
+          ))}
+        </>
+      )}
+    </MarkerClusterer>
   );
 };
 

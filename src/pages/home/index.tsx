@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSetState } from "react-use";
+import { useDebounce, useSetState } from "react-use";
 
 import { LinearProgress, Stack } from "@mui/material";
 
@@ -23,8 +23,18 @@ const Home: NextPage = () => {
     listingId: undefined,
     addressState: undefined,
   });
+  const [debouncedVariables, setDebouncedVariables] = useSetState(variables);
+
+  useDebounce(
+    () => {
+      setDebouncedVariables(variables);
+    },
+    200,
+    [variables]
+  );
+
   const { data: queryListings, isFetching: queryListingsIsFetching } =
-    useQueryListings(variables, {
+    useQueryListings(debouncedVariables, {
       keepPreviousData: true,
     });
   const {
@@ -32,7 +42,7 @@ const Home: NextPage = () => {
     isFetching: queryListingsForMapIsFetching,
   } = useQueryListings(
     {
-      ...variables,
+      ...debouncedVariables,
       currentPage: undefined,
       rowsPerPage: 10000,
     },
@@ -41,18 +51,13 @@ const Home: NextPage = () => {
     }
   );
 
-  const [prediction, setPrediction] = useState<
-    Partial<google.maps.places.AutocompletePrediction>
-  >({
-    place_id: "ChIJYeZuBI9YwokRjMDs_IEyCwo",
-    description: variables.freeText,
-  });
+  const [placeId, setPlaceId] = useState("ChIJYeZuBI9YwokRjMDs_IEyCwo");
   const [hovering, setHovering] = useState<SingleListing["listingId"]>();
 
   usePlaceDetails(
     {
       map,
-      placeId: prediction.place_id ?? "",
+      placeId,
     },
     {
       onSuccess: (result) => {
@@ -97,73 +102,27 @@ const Home: NextPage = () => {
           if (!prediction) {
             return;
           }
-          setPrediction(prediction);
-
-          // const headers = new Headers({
-          //   'X-Goog-Api-Key': process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
-          // });
-
-          // const placeTypes = [
-          //   {
-          //     place_type: 'POSTAL_CODE',
-          //   },
-          //   {
-          //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_1',
-          //   },
-          //   {
-          //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_2',
-          //   },
-          //   {
-          //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_3',
-          //   },
-          //   {
-          //     place_type: 'ADMINISTRATIVE_AREA_LEVEL_4',
-          //   },
-          //   {
-          //     place_type: 'LOCALITY',
-          //   },
-          //   {
-          //     place_type: 'SUBLOCALITY_LEVEL_1',
-          //   },
-          //   {
-          //     place_type: 'NEIGHBORHOOD',
-          //   },
-          //   {
-          //     place_type: 'COUNTRY',
-          //   },
-          // ];
-
-          // const response = await fetch('https://regionlookup.googleapis.com/v1alpha:searchRegion', {
-          //   method: 'POST',
-          //   headers,
-          //   body: JSON.stringify({
-          //     search_values: placeTypes.map((item) => ({
-          //       region_code: 'US',
-          //       address: prediction.description,
-          //       ...item,
-          //     })),
-          //   }),
-          // });
-
-          // const result = await response.json();
-
-          // console.log(
-          //   placeTypes.map((item, index) => ({
-          //     ...item,
-          //     matchedPlaceId: result.matches[index].matchedPlaceId,
-          //   })),
-          // );
+          setPlaceId(prediction.place_id);
         }}
       />
-      {(queryListingsIsFetching || queryListingsForMapIsFetching) && (
-        <LinearProgress />
-      )}
       <Stack
         direction="row"
         sx={{
           flex: 1,
+          position: "relative",
         }}
       >
+        {(queryListingsIsFetching || queryListingsForMapIsFetching) && (
+          <LinearProgress
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 2,
+            }}
+          />
+        )}
         <Stack
           sx={{
             width: 485,
@@ -208,6 +167,24 @@ const Home: NextPage = () => {
             },
             onLoad: (map) => {
               setMap(map);
+            },
+            onBoundsChanged: () => {
+              const bounds = map?.getBounds()?.toJSON();
+
+              if (bounds) {
+                setVariables({
+                  viewport: {
+                    low: {
+                      latitudes: bounds.north,
+                      longitudes: bounds.east,
+                    },
+                    high: {
+                      latitudes: bounds.south,
+                      longitudes: bounds.west,
+                    },
+                  },
+                });
+              }
             },
           }}
           MarkersProps={{
