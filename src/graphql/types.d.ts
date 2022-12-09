@@ -74,7 +74,7 @@ type Queries = {
   login: Maybe<User>;
   /** Returns listings that match the query param(s) */
   queryListings: Maybe<QueryListing>;
-  /** Returns listings all at once with concise info, for map display use */
+  /** Deprecated */
   queryListingsLite: Maybe<Array<Maybe<SingleListingLite>>>;
 };
 
@@ -90,6 +90,8 @@ type QueriesQueryListingsArgs = {
   currentPage: InputMaybe<Scalars["Int"]>;
   freeText: InputMaybe<Scalars["String"]>;
   listingId: InputMaybe<Scalars["String"]>;
+  rowsPerPage: InputMaybe<Scalars["Int"]>;
+  viewport: InputMaybe<QueryListingViewport>;
 };
 
 /** All User and Listing apis available */
@@ -102,6 +104,16 @@ type QueryListing = {
   currentPage: Maybe<Scalars["Int"]>;
   listings: Maybe<Array<Maybe<SingleListing>>>;
   pageNumbers: Maybe<Scalars["Int"]>;
+};
+
+type QueryListingViewport = {
+  high: InputMaybe<QueryListingViewportGeometry>;
+  low: InputMaybe<QueryListingViewportGeometry>;
+};
+
+type QueryListingViewportGeometry = {
+  latitudes: InputMaybe<Scalars["Float"]>;
+  longitudes: InputMaybe<Scalars["Float"]>;
 };
 
 type SingleListing = {

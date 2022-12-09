@@ -15,14 +15,31 @@ const Home: NextPage = () => {
   const [map, setMap] = useState<google.maps.Map>();
 
   const [variables, setVariables] = useSetState<QueriesQueryListingsArgs>({
-    freeText: "Manhattan",
     currentPage: 1,
+    rowsPerPage: 100,
+    viewport: undefined,
+    // unused
+    freeText: undefined,
     listingId: undefined,
     addressState: undefined,
   });
-  const { data: queryListings, isFetching } = useQueryListings(variables, {
-    keepPreviousData: true,
-  });
+  const { data: queryListings, isFetching: queryListingsIsFetching } =
+    useQueryListings(variables, {
+      keepPreviousData: true,
+    });
+  const {
+    data: queryListingsForMap,
+    isFetching: queryListingsForMapIsFetching,
+  } = useQueryListings(
+    {
+      ...variables,
+      currentPage: undefined,
+      rowsPerPage: 10000,
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
 
   const [prediction, setPrediction] = useState<
     Partial<google.maps.places.AutocompletePrediction>
@@ -47,6 +64,21 @@ const Home: NextPage = () => {
 
         if (geometry?.viewport) {
           map?.fitBounds(geometry?.viewport);
+
+          const viewport = geometry?.viewport.toJSON();
+
+          setVariables({
+            viewport: {
+              low: {
+                latitudes: viewport.north,
+                longitudes: viewport.east,
+              },
+              high: {
+                latitudes: viewport.south,
+                longitudes: viewport.west,
+              },
+            },
+          });
         }
       },
     }
@@ -123,7 +155,9 @@ const Home: NextPage = () => {
           // );
         }}
       />
-      {isFetching && <LinearProgress />}
+      {(queryListingsIsFetching || queryListingsForMapIsFetching) && (
+        <LinearProgress />
+      )}
       <Stack
         direction="row"
         sx={{
@@ -137,7 +171,7 @@ const Home: NextPage = () => {
           }}
         >
           <ListingsCard
-            isLoading={isFetching}
+            isLoading={queryListingsIsFetching}
             queryListing={queryListings?.queryListings}
             onPageChange={(currentPage) => {
               setVariables({
@@ -167,7 +201,7 @@ const Home: NextPage = () => {
           />
         </Stack>
         <ListingsMap
-          listings={queryListings?.queryListings.listings}
+          listings={queryListingsForMap?.queryListings.listings}
           GoogleMapProps={{
             mapContainerStyle: {
               flex: 1,

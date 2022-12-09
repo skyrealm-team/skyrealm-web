@@ -7,11 +7,17 @@ import client from "./client";
 export const queryListingsQuery = gql`
   query queryListings(
     $currentPage: Int
+    $rowsPerPage: Int
+    $viewport: QueryListingViewport
+    $listingId: String
     $addressState: String
     $freeText: String
   ) {
     queryListings(
       currentPage: $currentPage
+      rowsPerPage: $rowsPerPage
+      viewport: $viewport
+      listingId: $listingId
       addressState: $addressState
       freeText: $freeText
     ) {

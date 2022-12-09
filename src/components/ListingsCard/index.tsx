@@ -48,109 +48,111 @@ const ListingsCard: FC<ListingsCardProps> = ({
         ...CardProps?.sx,
       }}
     >
-      {queryListing?.listings?.length === 0 ? (
-        <Stack alignItems="center">
-          <EmptyIcon />
-          <Typography
-            variant="body2"
-            sx={{
-              color: "#999",
-            }}
-          >
-            There is nothing for you to search, please re-enter your address
-          </Typography>
-        </Stack>
-      ) : (
+      <Stack
+        sx={{
+          height: "100%",
+        }}
+      >
         <Stack
           sx={{
-            height: "100%",
+            flex: 1,
+            overflow: "auto",
           }}
         >
-          <List
-            disablePadding
-            sx={{
-              flex: 1,
-              overflow: "auto",
-            }}
-          >
-            {queryListing?.listings?.map((listing) => (
-              <ListItem key={listing?.listingId} divider disablePadding>
-                <Link
-                  href={{
-                    pathname: `/listing/${listing?.listingId}/property-info`,
-                  }}
-                  legacyBehavior
-                >
-                  <ListItemButton
-                    disableRipple
-                    sx={{
-                      px: 2,
-                      py: 1.5,
-                      justifyContent: "space-between",
+          {queryListing?.listings?.length === 0 ? (
+            <Stack alignItems="center">
+              <EmptyIcon />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "#999",
+                }}
+              >
+                There is nothing for you to search, please re-enter your address
+              </Typography>
+            </Stack>
+          ) : (
+            <List disablePadding>
+              {queryListing?.listings?.map((listing) => (
+                <ListItem key={listing?.listingId} divider disablePadding>
+                  <Link
+                    href={{
+                      pathname: `/listing/${listing?.listingId}/property-info`,
                     }}
-                    disabled={isLoading}
+                    legacyBehavior
                   >
-                    <Stack
-                      direction="row"
-                      gap={2}
+                    <ListItemButton
+                      disableRipple
                       sx={{
-                        flex: 1,
-                        overflow: "hidden",
+                        px: 2,
+                        py: 1.5,
+                        justifyContent: "space-between",
                       }}
+                      disabled={isLoading}
                     >
-                      <ListingsItem
-                        {...ListingsItemProps?.(listing?.listingId)}
-                        listing={listing}
-                      />
-                    </Stack>
-                  </ListItemButton>
-                </Link>
-              </ListItem>
-            ))}
-          </List>
-          {!!queryListing?.pageNumbers && (
-            <>
-              <Divider />
-              <CardActions>
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="center"
-                  width="100%"
-                >
-                  <IconButton
-                    size="small"
-                    onClick={() => {
-                      onPageChange?.(currentPage - 1);
-                    }}
-                    disabled={currentPage === 1}
-                  >
-                    <NavigateBefore />
-                  </IconButton>
-                  <Avatar
-                    variant="rounded"
-                    color="primary"
-                    sx={{
-                      width: 30,
-                      height: 30,
-                    }}
-                  >
-                    <Typography variant="caption">{currentPage}</Typography>
-                  </Avatar>
-                  <IconButton
-                    size="small"
-                    onClick={() => {
-                      onPageChange?.(currentPage + 1);
-                    }}
-                  >
-                    <NavigateNext />
-                  </IconButton>
-                </Stack>
-              </CardActions>
-            </>
+                      <Stack
+                        direction="row"
+                        gap={2}
+                        sx={{
+                          flex: 1,
+                          overflow: "hidden",
+                        }}
+                      >
+                        <ListingsItem
+                          {...ListingsItemProps?.(listing?.listingId)}
+                          listing={listing}
+                        />
+                      </Stack>
+                    </ListItemButton>
+                  </Link>
+                </ListItem>
+              ))}
+            </List>
           )}
         </Stack>
-      )}
+        {!!queryListing && (
+          <>
+            <Divider />
+            <CardActions>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+                width="100%"
+              >
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    onPageChange?.(currentPage - 1);
+                  }}
+                  disabled={currentPage === 1}
+                >
+                  <NavigateBefore />
+                </IconButton>
+                <Avatar
+                  variant="rounded"
+                  color="primary"
+                  sx={{
+                    width: 30,
+                    height: 30,
+                  }}
+                >
+                  <Typography variant="caption">{currentPage}</Typography>
+                </Avatar>
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    onPageChange?.(currentPage + 1);
+                  }}
+                  disabled={Number(queryListing.listings?.length) < 100}
+                >
+                  <NavigateNext />
+                </IconButton>
+              </Stack>
+            </CardActions>
+          </>
+        )}
+      </Stack>
     </Card>
   );
 };
