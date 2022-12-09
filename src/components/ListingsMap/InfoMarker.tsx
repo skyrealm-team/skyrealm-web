@@ -31,7 +31,7 @@ const InfoMarker: FC<InfoMarkerProps> = ({
 
   return (
     <Marker
-      icon={focused ? "/icons/pin-focused.svg" : "/icons/pin.svg"}
+      icon={focused ? "/icons/pin-focused.svg" : "/icons/pin.png"}
       {...(focused && {
         zIndex: Number.MAX_SAFE_INTEGER,
       })}

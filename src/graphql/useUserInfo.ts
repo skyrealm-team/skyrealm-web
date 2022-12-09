@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from "react-query";
 import { useLocalStorage } from "react-use";
 
-import { ClientError, gql } from "graphql-request";
+import { ClientError, gql, RequestOptions } from "graphql-request";
 
 import client from "./client";
 
@@ -20,8 +20,13 @@ export const getUserUserInfoQuery = gql`
   }
 `;
 
-export const getUserUserInfoRequest = (requestHeaders?: HeadersInit) => {
-  return client.request(getUserUserInfoQuery, requestHeaders);
+export const getUserUserInfoRequest = (
+  options?: Partial<RequestOptions<QueriesQueryListingsArgs>>
+) => {
+  return client.request({
+    ...options,
+    document: getUserUserInfoQuery,
+  });
 };
 
 export const useUserInfo = <

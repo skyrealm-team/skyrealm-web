@@ -1,6 +1,11 @@
-import { useQuery, UseQueryOptions } from "react-query";
+import { useQuery, useQueryClient, UseQueryOptions } from "react-query";
+import {
+  useDeepCompareEffect,
+  useFirstMountState,
+  usePrevious,
+} from "react-use";
 
-import { ClientError, gql } from "graphql-request";
+import { ClientError, gql, RequestOptions } from "graphql-request";
 
 import client from "./client";
 
@@ -39,10 +44,19 @@ export const queryListingsQuery = gql`
 `;
 
 export const queryListingsRequest = (
-  variables?: QueriesQueryListingsArgs,
-  requestHeaders?: HeadersInit
+  options?: Partial<
+    RequestOptions<
+      QueriesQueryListingsArgs,
+      {
+        queryListings: QueryListing;
+      }
+    >
+  >
 ) => {
-  return client.request(queryListingsQuery, variables, requestHeaders);
+  return client.request({
+    ...options,
+    document: queryListingsQuery,
+  });
 };
 
 export const useQueryListings = <
@@ -53,10 +67,22 @@ export const useQueryListings = <
   variables?: QueriesQueryListingsArgs,
   options?: UseQueryOptions<TData, ClientError>
 ) => {
+  const queryClient = useQueryClient();
+  const previousVariables = usePrevious(variables);
+  const isFirstMount = useFirstMountState();
+
+  useDeepCompareEffect(() => {
+    if (!isFirstMount) {
+      queryClient.cancelQueries({
+        queryKey: [useQueryListings.name, previousVariables],
+      });
+    }
+  }, [variables]);
+
   return useQuery<TData, ClientError>(
     [useQueryListings.name, variables],
-    () => {
-      return queryListingsRequest(variables);
+    ({ signal }) => {
+      return queryListingsRequest({ variables, signal: signal as any });
     },
     {
       ...options,
