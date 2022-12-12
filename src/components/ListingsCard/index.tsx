@@ -18,8 +18,6 @@ import {
   Typography,
 } from "@mui/material";
 
-import { defaultBounds } from "consts";
-
 import EmptyIcon from "assets/icons/empty.svg";
 import ListingsItem, { ListingsItemProps } from "components/ListingsItem";
 import useQueryListings from "graphql/useQueryListings";
@@ -42,7 +40,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
   const { data, isLoading, isFetching } = useQueryListings(
     {
       ...queryListingArgs,
-      bounds: queryListingArgs.bounds ?? defaultBounds,
+      bounds: queryListingArgs.bounds,
     },
     {
       keepPreviousData: true,
