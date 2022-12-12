@@ -1,6 +1,7 @@
 import { FC } from "react";
 
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import {
@@ -17,13 +18,13 @@ import {
   Typography,
 } from "@mui/material";
 
+import { defaultBounds } from "consts";
+
 import EmptyIcon from "assets/icons/empty.svg";
 import ListingsItem, { ListingsItemProps } from "components/ListingsItem";
+import useQueryListings from "graphql/useQueryListings";
 
 export type ListingsCardProps = {
-  isLoading?: boolean;
-  queryListing?: QueryListing;
-  onPageChange?: (page: number) => void;
   CardProps?: CardProps;
   ListingsItemProps?: (
     listingId: SingleListing["listingId"]
@@ -31,13 +32,23 @@ export type ListingsCardProps = {
 };
 
 const ListingsCard: FC<ListingsCardProps> = ({
-  isLoading,
-  queryListing,
-  onPageChange,
   CardProps,
   ListingsItemProps,
 }) => {
-  const currentPage = queryListing?.currentPage ?? 1;
+  const router = useRouter();
+  const queryListingArgs: QueriesQueryListingsArgs = JSON.parse(
+    String(router.query.listingsArgs ?? "{}")
+  );
+  const { data, isLoading, isFetching } = useQueryListings(
+    {
+      ...queryListingArgs,
+      bounds: queryListingArgs.bounds ?? defaultBounds,
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
+  const currentPage = data?.queryListings?.currentPage ?? 1;
 
   return (
     <Card
@@ -59,7 +70,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
             overflow: "auto",
           }}
         >
-          {queryListing?.listings?.length === 0 ? (
+          {data?.queryListings?.listings?.length === 0 ? (
             <Stack alignItems="center">
               <EmptyIcon />
               <Typography
@@ -73,8 +84,15 @@ const ListingsCard: FC<ListingsCardProps> = ({
             </Stack>
           ) : (
             <List disablePadding>
-              {queryListing?.listings?.map((listing) => (
-                <ListItem key={listing?.listingId} divider disablePadding>
+              {(isLoading
+                ? Array.from(new Array(100))
+                : data?.queryListings?.listings
+              )?.map((listing, index) => (
+                <ListItem
+                  key={listing?.listingId ?? index}
+                  divider
+                  disablePadding
+                >
                   <Link
                     href={{
                       pathname: `/listing/${listing?.listingId}/property-info`,
@@ -88,7 +106,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
                         py: 1.5,
                         justifyContent: "space-between",
                       }}
-                      disabled={isLoading}
+                      disabled={isLoading || isFetching}
                     >
                       <Stack
                         direction="row"
@@ -110,7 +128,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
             </List>
           )}
         </Stack>
-        {!!queryListing && (
+        {!!data?.queryListings && (
           <>
             <Divider />
             <CardActions>
@@ -123,9 +141,13 @@ const ListingsCard: FC<ListingsCardProps> = ({
                 <IconButton
                   size="small"
                   onClick={() => {
-                    onPageChange?.(currentPage - 1);
+                    router.query.listingsArgs = JSON.stringify({
+                      ...queryListingArgs,
+                      currentPage: currentPage - 1,
+                    });
+                    router.push(router);
                   }}
-                  disabled={currentPage === 1}
+                  disabled={isFetching || currentPage === 1}
                 >
                   <NavigateBefore />
                 </IconButton>
@@ -142,9 +164,13 @@ const ListingsCard: FC<ListingsCardProps> = ({
                 <IconButton
                   size="small"
                   onClick={() => {
-                    onPageChange?.(currentPage + 1);
+                    router.query.listingsArgs = JSON.stringify({
+                      ...queryListingArgs,
+                      currentPage: currentPage + 1,
+                    });
+                    router.push(router);
                   }}
-                  disabled={Number(queryListing.listings?.length) < 100}
+                  disabled={isFetching || !data?.queryListings?.hasNextPage}
                 >
                   <NavigateNext />
                 </IconButton>

@@ -127,8 +127,8 @@ const PlaceField: FC<PlaceFieldProps> = ({
 
         return (
           <MenuItem
-            {...props}
             key={option.place_id}
+            {...props}
             value={option.structured_formatting.main_text}
           >
             <ListItemIcon>

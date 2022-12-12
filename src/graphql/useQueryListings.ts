@@ -1,9 +1,4 @@
-import { useQuery, useQueryClient, UseQueryOptions } from "react-query";
-import {
-  useDeepCompareEffect,
-  useFirstMountState,
-  usePrevious,
-} from "react-use";
+import { useQuery, UseQueryOptions } from "react-query";
 
 import { ClientError, gql, RequestOptions } from "graphql-request";
 
@@ -13,21 +8,20 @@ export const queryListingsQuery = gql`
   query queryListings(
     $currentPage: Int
     $rowsPerPage: Int
-    $viewport: QueryListingViewport
+    $bounds: QueryListingBounds
     $listingId: String
     $addressState: String
-    $freeText: String
   ) {
     queryListings(
       currentPage: $currentPage
       rowsPerPage: $rowsPerPage
-      viewport: $viewport
+      bounds: $bounds
       listingId: $listingId
       addressState: $addressState
-      freeText: $freeText
     ) {
       currentPage
-      pageNumbers
+      rowsPerPage
+      hasNextPage
       listings {
         listingId
         isFavorite
@@ -55,6 +49,11 @@ export const queryListingsRequest = (
 ) => {
   return client.request({
     ...options,
+    variables: {
+      currentPage: 1,
+      rowsPerPage: 100,
+      ...options?.variables,
+    },
     document: queryListingsQuery,
   });
 };
@@ -67,24 +66,16 @@ export const useQueryListings = <
   variables?: QueriesQueryListingsArgs,
   options?: UseQueryOptions<TData, ClientError>
 ) => {
-  const queryClient = useQueryClient();
-  const previousVariables = usePrevious(variables);
-  const isFirstMount = useFirstMountState();
-
-  useDeepCompareEffect(() => {
-    if (!isFirstMount) {
-      queryClient.cancelQueries({
-        queryKey: [useQueryListings.name, previousVariables],
-      });
-    }
-  }, [variables]);
-
   return useQuery<TData, ClientError>(
     [useQueryListings.name, variables],
     ({ signal }) => {
-      return queryListingsRequest({ variables, signal: signal as any });
+      return queryListingsRequest({
+        variables,
+        signal: signal as RequestOptions["signal"],
+      });
     },
     {
+      enabled: !!variables?.bounds,
       ...options,
     }
   );

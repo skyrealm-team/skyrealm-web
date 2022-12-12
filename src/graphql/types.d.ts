@@ -87,11 +87,10 @@ type QueriesLoginArgs = {
 /** All User and Listing apis available */
 type QueriesQueryListingsArgs = {
   addressState: InputMaybe<Scalars["String"]>;
+  bounds: InputMaybe<QueryListingBounds>;
   currentPage: InputMaybe<Scalars["Int"]>;
-  freeText: InputMaybe<Scalars["String"]>;
   listingId: InputMaybe<Scalars["String"]>;
   rowsPerPage: InputMaybe<Scalars["Int"]>;
-  viewport: InputMaybe<QueryListingViewport>;
 };
 
 /** All User and Listing apis available */
@@ -102,18 +101,16 @@ type QueriesQueryListingsLiteArgs = {
 type QueryListing = {
   __typename?: "QueryListing";
   currentPage: Maybe<Scalars["Int"]>;
+  hasNextPage: Maybe<Scalars["Boolean"]>;
   listings: Maybe<Array<Maybe<SingleListing>>>;
-  pageNumbers: Maybe<Scalars["Int"]>;
+  rowsPerPage: Maybe<Scalars["Int"]>;
 };
 
-type QueryListingViewport = {
-  high: InputMaybe<QueryListingViewportGeometry>;
-  low: InputMaybe<QueryListingViewportGeometry>;
-};
-
-type QueryListingViewportGeometry = {
-  latitudes: InputMaybe<Scalars["Float"]>;
-  longitudes: InputMaybe<Scalars["Float"]>;
+type QueryListingBounds = {
+  east: InputMaybe<Scalars["Float"]>;
+  north: InputMaybe<Scalars["Float"]>;
+  south: InputMaybe<Scalars["Float"]>;
+  west: InputMaybe<Scalars["Float"]>;
 };
 
 type SingleListing = {

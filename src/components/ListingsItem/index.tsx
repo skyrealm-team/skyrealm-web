@@ -1,6 +1,13 @@
 import { FC, useRef } from "react";
 
-import { Avatar, BoxProps, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  BoxProps,
+  IconButton,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
 
 import FavoriteSelectedIcon from "assets/icons/favorite-selected.svg";
 import FavoriteIcon from "assets/icons/favorite.svg";
@@ -65,15 +72,21 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
             overflow: "hidden",
           }}
         >
-          <Typography
-            sx={{
-              fontSize: 14,
-              fontWeight: 700,
-            }}
-            noWrap
-          >
-            {listing?.address}
-          </Typography>
+          {listing ? (
+            <>
+              <Typography
+                sx={{
+                  fontSize: 14,
+                  fontWeight: 700,
+                }}
+                noWrap
+              >
+                {listing?.address}
+              </Typography>
+            </>
+          ) : (
+            <Skeleton />
+          )}
           <Stack direction="row" gap={3}>
             {[
               {
@@ -95,16 +108,20 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
                   overflow: "hidden",
                 }}
               >
-                <Typography
-                  variant="subtitle1"
-                  color="primary"
-                  sx={{
-                    fontSize: 16,
-                    fontWeight: 700,
-                  }}
-                >
-                  {formatter.format(value ?? 0)}
-                </Typography>
+                {listing ? (
+                  <Typography
+                    variant="subtitle1"
+                    color="primary"
+                    sx={{
+                      fontSize: 16,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {formatter.format(value ?? 0)}
+                  </Typography>
+                ) : (
+                  <Skeleton width="40%" />
+                )}
                 <Typography
                   variant="subtitle2"
                   noWrap

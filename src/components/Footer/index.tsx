@@ -3,7 +3,7 @@ import { FC } from "react";
 import { AppBar, Divider, Link, Stack } from "@mui/material";
 
 import LogoIcon from "assets/icons/logo.svg";
-import { PrivacyPolicy, TermsOfService } from "constants/links";
+import { PrivacyPolicy, TermsOfService } from "consts/links";
 
 const Footer: FC = () => {
   return (

@@ -31,7 +31,15 @@ const InfoMarker: FC<InfoMarkerProps> = ({
 
   return (
     <Marker
-      icon={focused ? "/icons/pin-focused.svg" : "/icons/pin.png"}
+      icon={
+        {
+          url: focused ? "/icons/pin-focused.svg" : "/icons/pin2.png",
+          scaledSize: {
+            width: 20,
+            height: 20,
+          },
+        } as google.maps.Icon
+      }
       {...(focused && {
         zIndex: Number.MAX_SAFE_INTEGER,
       })}

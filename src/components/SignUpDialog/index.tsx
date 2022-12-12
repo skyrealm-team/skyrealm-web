@@ -22,7 +22,7 @@ import * as Yup from "yup";
 import CloseIcon from "assets/icons/close.svg";
 import InputField from "components/InputField";
 import SelectField from "components/SelectField";
-import { PrivacyPolicy, TermsOfService } from "constants/links";
+import { PrivacyPolicy, TermsOfService } from "consts/links";
 import useRegister from "graphql/useRegister";
 
 const validationSchema = Yup.object().shape({
