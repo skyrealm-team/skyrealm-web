@@ -18,6 +18,7 @@ import * as Yup from "yup";
 import BackIcon from "assets/icons/back.svg";
 import InputField from "components/InputField";
 import { useForgetPassword } from "graphql/useForgetPassword";
+import useOpen from "hooks/useOpen";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -25,18 +26,16 @@ const validationSchema = Yup.object().shape({
     .required("Required"),
 });
 
-export type ForgotPasswordDialogProps = DialogProps & {
-  onBack?: () => void;
-  onSuccess?: () => void;
-};
-const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({
-  onBack,
-  onSuccess,
-  ...props
-}) => {
+export type ForgotPasswordDialogProps = Omit<DialogProps, "open">;
+const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({ ...props }) => {
+  const [open, setOpen] = useOpen();
+
   const { mutateAsync: forgetPassword } = useForgetPassword({
     onSuccess: async () => {
-      onSuccess?.();
+      setOpen({
+        ...open,
+        forgotPasswordDialog: false,
+      });
     },
     onError: ({ response }) => {
       response.errors?.forEach((error) => {
@@ -57,6 +56,7 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({
     onSubmit: async (values) => {
       try {
         await forgetPassword(values);
+      } catch {
       } finally {
         formik.setSubmitting(false);
       }
@@ -65,13 +65,14 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({
 
   useUpdateEffect(() => {
     formik.resetForm();
-  }, [props.open]);
+  }, [open.forgotPasswordDialog]);
 
   return (
     <Dialog
       scroll="body"
       fullWidth
       {...props}
+      open={open.forgotPasswordDialog}
       PaperProps={{
         ...props.PaperProps,
         sx: {
@@ -82,7 +83,11 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({
       <IconButton
         onClick={(event) => {
           event.preventDefault();
-          onBack?.();
+          setOpen({
+            ...open,
+            signinDialog: true,
+            forgotPasswordDialog: false,
+          });
         }}
         sx={{
           position: "absolute",

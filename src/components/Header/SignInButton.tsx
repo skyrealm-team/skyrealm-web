@@ -1,50 +1,25 @@
 import { FC } from "react";
-import { useToggle } from "react-use";
 
 import { Button } from "@mui/material";
 
-import ForgotPasswordDialog from "components/ForgotPasswordDialog";
-import SignInDialog from "components/SignInDialog";
+import useOpen from "hooks/useOpen";
 
 const SignInButton: FC = () => {
-  const [signInOpen, setSignInOpen] = useToggle(false);
-  const [forgotPasswordOpen, setForgotPasswordOpen] = useToggle(false);
+  const [open, setOpen] = useOpen();
 
   return (
-    <>
-      <Button
-        variant="outlined"
-        onClick={() => {
-          setSignInOpen(true);
-        }}
-        size="small"
-      >
-        Sign in
-      </Button>
-      <SignInDialog
-        open={signInOpen}
-        onClose={() => {
-          setSignInOpen(false);
-        }}
-        onSuccess={() => {
-          setSignInOpen(false);
-        }}
-        onForgotPassword={() => {
-          setForgotPasswordOpen(true);
-          setSignInOpen(false);
-        }}
-      />
-      <ForgotPasswordDialog
-        open={forgotPasswordOpen}
-        onBack={() => {
-          setSignInOpen(true);
-          setForgotPasswordOpen(false);
-        }}
-        onSuccess={() => {
-          setForgotPasswordOpen(false);
-        }}
-      />
-    </>
+    <Button
+      variant="outlined"
+      onClick={() => {
+        setOpen({
+          ...open,
+          signinDialog: true,
+        });
+      }}
+      size="small"
+    >
+      Sign in
+    </Button>
   );
 };
 

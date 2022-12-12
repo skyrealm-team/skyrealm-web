@@ -19,6 +19,7 @@ import * as Yup from "yup";
 import CloseIcon from "assets/icons/close.svg";
 import InputField from "components/InputField";
 import useLogin from "graphql/useLogin";
+import useOpen from "hooks/useOpen";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -27,18 +28,16 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().required("Required"),
 });
 
-export type SignInDialogProps = DialogProps & {
-  onSuccess?: () => void;
-  onForgotPassword?: () => void;
-};
-const SignInDialog: FC<SignInDialogProps> = ({
-  onSuccess,
-  onForgotPassword,
-  ...props
-}) => {
+export type SignInDialogProps = Omit<DialogProps, "open">;
+const SignInDialog: FC<SignInDialogProps> = ({ ...props }) => {
+  const [open, setOpen] = useOpen();
+
   const { mutateAsync: login } = useLogin({
     onSuccess: async () => {
-      onSuccess?.();
+      setOpen({
+        ...open,
+        signinDialog: false,
+      });
     },
     onError: ({ response }) => {
       response.errors?.forEach((error) => {
@@ -60,6 +59,7 @@ const SignInDialog: FC<SignInDialogProps> = ({
     onSubmit: async (values) => {
       try {
         await login(values);
+      } catch {
       } finally {
         formik.setSubmitting(false);
       }
@@ -68,13 +68,21 @@ const SignInDialog: FC<SignInDialogProps> = ({
 
   useUpdateEffect(() => {
     formik.resetForm();
-  }, [props.open]);
+  }, [open.signinDialog]);
 
   return (
     <Dialog
       scroll="body"
       fullWidth
       {...props}
+      open={open.signinDialog}
+      onClose={(event, reason) => {
+        setOpen({
+          ...open,
+          signinDialog: false,
+        });
+        props.onClose?.(event, reason);
+      }}
       PaperProps={{
         ...props.PaperProps,
         sx: {
@@ -84,6 +92,10 @@ const SignInDialog: FC<SignInDialogProps> = ({
     >
       <IconButton
         onClick={(event) => {
+          setOpen({
+            ...open,
+            signinDialog: false,
+          });
           props.onClose?.(event, "backdropClick");
         }}
         sx={{
@@ -142,7 +154,11 @@ const SignInDialog: FC<SignInDialogProps> = ({
               align="center"
               onClick={(event) => {
                 event.preventDefault();
-                onForgotPassword?.();
+                setOpen({
+                  ...open,
+                  signinDialog: false,
+                  forgotPasswordDialog: true,
+                });
               }}
               sx={{
                 fontSize: 16,

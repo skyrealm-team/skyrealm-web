@@ -34,6 +34,10 @@ const Markers: FC<MarkersProps> = ({
     setSelected(selections?.[selections?.length - 1]);
   }, [selections]);
 
+  if (!listings) {
+    return null;
+  }
+
   return (
     <MarkerClusterer
       {...props}

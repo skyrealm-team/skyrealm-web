@@ -1,5 +1,5 @@
 import { ClassAttributes, FC, useState } from "react";
-import { useUpdateEffect } from "react-use";
+import { useToggle, useUpdateEffect } from "react-use";
 
 import { useRouter } from "next/router";
 
@@ -8,15 +8,9 @@ import { LinearProgress } from "@mui/material";
 import { GoogleMap, GoogleMapProps } from "@react-google-maps/api";
 
 import useQueryListings from "graphql/useQueryListings";
+import useDefaultBounds from "hooks/useDefaultBounds";
 
 import Markers, { MarkersProps } from "./Markers";
-
-const defaultBounds = {
-  east: -73.8933254265425,
-  north: 40.82950309443075,
-  south: 40.68860118615344,
-  west: -74.04513657345743,
-};
 
 export type ListingsMapProps = {
   GoogleMapProps?: GoogleMapProps & ClassAttributes<GoogleMap>;
@@ -31,10 +25,13 @@ const ListingsMap: FC<ListingsMapProps> = ({
     String(router.query.listingsArgs ?? "{}")
   );
 
+  const [bounded, setBounded] = useToggle(false);
+  const [defaultBounds, setDefaultBounds] = useDefaultBounds();
+  const [initialBounds] = useState(defaultBounds);
   const { data, isFetching } = useQueryListings(
     {
       ...queryListingArgs,
-      bounds: queryListingArgs.bounds,
+      bounds: queryListingArgs.bounds ?? defaultBounds,
       currentPage: 1,
       rowsPerPage: 0,
     },
@@ -47,18 +44,10 @@ const ListingsMap: FC<ListingsMapProps> = ({
 
   useUpdateEffect(() => {
     if (!queryListingArgs.bounds) {
-      router.push({
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          listingsArgs: JSON.stringify({
-            ...queryListingArgs,
-            bounds: defaultBounds,
-          }),
-        },
+      setBounded(false);
+      setTimeout(() => {
+        map?.fitBounds(initialBounds);
       });
-
-      map?.fitBounds(defaultBounds);
     }
   }, [queryListingArgs.bounds]);
 
@@ -77,19 +66,25 @@ const ListingsMap: FC<ListingsMapProps> = ({
         GoogleMapProps?.onLoad?.(map);
       }}
       onBoundsChanged={() => {
-        const bounds = map?.getBounds();
+        const bounds = map?.getBounds()?.toJSON();
 
-        router.push({
-          pathname: router.pathname,
-          query: {
-            ...router.query,
-            listingsArgs: JSON.stringify({
-              ...queryListingArgs,
-              bounds: bounds?.toJSON(),
-            }),
-          },
-        });
-
+        if (bounds) {
+          if (bounded) {
+            router.push({
+              pathname: router.pathname,
+              query: {
+                ...router.query,
+                listingsArgs: JSON.stringify({
+                  ...queryListingArgs,
+                  bounds,
+                }),
+              },
+            });
+          } else {
+            setDefaultBounds(bounds);
+            setBounded(true);
+          }
+        }
         GoogleMapProps?.onBoundsChanged?.();
       }}
       options={{

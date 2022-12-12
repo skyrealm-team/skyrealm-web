@@ -14,6 +14,7 @@ import FavoriteIcon from "assets/icons/favorite.svg";
 import ListingIcon from "assets/icons/listing.svg";
 import useUpdateFavoriteListings from "graphql/useUpdateFavoriteListings";
 import useUserInfo from "graphql/useUserInfo";
+import useOpen from "hooks/useOpen";
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
@@ -22,6 +23,8 @@ export type ListingsItemProps = BoxProps & {
 };
 
 const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
+  const [open, setOpen] = useOpen();
+
   const { data: userInfo, refetch: refetchUserInfo } = useUserInfo();
   const {
     mutateAsync: updateFavoriteListings,
@@ -141,6 +144,15 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
         <IconButton
           onClick={async (event) => {
             event.stopPropagation();
+
+            if (!userInfo) {
+              setOpen({
+                ...open,
+                signupDialog: true,
+              });
+              return;
+            }
+
             try {
               await updateFavoriteListings({
                 listingId: listing?.listingId,

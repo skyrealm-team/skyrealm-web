@@ -21,6 +21,7 @@ import {
 import EmptyIcon from "assets/icons/empty.svg";
 import ListingsItem, { ListingsItemProps } from "components/ListingsItem";
 import useQueryListings from "graphql/useQueryListings";
+import useDefaultBounds from "hooks/useDefaultBounds";
 
 export type ListingsCardProps = {
   CardProps?: CardProps;
@@ -37,10 +38,12 @@ const ListingsCard: FC<ListingsCardProps> = ({
   const queryListingArgs: QueriesQueryListingsArgs = JSON.parse(
     String(router.query.listingsArgs ?? "{}")
   );
+
+  const [defaultBounds] = useDefaultBounds();
   const { data, isLoading, isFetching } = useQueryListings(
     {
       ...queryListingArgs,
-      bounds: queryListingArgs.bounds,
+      bounds: queryListingArgs.bounds ?? defaultBounds,
     },
     {
       keepPreviousData: true,
