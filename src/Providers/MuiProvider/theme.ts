@@ -65,6 +65,20 @@ const theme = responsiveFontSizes(
 );
 
 theme.components = {
+  MuiTypography: {
+    styleOverrides: {
+      root: {
+        textTransform: "none",
+      },
+    },
+  },
+  MuiLink: {
+    styleOverrides: {
+      root: {
+        cursor: "pointer",
+      },
+    },
+  },
   MuiToolbar: {
     styleOverrides: {
       gutters: {

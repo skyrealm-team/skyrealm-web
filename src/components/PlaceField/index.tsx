@@ -24,8 +24,8 @@ import usePlacePredictions from "hooks/usePlacePredictions";
 
 export type PlaceFieldProps = {
   value?: string;
-  onChange?: (value: string) => void;
-  onPredictionChange?: (
+  onChange?: (
+    value: string,
     prediction?: google.maps.places.AutocompletePrediction
   ) => void;
   TextFieldProps?: TextFieldProps;
@@ -33,7 +33,6 @@ export type PlaceFieldProps = {
 const PlaceField: FC<PlaceFieldProps> = ({
   value,
   onChange,
-  onPredictionChange,
   TextFieldProps,
 }) => {
   const [open, setOpen] = useToggle(false);
@@ -82,16 +81,10 @@ const PlaceField: FC<PlaceFieldProps> = ({
       onClose={() => {
         setOpen(false);
       }}
-      onChange={async (event, prediction) => {
-        onChange?.(inputValue ?? "");
-        onPredictionChange?.(prediction ?? undefined);
-      }}
       inputValue={inputValue ?? ""}
       onInputChange={(event, input, reason) => {
         if (reason !== "reset") {
           setInputValue(input);
-        } else {
-          setInputValue("");
         }
       }}
       renderInput={(params) => (
@@ -138,6 +131,11 @@ const PlaceField: FC<PlaceFieldProps> = ({
             key={option.place_id}
             {...props}
             value={option.structured_formatting.main_text}
+            onClick={(event) => {
+              props.onClick?.(event);
+
+              onChange?.(inputValue ?? "", option);
+            }}
           >
             <ListItemIcon>
               <LocationOn fontSize="small" />

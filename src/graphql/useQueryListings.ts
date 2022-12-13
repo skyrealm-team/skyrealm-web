@@ -40,7 +40,7 @@ export const queryListingsQuery = gql`
 export const queryListingsRequest = (
   options?: Partial<
     RequestOptions<
-      QueriesQueryListingsArgs,
+      Partial<QueriesQueryListingsArgs>,
       {
         queryListings: QueryListing;
       }
@@ -63,7 +63,7 @@ export const useQueryListings = <
     queryListings: QueryListing;
   }
 >(
-  variables?: QueriesQueryListingsArgs,
+  variables?: Partial<QueriesQueryListingsArgs>,
   options?: UseQueryOptions<TData, ClientError>
 ) => {
   return useQuery<TData, ClientError>(

@@ -109,6 +109,7 @@ const SignInDialog: FC<SignInDialogProps> = ({ ...props }) => {
       <DialogContent>
         <form onSubmit={formik.handleSubmit}>
           <Stack
+            alignItems="center"
             gap={3}
             sx={{
               p: 3,
@@ -148,8 +149,28 @@ const SignInDialog: FC<SignInDialogProps> = ({ ...props }) => {
               autoComplete="current-password"
               fullWidth
             />
+            <Typography variant="button">
+              <Link
+                type="button"
+                align="center"
+                onClick={(event) => {
+                  event.preventDefault();
+                  setOpen({
+                    ...open,
+                    signinDialog: false,
+                    signupDialog: true,
+                  });
+                }}
+                sx={{
+                  fontSize: 16,
+                  fontWeight: 500,
+                }}
+              >
+                Sign up
+              </Link>{" "}
+              here if you don't have an account yet.
+            </Typography>
             <Link
-              component="button"
               type="button"
               align="center"
               onClick={(event) => {

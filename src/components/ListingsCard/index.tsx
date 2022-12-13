@@ -1,7 +1,6 @@
 import { FC } from "react";
 
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import {
@@ -22,6 +21,7 @@ import EmptyIcon from "assets/icons/empty.svg";
 import ListingsItem, { ListingsItemProps } from "components/ListingsItem";
 import useQueryListings from "graphql/useQueryListings";
 import useDefaultBounds from "hooks/useDefaultBounds";
+import useRouterState from "hooks/useRouterState";
 
 export type ListingsCardProps = {
   CardProps?: CardProps;
@@ -34,16 +34,15 @@ const ListingsCard: FC<ListingsCardProps> = ({
   CardProps,
   ListingsItemProps,
 }) => {
-  const router = useRouter();
-  const queryListingArgs: QueriesQueryListingsArgs = JSON.parse(
-    String(router.query.listingsArgs ?? "{}")
-  );
+  const { routerState, setRouterState } = useRouterState<{
+    queryListingsArgs: QueriesQueryListingsArgs;
+  }>();
 
   const [defaultBounds] = useDefaultBounds();
   const { data, isLoading, isFetching } = useQueryListings(
     {
-      ...queryListingArgs,
-      bounds: queryListingArgs.bounds ?? defaultBounds,
+      ...routerState.queryListingsArgs,
+      bounds: routerState.queryListingsArgs?.bounds ?? defaultBounds,
     },
     {
       keepPreviousData: true,
@@ -142,11 +141,11 @@ const ListingsCard: FC<ListingsCardProps> = ({
                 <IconButton
                   size="small"
                   onClick={() => {
-                    router.query.listingsArgs = JSON.stringify({
-                      ...queryListingArgs,
-                      currentPage: currentPage - 1,
+                    setRouterState({
+                      queryListingsArgs: {
+                        currentPage: currentPage - 1,
+                      },
                     });
-                    router.push(router);
                   }}
                   disabled={isFetching || currentPage === 1}
                 >
@@ -165,11 +164,11 @@ const ListingsCard: FC<ListingsCardProps> = ({
                 <IconButton
                   size="small"
                   onClick={() => {
-                    router.query.listingsArgs = JSON.stringify({
-                      ...queryListingArgs,
-                      currentPage: currentPage + 1,
+                    setRouterState({
+                      queryListingsArgs: {
+                        currentPage: currentPage + 1,
+                      },
                     });
-                    router.push(router);
                   }}
                   disabled={isFetching || !data?.queryListings?.hasNextPage}
                 >

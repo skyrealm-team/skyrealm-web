@@ -1,14 +1,14 @@
 import { ClassAttributes, FC, useState } from "react";
-import { useDeepCompareEffect, useToggle } from "react-use";
-
-import { useRouter } from "next/router";
+import { useToggle, useUpdateEffect } from "react-use";
 
 import { LinearProgress } from "@mui/material";
 
 import { GoogleMap, GoogleMapProps } from "@react-google-maps/api";
 
+import { Filters } from "components/FiltersBar";
 import useQueryListings from "graphql/useQueryListings";
 import useDefaultBounds from "hooks/useDefaultBounds";
+import useRouterState from "hooks/useRouterState";
 
 import Markers, { MarkersProps } from "./Markers";
 
@@ -20,18 +20,21 @@ const ListingsMap: FC<ListingsMapProps> = ({
   GoogleMapProps,
   MarkersProps,
 }) => {
-  const router = useRouter();
-  const queryListingArgs: QueriesQueryListingsArgs = JSON.parse(
-    String(router.query.listingsArgs ?? "{}")
-  );
+  const { routerState, setRouterState } = useRouterState<{
+    queryListingsArgs: QueriesQueryListingsArgs;
+    filters: Filters;
+  }>();
 
   const [boundsPrevented, preventBounds] = useToggle(false);
   const [defaultBounds, setDefaultBounds] = useDefaultBounds();
   const [initialBounds] = useState(defaultBounds);
   const { data, isFetching } = useQueryListings(
     {
-      ...queryListingArgs,
-      bounds: queryListingArgs.bounds ?? defaultBounds,
+      ...routerState.queryListingsArgs,
+      bounds: {
+        ...defaultBounds,
+        ...routerState.queryListingsArgs?.bounds,
+      },
       currentPage: 1,
       rowsPerPage: 500,
     },
@@ -42,11 +45,11 @@ const ListingsMap: FC<ListingsMapProps> = ({
 
   const [map, setMap] = useState<google.maps.Map>();
 
-  useDeepCompareEffect(() => {
+  useUpdateEffect(() => {
     preventBounds(true);
 
     setTimeout(() => {
-      const bounds = queryListingArgs.bounds;
+      const bounds = routerState.queryListingsArgs?.bounds;
       if (!bounds) {
         map?.fitBounds(initialBounds, 0);
       } else {
@@ -67,7 +70,7 @@ const ListingsMap: FC<ListingsMapProps> = ({
         }
       }
     });
-  }, [queryListingArgs.bounds]);
+  }, [routerState.queryListingsArgs?.bounds]);
 
   return (
     <GoogleMap
@@ -79,7 +82,7 @@ const ListingsMap: FC<ListingsMapProps> = ({
         map?.fitBounds(
           {
             ...defaultBounds,
-            ...queryListingArgs.bounds,
+            ...routerState.queryListingsArgs?.bounds,
           },
           0
         );
@@ -94,18 +97,17 @@ const ListingsMap: FC<ListingsMapProps> = ({
             setDefaultBounds(bounds);
             preventBounds(false);
           } else {
-            router.push({
-              pathname: router.pathname,
-              query: {
-                ...router.query,
-                listingsArgs: JSON.stringify({
-                  ...queryListingArgs,
-                  bounds,
-                }),
+            setRouterState({
+              queryListingsArgs: {
+                bounds,
+              },
+              filters: {
+                address: "",
               },
             });
           }
         }
+
         GoogleMapProps?.onBoundsChanged?.();
       }}
       options={{

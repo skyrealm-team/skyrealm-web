@@ -1,83 +1,49 @@
-import { FC, useState } from "react";
-import { useDeepCompareEffect, useUpdateEffect } from "react-use";
-
-import { useRouter } from "next/router";
+import { FC } from "react";
+import { useUpdateEffect } from "react-use";
 
 import { AppBar, MenuItem, Stack, Toolbar } from "@mui/material";
-
-import { useFormik } from "formik";
 
 import PlaceField from "components/PlaceField";
 import SelectField from "components/SelectField";
 import usePlaceDetails from "hooks/usePlaceDetails";
+import useRouterState from "hooks/useRouterState";
 
-type Filters = {
+export type Filters = {
   address?: string;
+  placeId?: string;
   for?: "lease" | "sale";
   spaceUse?: string;
 };
 
-export type FiltersBarProps = {
-  onSubmit?: (values: Filters) => void;
-};
-const FiltersBar: FC<FiltersBarProps> = ({ onSubmit }) => {
-  const router = useRouter();
-  const queryListingArgs: QueriesQueryListingsArgs = JSON.parse(
-    String(router.query.listingsArgs ?? "{}")
-  );
-  const filters: Filters = JSON.parse(String(router.query.filters ?? "{}"));
-  const initialValues: Filters = {
-    address: "",
-    for: "lease",
-    spaceUse: "",
-    ...filters,
-  };
-  const formik = useFormik<Filters>({
-    initialValues,
-    onSubmit: (values) => {
-      onSubmit?.(values);
+const FiltersBar: FC = () => {
+  const { routerState, setRouterState } = useRouterState<{
+    queryListingsArgs: QueriesQueryListingsArgs;
+    filters: Filters;
+  }>({
+    filters: {
+      for: "lease",
+      spaceUse: "",
     },
   });
 
-  const [placeId, setPlaceId] = useState("");
   const { data: placeDetails } = usePlaceDetails({
-    placeId,
+    placeId: routerState.filters?.placeId ?? "",
   });
 
-  useDeepCompareEffect(() => {
-    formik.setValues(initialValues);
-  }, [filters]);
-
   useUpdateEffect(() => {
-    formik.setFieldValue("spaceUse", "");
-  }, [formik.values.for]);
-
-  useUpdateEffect(() => {
-    if (formik.dirty) {
-      router.push({
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          filters: JSON.stringify(formik.values),
-          listingsArgs: JSON.stringify({
-            ...queryListingArgs,
-            currentPage: 1,
-          }),
-        },
-      });
-    }
-  }, [formik.values]);
+    setRouterState({
+      filters: {
+        spaceUse: "",
+      },
+    });
+  }, [routerState.filters?.for]);
 
   useUpdateEffect(() => {
     if (placeDetails?.geometry?.viewport) {
-      router.push({
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          listingsArgs: JSON.stringify({
-            ...queryListingArgs,
-            bounds: placeDetails?.geometry?.viewport.toJSON(),
-          }),
+      setRouterState({
+        queryListingsArgs: {
+          bounds: placeDetails?.geometry?.viewport.toJSON(),
+          currentPage: 1,
         },
       });
     }
@@ -104,20 +70,25 @@ const FiltersBar: FC<FiltersBarProps> = ({ onSubmit }) => {
       >
         <Stack direction="row" gap={2}>
           <PlaceField
-            value={formik.values.address}
-            onChange={formik.handleChange("address")}
-            onPredictionChange={async (prediction) => {
-              await formik.setFieldValue(
-                "address",
-                prediction?.structured_formatting.main_text
-              );
-
-              setPlaceId(prediction?.place_id ?? "");
+            value={routerState.filters?.address}
+            onChange={(_, prediction) => {
+              setRouterState({
+                filters: {
+                  address: prediction?.structured_formatting.main_text,
+                  placeId: prediction?.place_id,
+                },
+              });
             }}
           />
           <SelectField
-            value={formik.values.for}
-            onChange={formik.handleChange("for")}
+            value={routerState.filters?.for}
+            onChange={(event) => {
+              setRouterState({
+                filters: {
+                  for: event.currentTarget.value as Filters["for"],
+                },
+              });
+            }}
             size="small"
             sx={{
               minWidth: 142,
@@ -139,8 +110,14 @@ const FiltersBar: FC<FiltersBarProps> = ({ onSubmit }) => {
             ))}
           </SelectField>
           <SelectField
-            value={formik.values.spaceUse}
-            onChange={formik.handleChange("spaceUse")}
+            value={routerState.filters?.spaceUse}
+            onChange={(event) => {
+              setRouterState({
+                filters: {
+                  spaceUse: event.currentTarget.value,
+                },
+              });
+            }}
             size="small"
             sx={{
               minWidth: 142,
@@ -154,7 +131,7 @@ const FiltersBar: FC<FiltersBarProps> = ({ onSubmit }) => {
             >
               Space Use
             </MenuItem>
-            {(formik.values.for === "lease"
+            {(routerState.filters?.for === "lease"
               ? [
                   {
                     key: "Retail",

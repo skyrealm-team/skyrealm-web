@@ -149,7 +149,7 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
             if (!userInfo) {
               setOpen({
                 ...open,
-                signupDialog: true,
+                signinDialog: true,
               });
               return;
             }
