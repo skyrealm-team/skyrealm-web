@@ -48,19 +48,22 @@ const ListingsMap: FC<ListingsMapProps> = ({
     setTimeout(() => {
       const bounds = queryListingArgs.bounds;
       if (!bounds) {
-        map?.fitBounds(initialBounds);
+        map?.fitBounds(initialBounds, 0);
       } else {
         const east = bounds?.east;
         const west = bounds?.west;
         const north = bounds?.north;
         const south = bounds?.south;
         if (east && west && north && south) {
-          map?.fitBounds({
-            east,
-            west,
-            north,
-            south,
-          });
+          map?.fitBounds(
+            {
+              east,
+              west,
+              north,
+              south,
+            },
+            0
+          );
         }
       }
     });
@@ -73,10 +76,13 @@ const ListingsMap: FC<ListingsMapProps> = ({
       {...GoogleMapProps}
       onLoad={(map) => {
         setMap(map);
-        map?.fitBounds({
-          ...defaultBounds,
-          ...queryListingArgs.bounds,
-        });
+        map?.fitBounds(
+          {
+            ...defaultBounds,
+            ...queryListingArgs.bounds,
+          },
+          0
+        );
 
         GoogleMapProps?.onLoad?.(map);
       }}
