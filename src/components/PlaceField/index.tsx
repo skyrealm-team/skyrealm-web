@@ -38,7 +38,6 @@ const PlaceField: FC<PlaceFieldProps> = ({
 }) => {
   const [open, setOpen] = useToggle(false);
   const [inputValue, setInputValue] = useEffectState(value);
-  console.log(value, inputValue);
 
   const { data: placePredictions, isLoading } = usePlacePredictions({
     input: inputValue ?? "",
