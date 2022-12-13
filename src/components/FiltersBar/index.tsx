@@ -59,6 +59,10 @@ const FiltersBar: FC<FiltersBarProps> = ({ onSubmit }) => {
         query: {
           ...router.query,
           filters: JSON.stringify(formik.values),
+          listingsArgs: JSON.stringify({
+            ...queryListingArgs,
+            currentPage: 1,
+          }),
         },
       });
     }
@@ -73,7 +77,6 @@ const FiltersBar: FC<FiltersBarProps> = ({ onSubmit }) => {
           listingsArgs: JSON.stringify({
             ...queryListingArgs,
             bounds: placeDetails?.geometry?.viewport.toJSON(),
-            currentPage: 1,
           }),
         },
       });
