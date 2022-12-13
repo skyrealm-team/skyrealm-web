@@ -1,4 +1,4 @@
-import * as React from "react";
+import { FC } from "react";
 
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -19,8 +19,7 @@ export type MyAppProps = AppProps & {
   emotionCache?: EmotionCache;
 };
 
-const MyApp = (props: MyAppProps) => {
-  const { Component, emotionCache, pageProps } = props;
+const MyApp: FC<MyAppProps> = ({ Component, emotionCache, pageProps }) => {
   return (
     <>
       <Head>

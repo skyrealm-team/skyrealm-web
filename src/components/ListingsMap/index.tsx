@@ -1,5 +1,5 @@
 import { ClassAttributes, FC, useState } from "react";
-import { useToggle, useUpdateEffect } from "react-use";
+import { useDeepCompareEffect, useToggle } from "react-use";
 
 import { useRouter } from "next/router";
 
@@ -25,7 +25,7 @@ const ListingsMap: FC<ListingsMapProps> = ({
     String(router.query.listingsArgs ?? "{}")
   );
 
-  const [bounded, setBounded] = useToggle(false);
+  const [boundsPrevented, preventBounds] = useToggle(false);
   const [defaultBounds, setDefaultBounds] = useDefaultBounds();
   const [initialBounds] = useState(defaultBounds);
   const { data, isFetching } = useQueryListings(
@@ -33,7 +33,7 @@ const ListingsMap: FC<ListingsMapProps> = ({
       ...queryListingArgs,
       bounds: queryListingArgs.bounds ?? defaultBounds,
       currentPage: 1,
-      rowsPerPage: 0,
+      rowsPerPage: 500,
     },
     {
       keepPreviousData: true,
@@ -42,13 +42,28 @@ const ListingsMap: FC<ListingsMapProps> = ({
 
   const [map, setMap] = useState<google.maps.Map>();
 
-  useUpdateEffect(() => {
-    if (!queryListingArgs.bounds) {
-      setBounded(false);
-      setTimeout(() => {
+  useDeepCompareEffect(() => {
+    preventBounds(true);
+
+    setTimeout(() => {
+      const bounds = queryListingArgs.bounds;
+      if (!bounds) {
         map?.fitBounds(initialBounds);
-      });
-    }
+      } else {
+        const east = bounds?.east;
+        const west = bounds?.west;
+        const north = bounds?.north;
+        const south = bounds?.south;
+        if (east && west && north && south) {
+          map?.fitBounds({
+            east,
+            west,
+            north,
+            south,
+          });
+        }
+      }
+    });
   }, [queryListingArgs.bounds]);
 
   return (
@@ -69,7 +84,10 @@ const ListingsMap: FC<ListingsMapProps> = ({
         const bounds = map?.getBounds()?.toJSON();
 
         if (bounds) {
-          if (bounded) {
+          if (boundsPrevented) {
+            setDefaultBounds(bounds);
+            preventBounds(false);
+          } else {
             router.push({
               pathname: router.pathname,
               query: {
@@ -80,9 +98,6 @@ const ListingsMap: FC<ListingsMapProps> = ({
                 }),
               },
             });
-          } else {
-            setDefaultBounds(bounds);
-            setBounded(true);
           }
         }
         GoogleMapProps?.onBoundsChanged?.();

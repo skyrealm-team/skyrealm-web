@@ -13,7 +13,7 @@ import FavoriteSelectedIcon from "assets/icons/favorite-selected.svg";
 import FavoriteIcon from "assets/icons/favorite.svg";
 import ListingIcon from "assets/icons/listing.svg";
 import useUpdateFavoriteListings from "graphql/useUpdateFavoriteListings";
-import useUserInfo from "graphql/useUserInfo";
+import useUserInfo, { useSetUserInfoData } from "graphql/useUserInfo";
 import useOpen from "hooks/useOpen";
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
@@ -26,6 +26,7 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
   const [open, setOpen] = useOpen();
 
   const { data: userInfo, refetch: refetchUserInfo } = useUserInfo();
+  const setUserInfoData = useSetUserInfoData();
   const {
     mutateAsync: updateFavoriteListings,
     isLoading: updateFavoriteListingsIsLoading,
@@ -154,6 +155,19 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
             }
 
             try {
+              setUserInfoData({
+                getUserUserInfo: {
+                  ...userInfo.getUserUserInfo,
+                  favorite: !isFavorite
+                    ? [
+                        ...(userInfo.getUserUserInfo.favorite ?? []),
+                        listing?.listingId,
+                      ]
+                    : userInfo.getUserUserInfo.favorite?.filter(
+                        (item) => item !== listing?.listingId
+                      ),
+                },
+              });
               await updateFavoriteListings({
                 listingId: listing?.listingId,
                 toLike: !isFavorite,

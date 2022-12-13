@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useToggle } from "react-use";
 
 import { LocationOn } from "@mui/icons-material";
@@ -19,20 +19,26 @@ import parse from "autosuggest-highlight/parse";
 
 import LocationIcon from "assets/icons/location.svg";
 import SearchIcon from "assets/icons/search.svg";
+import useEffectState from "hooks/useEffectState";
 import usePlacePredictions from "hooks/usePlacePredictions";
 
 export type PlaceFieldProps = {
-  defaultValue?: string;
-  onChange?: (prediction?: google.maps.places.AutocompletePrediction) => void;
+  value?: string;
+  onChange?: (value: string) => void;
+  onPredictionChange?: (
+    prediction?: google.maps.places.AutocompletePrediction
+  ) => void;
   TextFieldProps?: TextFieldProps;
 };
 const PlaceField: FC<PlaceFieldProps> = ({
-  defaultValue,
+  value,
   onChange,
+  onPredictionChange,
   TextFieldProps,
 }) => {
   const [open, setOpen] = useToggle(false);
-  const [inputValue, setInputValue] = useState(defaultValue);
+  const [inputValue, setInputValue] = useEffectState(value);
+  console.log(value, inputValue);
 
   const { data: placePredictions, isLoading } = usePlacePredictions({
     input: inputValue ?? "",
@@ -78,12 +84,15 @@ const PlaceField: FC<PlaceFieldProps> = ({
         setOpen(false);
       }}
       onChange={async (event, prediction) => {
-        onChange?.(prediction ?? undefined);
+        onChange?.(inputValue ?? "");
+        onPredictionChange?.(prediction ?? undefined);
       }}
-      inputValue={inputValue}
+      inputValue={inputValue ?? ""}
       onInputChange={(event, input, reason) => {
-        if (!(reason === "reset" && !input)) {
+        if (reason !== "reset") {
           setInputValue(input);
+        } else {
+          setInputValue("");
         }
       }}
       renderInput={(params) => (

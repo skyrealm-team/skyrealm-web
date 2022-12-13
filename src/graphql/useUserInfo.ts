@@ -1,4 +1,4 @@
-import { useQuery, UseQueryOptions } from "react-query";
+import { useQuery, useQueryClient, UseQueryOptions } from "react-query";
 import { useLocalStorage } from "react-use";
 
 import { ClientError, gql, RequestOptions } from "graphql-request";
@@ -48,6 +48,18 @@ export const useUserInfo = <
       ...options,
     }
   );
+};
+
+export const useSetUserInfoData = <
+  TData = {
+    getUserUserInfo: User;
+  }
+>() => {
+  const queryClient = useQueryClient();
+
+  return (data: TData) => {
+    queryClient.setQueryData<TData>([useUserInfo.name], data);
+  };
 };
 
 export default useUserInfo;

@@ -1,60 +1,89 @@
-import { FC } from "react";
-import { useUpdateEffect } from "react-use";
+import { FC, useState } from "react";
+import { useDeepCompareEffect, useUpdateEffect } from "react-use";
 
-import { AppBar, AppBarProps, MenuItem, Stack, Toolbar } from "@mui/material";
+import { useRouter } from "next/router";
+
+import { AppBar, MenuItem, Stack, Toolbar } from "@mui/material";
 
 import { useFormik } from "formik";
 
 import PlaceField from "components/PlaceField";
 import SelectField from "components/SelectField";
+import usePlaceDetails from "hooks/usePlaceDetails";
 
-type FilterValues = {
+type Filters = {
   address?: string;
   for?: "lease" | "sale";
   spaceUse?: string;
 };
 
 export type FiltersBarProps = {
-  initialValues?: FilterValues;
-  AppBarProps?: Omit<AppBarProps, "onChange">;
-  onChange?: (values: FilterValues) => void;
-  onPredictionChange?: (
-    prediction?: google.maps.places.AutocompletePrediction
-  ) => void;
-  onSubmit?: (values: FilterValues) => void;
+  onSubmit?: (values: Filters) => void;
 };
-const FiltersBar: FC<FiltersBarProps> = ({
-  initialValues,
-  AppBarProps,
-  onChange,
-  onPredictionChange,
-  onSubmit,
-}) => {
-  const formik = useFormik<FilterValues>({
-    initialValues: {
-      address: "",
-      for: "lease",
-      spaceUse: "",
-      ...initialValues,
-    },
+const FiltersBar: FC<FiltersBarProps> = ({ onSubmit }) => {
+  const router = useRouter();
+  const queryListingArgs: QueriesQueryListingsArgs = JSON.parse(
+    String(router.query.listingsArgs ?? "{}")
+  );
+  const filters: Filters = JSON.parse(String(router.query.filters ?? "{}"));
+  const initialValues: Filters = {
+    address: "",
+    for: "lease",
+    spaceUse: "",
+    ...filters,
+  };
+  const formik = useFormik<Filters>({
+    initialValues,
     onSubmit: (values) => {
       onSubmit?.(values);
     },
   });
+
+  const [placeId, setPlaceId] = useState("");
+  const { data: placeDetails } = usePlaceDetails({
+    placeId,
+  });
+
+  useDeepCompareEffect(() => {
+    formik.setValues(initialValues);
+  }, [filters]);
 
   useUpdateEffect(() => {
     formik.setFieldValue("spaceUse", "");
   }, [formik.values.for]);
 
   useUpdateEffect(() => {
-    onChange?.(formik.values);
+    if (formik.dirty) {
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          filters: JSON.stringify(formik.values),
+        },
+      });
+    }
   }, [formik.values]);
+
+  useUpdateEffect(() => {
+    if (placeDetails?.geometry?.viewport) {
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          listingsArgs: JSON.stringify({
+            ...queryListingArgs,
+            bounds: placeDetails?.geometry?.viewport.toJSON(),
+            currentPage: 1,
+          }),
+        },
+      });
+    }
+  }, [placeDetails]);
 
   return (
     <AppBar
       position="static"
       color="inherit"
-      {...AppBarProps}
       sx={(theme) => ({
         background: "rgba(255, 255, 255, 0.8)",
         boxShadow: "0px 5px 7px rgba(0, 0, 0, 0.05)",
@@ -72,13 +101,15 @@ const FiltersBar: FC<FiltersBarProps> = ({
       >
         <Stack direction="row" gap={2}>
           <PlaceField
-            defaultValue={formik.initialValues.address}
-            onChange={async (prediction) => {
+            value={formik.values.address}
+            onChange={formik.handleChange("address")}
+            onPredictionChange={async (prediction) => {
               await formik.setFieldValue(
                 "address",
                 prediction?.structured_formatting.main_text
               );
-              onPredictionChange?.(prediction);
+
+              setPlaceId(prediction?.place_id ?? "");
             }}
           />
           <SelectField
