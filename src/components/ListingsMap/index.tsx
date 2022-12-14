@@ -1,9 +1,10 @@
 import { ClassAttributes, FC, useState } from "react";
-import { useToggle, useUpdateEffect } from "react-use";
+import { useUpdateEffect } from "react-use";
 
 import { LinearProgress } from "@mui/material";
 
 import { GoogleMap, GoogleMapProps } from "@react-google-maps/api";
+import { defaultsDeep } from "lodash";
 
 import { Filters } from "components/FiltersBar";
 import useQueryListings from "graphql/useQueryListings";
@@ -25,9 +26,7 @@ const ListingsMap: FC<ListingsMapProps> = ({
     filters: Filters;
   }>();
 
-  const [boundsPrevented, preventBounds] = useToggle(false);
   const [defaultBounds, setDefaultBounds] = useDefaultBounds();
-  const [initialBounds] = useState(defaultBounds);
   const { data, isFetching } = useQueryListings(
     {
       ...routerState.queryListingsArgs,
@@ -46,28 +45,14 @@ const ListingsMap: FC<ListingsMapProps> = ({
   const [map, setMap] = useState<google.maps.Map>();
 
   useUpdateEffect(() => {
-    preventBounds(true);
+    map?.set("boundsPrevented", true);
 
     setTimeout(() => {
       const bounds = routerState.queryListingsArgs?.bounds;
       if (!bounds) {
-        map?.fitBounds(initialBounds, 0);
+        map?.fitBounds(map?.get("defaultBounds") ?? defaultBounds, 0);
       } else {
-        const east = bounds?.east;
-        const west = bounds?.west;
-        const north = bounds?.north;
-        const south = bounds?.south;
-        if (east && west && north && south) {
-          map?.fitBounds(
-            {
-              east,
-              west,
-              north,
-              south,
-            },
-            0
-          );
-        }
+        map?.fitBounds(defaultsDeep(bounds, defaultBounds), 0);
       }
     });
   }, [routerState.queryListingsArgs?.bounds]);
@@ -93,9 +78,12 @@ const ListingsMap: FC<ListingsMapProps> = ({
         const bounds = map?.getBounds()?.toJSON();
 
         if (bounds) {
-          if (boundsPrevented) {
+          if (map?.get("boundsPrevented") !== false) {
             setDefaultBounds(bounds);
-            preventBounds(false);
+            if (!map?.get("defaultBounds")) {
+              map?.set("defaultBounds", bounds);
+            }
+            map?.set("boundsPrevented", false);
           } else {
             setRouterState({
               queryListingsArgs: {

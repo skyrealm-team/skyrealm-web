@@ -52,6 +52,7 @@ const PlaceField: FC<PlaceFieldProps> = ({
       isOptionEqualToValue={(option, prediction) => {
         return option.place_id === prediction.place_id;
       }}
+      includeInputInList={false}
       autoComplete
       sx={(theme) => ({
         width: 323,

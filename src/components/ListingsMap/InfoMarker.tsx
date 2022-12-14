@@ -71,6 +71,7 @@ const InfoMarker: FC<InfoMarkerProps> = ({
           anchor={marker}
           options={{
             minWidth: 485,
+            disableAutoPan: true,
           }}
         >
           <ListingsItem listing={listing} />

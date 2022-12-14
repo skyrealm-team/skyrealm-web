@@ -28,7 +28,7 @@ const Footer: FC = () => {
       >
         <LogoIcon />
         <Stack direction="row" gap={2} alignItems="center">
-          <Link color="inherit" underline="none" href="">
+          <Link target="_blank" color="inherit" underline="none" href="">
             Contact Us
           </Link>
           <Divider
@@ -38,7 +38,12 @@ const Footer: FC = () => {
               borderColor: "common.black",
             }}
           />
-          <Link color="inherit" underline="none" href={TermsOfService}>
+          <Link
+            target="_blank"
+            color="inherit"
+            underline="none"
+            href={TermsOfService}
+          >
             Terms of Use
           </Link>
           <Divider
@@ -48,7 +53,12 @@ const Footer: FC = () => {
               borderColor: "common.black",
             }}
           />
-          <Link color="inherit" underline="none" href={PrivacyPolicy}>
+          <Link
+            target="_blank"
+            color="inherit"
+            underline="none"
+            href={PrivacyPolicy}
+          >
             Privacy Policy
           </Link>
         </Stack>

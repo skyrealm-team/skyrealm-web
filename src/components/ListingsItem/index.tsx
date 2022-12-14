@@ -1,9 +1,14 @@
-import { FC, useRef } from "react";
+import { FC } from "react";
+
+import Link from "next/link";
 
 import {
   Avatar,
-  BoxProps,
   IconButton,
+  ListItem,
+  ListItemButton,
+  ListItemButtonProps,
+  ListItemProps,
   Skeleton,
   Stack,
   Typography,
@@ -18,11 +23,17 @@ import useOpen from "hooks/useOpen";
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
-export type ListingsItemProps = BoxProps & {
+export type ListingsItemProps = {
   listing?: SingleListing;
+  ListItemProps?: ListItemProps;
+  ListItemButtonProps?: ListItemButtonProps<"a">;
 };
 
-const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
+const ListingsItem: FC<ListingsItemProps> = ({
+  listing,
+  ListItemProps,
+  ListItemButtonProps,
+}) => {
   const [open, setOpen] = useOpen();
 
   const { data: userInfo, refetch: refetchUserInfo } = useUserInfo();
@@ -35,157 +46,176 @@ const ListingsItem: FC<ListingsItemProps> = ({ listing, ...props }) => {
   const isFavorite = userInfo?.getUserUserInfo.favorite?.includes(
     listing?.listingId
   );
-  const ref = useRef<HTMLDivElement>(null);
+
   return (
-    <Stack
-      ref={ref}
-      direction="row"
-      gap={2}
-      alignItems="center"
-      justifyContent="space-between"
-      {...props}
-      sx={{
-        flex: 1,
-        overflow: "hidden",
-        ...props.sx,
-      }}
-    >
-      <Stack
-        direction="row"
-        alignItems="center"
-        gap={1.5}
-        sx={{
-          overflow: "hidden",
+    <ListItem disablePadding {...ListItemProps}>
+      <Link
+        target="_blank"
+        href={{
+          pathname: `/listing/${listing?.listingId}/property-info`,
         }}
+        legacyBehavior
+        passHref
       >
-        <Avatar
-          variant="rounded"
+        <ListItemButton
+          href=""
+          target="_blank"
+          disableRipple
+          {...ListItemButtonProps}
           sx={{
-            width: "auto",
-            height: "auto",
-            p: 1,
-            background: "#F0F0F0",
-            borderRadius: "10px",
+            justifyContent: "space-between",
+            ...ListItemButtonProps?.sx,
           }}
         >
-          <ListingIcon />
-        </Avatar>
-        <Stack
-          gap={0.5}
-          sx={{
-            overflow: "hidden",
-          }}
-        >
-          {listing ? (
-            <>
-              <Typography
+          <Stack
+            direction="row"
+            gap={2}
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{
+              flex: 1,
+              overflow: "hidden",
+            }}
+          >
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap={1.5}
+              sx={{
+                overflow: "hidden",
+              }}
+            >
+              <Avatar
+                variant="rounded"
                 sx={{
-                  fontSize: 14,
-                  fontWeight: 700,
+                  width: "auto",
+                  height: "auto",
+                  p: 1,
+                  background: "#F0F0F0",
+                  borderRadius: "10px",
                 }}
-                noWrap
               >
-                {listing?.address}
-              </Typography>
-            </>
-          ) : (
-            <Skeleton />
-          )}
-          <Stack direction="row" gap={3}>
-            {[
-              {
-                key: "Visitors",
-                value: listing?.visitors,
-              },
-              {
-                key: "Frequency",
-                value: listing?.frequency,
-              },
-              {
-                key: "Medium income",
-                value: listing?.mediumIncome,
-              },
-            ].map(({ key, value }) => (
+                <ListingIcon />
+              </Avatar>
               <Stack
-                key={key}
+                gap={0.5}
                 sx={{
                   overflow: "hidden",
                 }}
               >
                 {listing ? (
-                  <Typography
-                    variant="subtitle1"
-                    color="primary"
-                    sx={{
-                      fontSize: 16,
-                      fontWeight: 700,
-                    }}
-                  >
-                    {formatter.format(value ?? 0)}
-                  </Typography>
+                  <>
+                    <Typography
+                      sx={{
+                        fontSize: 14,
+                        fontWeight: 700,
+                      }}
+                      noWrap
+                    >
+                      {listing?.address}
+                    </Typography>
+                  </>
                 ) : (
-                  <Skeleton width="40%" />
+                  <Skeleton />
                 )}
-                <Typography
-                  variant="subtitle2"
-                  noWrap
-                  sx={(theme) => ({
-                    color: theme.palette.text.disabled,
-                    fontWeight: 400,
-                  })}
-                >
-                  {key}
-                </Typography>
+                <Stack direction="row" gap={3}>
+                  {[
+                    {
+                      key: "Visitors",
+                      value: listing?.visitors,
+                    },
+                    {
+                      key: "Frequency",
+                      value: listing?.frequency,
+                    },
+                    {
+                      key: "Medium income",
+                      value: listing?.mediumIncome,
+                    },
+                  ].map(({ key, value }) => (
+                    <Stack
+                      key={key}
+                      sx={{
+                        overflow: "hidden",
+                      }}
+                    >
+                      {listing ? (
+                        <Typography
+                          variant="subtitle1"
+                          color="primary"
+                          sx={{
+                            fontSize: 16,
+                            fontWeight: 700,
+                          }}
+                        >
+                          {formatter.format(value ?? 0)}
+                        </Typography>
+                      ) : (
+                        <Skeleton width="40%" />
+                      )}
+                      <Typography
+                        variant="subtitle2"
+                        noWrap
+                        sx={(theme) => ({
+                          color: theme.palette.text.disabled,
+                          fontWeight: 400,
+                        })}
+                      >
+                        {key}
+                      </Typography>
+                    </Stack>
+                  ))}
+                </Stack>
               </Stack>
-            ))}
+            </Stack>
+            <Stack justifyContent="center">
+              <IconButton
+                onClick={async (event) => {
+                  event.preventDefault();
+
+                  if (!userInfo) {
+                    setOpen({
+                      ...open,
+                      signinDialog: true,
+                    });
+                    return;
+                  }
+
+                  try {
+                    setUserInfoData({
+                      getUserUserInfo: {
+                        ...userInfo.getUserUserInfo,
+                        favorite: !isFavorite
+                          ? [
+                              ...(userInfo.getUserUserInfo.favorite ?? []),
+                              listing?.listingId,
+                            ]
+                          : userInfo.getUserUserInfo.favorite?.filter(
+                              (item) => item !== listing?.listingId
+                            ),
+                      },
+                    });
+                    await updateFavoriteListings({
+                      listingId: listing?.listingId,
+                      toLike: !isFavorite,
+                    });
+                  } finally {
+                    refetchUserInfo();
+                  }
+                }}
+                disableFocusRipple
+                disabled={updateFavoriteListingsIsLoading}
+                sx={{
+                  p: 0,
+                }}
+              >
+                {isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon />}
+              </IconButton>
+            </Stack>
           </Stack>
-        </Stack>
-      </Stack>
-      <Stack justifyContent="center">
-        <IconButton
-          onClick={async (event) => {
-            event.stopPropagation();
-
-            if (!userInfo) {
-              setOpen({
-                ...open,
-                signinDialog: true,
-              });
-              return;
-            }
-
-            try {
-              setUserInfoData({
-                getUserUserInfo: {
-                  ...userInfo.getUserUserInfo,
-                  favorite: !isFavorite
-                    ? [
-                        ...(userInfo.getUserUserInfo.favorite ?? []),
-                        listing?.listingId,
-                      ]
-                    : userInfo.getUserUserInfo.favorite?.filter(
-                        (item) => item !== listing?.listingId
-                      ),
-                },
-              });
-              await updateFavoriteListings({
-                listingId: listing?.listingId,
-                toLike: !isFavorite,
-              });
-            } finally {
-              refetchUserInfo();
-            }
-          }}
-          disableFocusRipple
-          disabled={updateFavoriteListingsIsLoading}
-          sx={{
-            p: 0,
-          }}
-        >
-          {isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon />}
-        </IconButton>
-      </Stack>
-    </Stack>
+        </ListItemButton>
+      </Link>
+    </ListItem>
   );
 };
 

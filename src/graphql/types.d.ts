@@ -23,6 +23,12 @@ type Broker = {
   phone: Maybe<Scalars["String"]>;
 };
 
+type ListingFilter = {
+  __typename?: "ListingFilter";
+  filterName: Maybe<Scalars["String"]>;
+  filterValues: Maybe<Array<Maybe<Scalars["String"]>>>;
+};
+
 type Mutation = {
   __typename?: "Mutation";
   /** forget password */
@@ -72,6 +78,8 @@ type Queries = {
   getUserUserInfo: Maybe<User>;
   /** Login */
   login: Maybe<User>;
+  /** Returns available filters for listings */
+  queryListingFilters: Maybe<Array<Maybe<ListingFilter>>>;
   /** Returns listings that match the query param(s) */
   queryListings: Maybe<QueryListing>;
   /** Deprecated */

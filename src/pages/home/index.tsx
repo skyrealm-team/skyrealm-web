@@ -38,13 +38,15 @@ const Home: NextPage = () => {
               },
             }}
             ListingsItemProps={(listingId) => ({
-              onMouseOver: () => {
-                setHovering(listingId);
-              },
-              onMouseOut: () => {
-                if (hovering === listingId) {
-                  setHovering(undefined);
-                }
+              ListItemButtonProps: {
+                onMouseOver: () => {
+                  setHovering(listingId);
+                },
+                onMouseOut: () => {
+                  if (hovering === listingId) {
+                    setHovering(undefined);
+                  }
+                },
               },
             })}
           />

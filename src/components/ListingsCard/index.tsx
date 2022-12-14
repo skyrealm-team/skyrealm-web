@@ -1,7 +1,5 @@
 import { FC } from "react";
 
-import Link from "next/link";
-
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import {
   Avatar,
@@ -11,11 +9,11 @@ import {
   Divider,
   IconButton,
   List,
-  ListItem,
-  ListItemButton,
   Stack,
   Typography,
 } from "@mui/material";
+
+import { defaultsDeep } from "lodash";
 
 import EmptyIcon from "assets/icons/empty.svg";
 import ListingsItem, { ListingsItemProps } from "components/ListingsItem";
@@ -42,7 +40,10 @@ const ListingsCard: FC<ListingsCardProps> = ({
   const { data, isLoading, isFetching } = useQueryListings(
     {
       ...routerState.queryListingsArgs,
-      bounds: routerState.queryListingsArgs?.bounds ?? defaultBounds,
+      bounds: defaultsDeep(
+        routerState.queryListingsArgs?.bounds,
+        defaultBounds
+      ),
     },
     {
       keepPreviousData: true,
@@ -87,44 +88,29 @@ const ListingsCard: FC<ListingsCardProps> = ({
               {(isLoading
                 ? Array.from(new Array(100))
                 : data?.queryListings?.listings
-              )?.map((listing, index) => (
-                <ListItem
-                  key={listing?.listingId ?? index}
-                  divider
-                  disablePadding
-                >
-                  <Link
-                    href={{
-                      pathname: `/listing/${listing?.listingId}/property-info`,
+              )?.map((listing, index) => {
+                const itemProps = ListingsItemProps?.(listing?.listingId);
+                return (
+                  <ListingsItem
+                    key={listing?.listingId ?? index}
+                    {...itemProps}
+                    ListItemProps={{
+                      divider: true,
+                      ...itemProps?.ListItemProps,
                     }}
-                    legacyBehavior
-                  >
-                    <ListItemButton
-                      disableRipple
-                      sx={{
+                    ListItemButtonProps={{
+                      disabled: isFetching,
+                      ...itemProps?.ListItemButtonProps,
+                      sx: {
                         px: 2,
                         py: 1.5,
-                        justifyContent: "space-between",
-                      }}
-                      disabled={isLoading || isFetching}
-                    >
-                      <Stack
-                        direction="row"
-                        gap={2}
-                        sx={{
-                          flex: 1,
-                          overflow: "hidden",
-                        }}
-                      >
-                        <ListingsItem
-                          {...ListingsItemProps?.(listing?.listingId)}
-                          listing={listing}
-                        />
-                      </Stack>
-                    </ListItemButton>
-                  </Link>
-                </ListItem>
-              ))}
+                        ...itemProps?.ListItemButtonProps?.sx,
+                      },
+                    }}
+                    listing={listing}
+                  />
+                );
+              })}
             </List>
           )}
         </Stack>

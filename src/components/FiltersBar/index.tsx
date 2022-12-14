@@ -85,7 +85,7 @@ const FiltersBar: FC = () => {
             onChange={(event) => {
               setRouterState({
                 filters: {
-                  for: event.currentTarget.value as Filters["for"],
+                  for: event.target.value as Filters["for"],
                 },
               });
             }}
@@ -114,7 +114,7 @@ const FiltersBar: FC = () => {
             onChange={(event) => {
               setRouterState({
                 filters: {
-                  spaceUse: event.currentTarget.value,
+                  spaceUse: event.target.value,
                 },
               });
             }}
