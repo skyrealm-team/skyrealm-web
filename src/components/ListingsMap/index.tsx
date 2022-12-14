@@ -4,7 +4,7 @@ import { useUpdateEffect } from "react-use";
 import { LinearProgress } from "@mui/material";
 
 import { GoogleMap, GoogleMapProps } from "@react-google-maps/api";
-import { defaultsDeep } from "lodash";
+import { debounce, defaultsDeep } from "lodash";
 
 import { Filters } from "components/FiltersBar";
 import useQueryListings from "graphql/useQueryListings";
@@ -25,15 +25,16 @@ const ListingsMap: FC<ListingsMapProps> = ({
     queryListingsArgs: QueriesQueryListingsArgs;
     filters: Filters;
   }>();
+  const setRouterStateDebounced = debounce(setRouterState, 500);
 
   const [defaultBounds, setDefaultBounds] = useDefaultBounds();
   const { data, isFetching } = useQueryListings(
     {
       ...routerState.queryListingsArgs,
-      bounds: {
-        ...defaultBounds,
-        ...routerState.queryListingsArgs?.bounds,
-      },
+      bounds: defaultsDeep(
+        routerState.queryListingsArgs?.bounds,
+        defaultBounds
+      ),
       currentPage: 1,
       rowsPerPage: 500,
     },
@@ -65,10 +66,7 @@ const ListingsMap: FC<ListingsMapProps> = ({
       onLoad={(map) => {
         setMap(map);
         map?.fitBounds(
-          {
-            ...defaultBounds,
-            ...routerState.queryListingsArgs?.bounds,
-          },
+          defaultsDeep(routerState.queryListingsArgs?.bounds, defaultBounds),
           0
         );
 
@@ -85,9 +83,10 @@ const ListingsMap: FC<ListingsMapProps> = ({
             }
             map?.set("boundsPrevented", false);
           } else {
-            setRouterState({
+            setRouterStateDebounced({
               queryListingsArgs: {
                 bounds,
+                currentPage: 1,
               },
               filters: {
                 address: "",
