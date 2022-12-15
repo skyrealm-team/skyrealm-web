@@ -16,7 +16,10 @@ const SignInButton: FC = () => {
           signinDialog: true,
         });
       }}
-      size="small"
+      sx={{
+        width: 100,
+        height: 40,
+      }}
     >
       Sign in
     </Button>

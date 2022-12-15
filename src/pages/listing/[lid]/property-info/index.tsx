@@ -237,10 +237,10 @@ const PropertyInfo: NextPageWithLayout = () => {
                   <Stack direction="row" gap={3}>
                     <Stack gap={1.7} alignItems="center">
                       <Avatar
+                        variant="rounded"
                         sx={{
                           width: 170,
                           height: 170,
-                          borderRadius: 2.5,
                         }}
                       ></Avatar>
                       <Stack direction="row" alignItems="center" gap={1}>
@@ -252,7 +252,6 @@ const PropertyInfo: NextPageWithLayout = () => {
                         startIcon={<ContactSmallIcon />}
                         sx={{
                           fontSize: 18,
-                          fontWeight: 700,
                           width: 120,
                           height: 40,
                         }}
@@ -309,10 +308,10 @@ const PropertyInfo: NextPageWithLayout = () => {
             <Stack gap={3} alignItems="center">
               <Stack gap={1} alignItems="center">
                 <Avatar
+                  variant="rounded"
                   sx={{
                     width: 130,
                     height: 130,
-                    borderRadius: 2.5,
                   }}
                 ></Avatar>
                 <Stack alignItems="center">
@@ -336,7 +335,6 @@ const PropertyInfo: NextPageWithLayout = () => {
                 startIcon={<ContactIcon />}
                 sx={{
                   fontSize: 18,
-                  fontWeight: 700,
                   width: 190,
                   height: 50,
                 }}

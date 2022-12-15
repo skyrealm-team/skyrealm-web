@@ -334,8 +334,10 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
                 type="submit"
                 variant="contained"
                 disabled={!formik.isValid || formik.isSubmitting || !checked}
-                size="large"
                 fullWidth
+                sx={{
+                  height: 70,
+                }}
               >
                 {formik.isSubmitting ? <CircularProgress /> : <>Sign up</>}
               </Button>

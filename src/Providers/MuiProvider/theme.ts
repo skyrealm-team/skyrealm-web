@@ -99,53 +99,6 @@ theme.components = {
     defaultProps: {
       disableFocusRipple: true,
     },
-    variants: [
-      {
-        props: { variant: "outlined" },
-        style: {
-          border: `2px solid ${theme.palette.border?.main}`,
-          "&:hover": {
-            borderWidth: 2,
-          },
-        },
-      },
-      {
-        props: { size: "small" },
-        style: {
-          padding: `${theme.spacing(0.863)} ${theme.spacing(1.4)}`,
-        },
-      },
-      {
-        props: { size: "small", variant: "outlined" },
-        style: {
-          padding: `${theme.spacing(0.663)} ${theme.spacing(1.4)}`,
-        },
-      },
-      {
-        props: { size: "medium" },
-        style: {
-          padding: `${theme.spacing(1.7)} ${theme.spacing(3.4)}`,
-        },
-      },
-      {
-        props: { size: "medium", variant: "outlined" },
-        style: {
-          padding: `${theme.spacing(1.5)} ${theme.spacing(3.4)}`,
-        },
-      },
-      {
-        props: { size: "large" },
-        style: {
-          padding: `${theme.spacing(2.2)} ${theme.spacing(4.4)}`,
-        },
-      },
-      {
-        props: { size: "medium", variant: "outlined" },
-        style: {
-          padding: `${theme.spacing(2)} ${theme.spacing(4.4)}`,
-        },
-      },
-    ],
   },
   MuiInputBase: {
     variants: [
@@ -267,6 +220,26 @@ theme.components = {
         padding: 40,
       },
     },
+  },
+  MuiCard: {
+    variants: [
+      {
+        props: { square: false },
+        style: {
+          borderRadius: theme.spacing(1),
+        },
+      },
+    ],
+  },
+  MuiAvatar: {
+    variants: [
+      {
+        props: { variant: "rounded" },
+        style: {
+          borderRadius: theme.spacing(1),
+        },
+      },
+    ],
   },
 };
 

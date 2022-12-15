@@ -92,7 +92,6 @@ const ListingsItem: FC<ListingsItemProps> = ({
                   height: "auto",
                   p: 1,
                   background: "#F0F0F0",
-                  borderRadius: "10px",
                 }}
               >
                 <ListingIcon />

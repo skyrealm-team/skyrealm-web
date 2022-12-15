@@ -144,8 +144,10 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({ ...props }) => {
               type="submit"
               variant="contained"
               disabled={!formik.isValid || formik.isSubmitting}
-              size="large"
               fullWidth
+              sx={{
+                height: 70,
+              }}
             >
               {formik.isSubmitting ? (
                 <CircularProgress />

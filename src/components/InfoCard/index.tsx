@@ -26,16 +26,7 @@ const InfoCard: FC<PropsWithChildren<InfoCardProps>> = ({
   CardContentProps,
 }) => {
   return (
-    <Card
-      elevation={0}
-      {...CardProps}
-      sx={{
-        ...(!CardProps?.square && {
-          borderRadius: 2.5,
-        }),
-        ...CardProps?.sx,
-      }}
-    >
+    <Card elevation={0} square={false} {...CardProps}>
       {title && (
         <>
           <CardHeader

@@ -97,8 +97,10 @@ const ResetPassword: NextPage = () => {
               type="submit"
               variant="contained"
               disabled={!formik.isValid || formik.isSubmitting}
-              size="large"
               fullWidth
+              sx={{
+                height: 70,
+              }}
             >
               {formik.isSubmitting ? <CircularProgress /> : <>Reset Password</>}
             </Button>
