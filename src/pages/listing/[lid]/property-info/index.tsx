@@ -1,9 +1,8 @@
-import { Fragment, useRef } from "react";
-import { useAsync } from "react-use";
+import { CSSProperties, Fragment, useMemo, useRef } from "react";
+import { useWindowScroll } from "react-use";
 
 import {
   Avatar,
-  Box,
   Button,
   Divider,
   IconButton,
@@ -14,30 +13,44 @@ import {
 
 import { GoogleMap } from "@react-google-maps/api";
 
-import ChevronLeft from "assets/icons/chevron-left.svg";
-import ChevronRight from "assets/icons/chevron-right.svg";
 import ContactSmallIcon from "assets/icons/contact-small.svg";
 import ContactIcon from "assets/icons/contact.svg";
 import FavoriteIcon from "assets/icons/favorite.svg";
 import TelIcon from "assets/icons/tel.svg";
+import ImageCarousel from "components/ImageCarousel";
 import InfoCard from "components/InfoCard";
 import ListingLayout from "layouts/ListingLayout";
 import { NextPageWithLayout } from "pages/_app";
 
 const PropertyInfo: NextPageWithLayout = () => {
-  const images = useAsync(async () => {
-    const response = await fetch("https://picsum.photos/v2/list");
-    const result: {
-      id: string;
-      download_url: string;
-    }[] = await response.json();
-    return result;
-  });
+  const rootRef = useRef<HTMLDivElement>(null);
+  const brokerRef = useRef<HTMLDivElement>(null);
+  const windowScroll = useWindowScroll();
 
-  const ref = useRef<HTMLDivElement>(null);
+  const brokerStyle = useMemo<CSSProperties>(() => {
+    const rootRect = rootRef.current?.getBoundingClientRect();
+    const brokerRect = brokerRef.current?.getBoundingClientRect();
+    const right = (rootRect?.right ?? 0) - (brokerRect?.right ?? 0);
+    const top = (rootRect?.top ?? 0) + windowScroll.y;
+
+    if (!brokerRect) {
+      return {};
+    }
+
+    if (brokerRect?.top >= top + right) {
+      return {};
+    }
+
+    return {
+      position: "fixed",
+      width: brokerRect.width,
+      top: top + right,
+      right: right,
+    };
+  }, [windowScroll]);
 
   return (
-    <Stack>
+    <Stack ref={rootRef}>
       <InfoCard
         CardProps={{
           square: true,
@@ -77,84 +90,7 @@ const PropertyInfo: NextPageWithLayout = () => {
           </IconButton>
         </Stack>
       </InfoCard>
-      {images.value && (
-        <Stack
-          sx={{
-            position: "relative",
-          }}
-        >
-          <Unstable_Grid2
-            ref={ref}
-            container
-            wrap="nowrap"
-            sx={{
-              overflowX: "auto",
-              transform: "translateZ(0)",
-              msOverflowStyle: "none",
-              scrollbarWidth: "none",
-              "&::-webkit-scrollbar": {
-                display: "none",
-              },
-            }}
-          >
-            {images.value?.map((item) => (
-              <Unstable_Grid2
-                key={item.id}
-                xs={5}
-                sx={{
-                  flexShrink: 0,
-                }}
-              >
-                <Box
-                  component="img"
-                  src={item.download_url}
-                  alt=""
-                  sx={{
-                    width: "100%",
-                    aspectRatio: `${264 / 198}`,
-                    objectFit: "cover",
-                    // height: 0,
-                    // paddingTop: `${(198 / 264) * 100}%`,
-                    // background: `url(${item.download_url}) center/cover no-repeat`,
-                  }}
-                />
-              </Unstable_Grid2>
-            ))}
-          </Unstable_Grid2>
-          <IconButton
-            onClick={() => {
-              ref.current?.scrollBy({
-                behavior: "smooth",
-                left: -ref.current?.clientWidth,
-              });
-            }}
-            sx={{
-              position: "absolute",
-              left: 0,
-              top: "50%",
-              transform: "translateY(-50%)",
-            }}
-          >
-            <ChevronLeft />
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              ref.current?.scrollBy({
-                behavior: "smooth",
-                left: ref.current?.clientWidth,
-              });
-            }}
-            sx={{
-              position: "absolute",
-              right: 0,
-              top: "50%",
-              transform: "translateY(-50%)",
-            }}
-          >
-            <ChevronRight />
-          </IconButton>
-        </Stack>
-      )}
+      <ImageCarousel />
       <Stack
         direction="row"
         alignItems="flex-start"
@@ -207,7 +143,7 @@ const PropertyInfo: NextPageWithLayout = () => {
                   alignItems="center"
                   spacing={0}
                   xs={12}
-                  lg={6}
+                  sm={6}
                 >
                   <Unstable_Grid2 xs={6}>
                     <Typography
@@ -313,7 +249,6 @@ const PropertyInfo: NextPageWithLayout = () => {
                       </Stack>
                       <Button
                         variant="contained"
-                        size="small"
                         startIcon={<ContactSmallIcon />}
                         sx={{
                           fontSize: 18,
@@ -349,54 +284,68 @@ const PropertyInfo: NextPageWithLayout = () => {
             </Stack>
           </InfoCard>
         </Stack>
-        <InfoCard
-          CardContentProps={{
-            sx: {
-              px: 7.5,
-              py: 3.2,
+        <Stack
+          ref={brokerRef}
+          sx={{
+            display: {
+              xs: "none",
+              lg: "block",
             },
+            width: 340,
           }}
         >
-          <Stack gap={3} alignItems="center">
-            <Stack gap={1} alignItems="center">
-              <Avatar
-                sx={{
-                  width: 130,
-                  height: 130,
-                  borderRadius: 2.5,
-                }}
-              ></Avatar>
-              <Stack alignItems="center">
-                <Typography
-                  paragraph
+          <InfoCard
+            CardProps={{
+              sx: {
+                ...brokerStyle,
+              },
+            }}
+            CardContentProps={{
+              sx: {
+                py: 3.2,
+              },
+            }}
+          >
+            <Stack gap={3} alignItems="center">
+              <Stack gap={1} alignItems="center">
+                <Avatar
                   sx={{
-                    fontSize: 18,
-                    fontWeight: 700,
+                    width: 130,
+                    height: 130,
+                    borderRadius: 2.5,
                   }}
-                >
-                  Steve Johnson
-                </Typography>
-                <Stack direction="row" alignItems="center" gap={1}>
-                  <TelIcon />
-                  <Typography>(754) 465-7291</Typography>
+                ></Avatar>
+                <Stack alignItems="center">
+                  <Typography
+                    paragraph
+                    sx={{
+                      fontSize: 18,
+                      fontWeight: 700,
+                    }}
+                  >
+                    Steve Johnson
+                  </Typography>
+                  <Stack direction="row" alignItems="center" gap={1}>
+                    <TelIcon />
+                    <Typography>(754) 465-7291</Typography>
+                  </Stack>
                 </Stack>
               </Stack>
+              <Button
+                variant="contained"
+                startIcon={<ContactIcon />}
+                sx={{
+                  fontSize: 18,
+                  fontWeight: 700,
+                  width: 190,
+                  height: 50,
+                }}
+              >
+                Contact
+              </Button>
             </Stack>
-            <Button
-              variant="contained"
-              size="small"
-              startIcon={<ContactIcon />}
-              sx={{
-                fontSize: 18,
-                fontWeight: 700,
-                width: 190,
-                height: 50,
-              }}
-            >
-              Contact
-            </Button>
-          </Stack>
-        </InfoCard>
+          </InfoCard>
+        </Stack>
       </Stack>
     </Stack>
   );
