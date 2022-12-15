@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, ReactElement, ReactNode } from "react";
 import { useMount } from "react-use";
 
 import { AppProps } from "next/app";
@@ -7,20 +7,23 @@ import { useRouter } from "next/router";
 
 import { EmotionCache } from "@emotion/react";
 
-import { Stack } from "@mui/material";
-
 import Providers from "Providers";
+import { NextPage } from "next";
 import { parse } from "querystring";
 
-import Footer from "components/Footer";
-import ForgotPasswordDialog from "components/ForgotPasswordDialog";
-import Header from "components/Header";
-import SignInDialog from "components/SignInDialog";
-import SignUpDialog from "components/SignUpDialog";
 import { useGlobalRouterState } from "hooks/useRouterState";
+import AppLayout from "layouts/AppLayout";
+
+export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<
+  P,
+  IP
+> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
 
 export type MyAppProps = AppProps & {
   emotionCache?: EmotionCache;
+  Component: NextPageWithLayout;
 };
 
 const MyApp: FC<MyAppProps> = ({ Component, emotionCache, pageProps }) => {
@@ -49,6 +52,7 @@ const MyApp: FC<MyAppProps> = ({ Component, emotionCache, pageProps }) => {
       router.events.off("routeChangeComplete", routeChangeComplete);
     };
   });
+  const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <>
@@ -56,26 +60,7 @@ const MyApp: FC<MyAppProps> = ({ Component, emotionCache, pageProps }) => {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <Providers emotionCache={emotionCache}>
-        <>
-          <Stack
-            sx={{
-              minHeight: "100vh",
-            }}
-          >
-            <Header />
-            <Stack
-              sx={{
-                flex: 1,
-              }}
-            >
-              <Component {...pageProps} />
-            </Stack>
-            <Footer />
-          </Stack>
-          <SignUpDialog />
-          <SignInDialog />
-          <ForgotPasswordDialog />
-        </>
+        <AppLayout>{getLayout(<Component {...pageProps} />)}</AppLayout>
       </Providers>
     </>
   );

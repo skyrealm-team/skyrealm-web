@@ -1,3 +1,4 @@
+import { FC, PropsWithChildren } from "react";
 import { useMeasure } from "react-use";
 
 import Link from "next/link";
@@ -16,16 +17,14 @@ import {
   Toolbar,
 } from "@mui/material";
 
-import { NextPage } from "next";
-
 import NearbyResidentsIcon from "assets/icons/nearby-residents.svg";
 import PropertyInfoIcon from "assets/icons/property-info.svg";
 import VisitorProfileIcon from "assets/icons/visitor-profile.svg";
 import VisitsIcon from "assets/icons/visits.svg";
 
-const Listing: NextPage = () => {
+const ListingLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
-  const { lid, tab } = router.query;
+  const { lid } = router.query;
 
   const menu: {
     key: string;
@@ -101,7 +100,8 @@ const Listing: NextPage = () => {
         >
           {menu.map(
             ({ key, MenuItemProps, ListItemIconProps, ListItemTextProps }) => {
-              const selected = key === tab || MenuItemProps?.selected;
+              const selected =
+                router.asPath.includes(key) || MenuItemProps?.selected;
 
               return (
                 <Link
@@ -148,10 +148,13 @@ const Listing: NextPage = () => {
       <Stack
         sx={{
           width: "100%",
+          overflow: "hidden",
         }}
-      ></Stack>
+      >
+        {children}
+      </Stack>
     </Stack>
   );
 };
 
-export default Listing;
+export default ListingLayout;
