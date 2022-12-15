@@ -112,7 +112,13 @@ theme.components = {
       {
         props: { size: "small" },
         style: {
-          padding: `${theme.spacing(0.7)} ${theme.spacing(1.4)}`,
+          padding: `${theme.spacing(0.863)} ${theme.spacing(1.4)}`,
+        },
+      },
+      {
+        props: { size: "small", variant: "outlined" },
+        style: {
+          padding: `${theme.spacing(0.663)} ${theme.spacing(1.4)}`,
         },
       },
       {
@@ -122,9 +128,21 @@ theme.components = {
         },
       },
       {
+        props: { size: "medium", variant: "outlined" },
+        style: {
+          padding: `${theme.spacing(1.5)} ${theme.spacing(3.4)}`,
+        },
+      },
+      {
         props: { size: "large" },
         style: {
           padding: `${theme.spacing(2.2)} ${theme.spacing(4.4)}`,
+        },
+      },
+      {
+        props: { size: "medium", variant: "outlined" },
+        style: {
+          padding: `${theme.spacing(2)} ${theme.spacing(4.4)}`,
         },
       },
     ],

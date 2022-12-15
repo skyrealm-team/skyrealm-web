@@ -38,7 +38,7 @@ const Header: FC = () => {
               <SkyrealmIcon />
             </Stack>
           </Link>
-          <Stack direction="row" gap={3}>
+          <Stack direction="row" alignItems="center" gap={3}>
             {!isLoading && !userInfo && (
               <>
                 <SignInButton />

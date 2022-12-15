@@ -61,7 +61,6 @@ const ListingsMap: FC<ListingsMapProps> = ({
   return (
     <GoogleMap
       zoom={5}
-      clickableIcons={false}
       {...GoogleMapProps}
       onLoad={(map) => {
         setMap(map);
@@ -98,8 +97,9 @@ const ListingsMap: FC<ListingsMapProps> = ({
         GoogleMapProps?.onBoundsChanged?.();
       }}
       options={{
-        minZoom: 2,
         mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID,
+        minZoom: 2,
+        clickableIcons: false,
         controlSize: 30,
         disableDefaultUI: false,
         fullscreenControl: false,
