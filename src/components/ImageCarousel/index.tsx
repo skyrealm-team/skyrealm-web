@@ -32,6 +32,7 @@ const ImageCarousel: FC = () => {
             wrap="nowrap"
             sx={{
               overflowX: "auto",
+              overflowY: "hidden",
               transform: "translateZ(0)",
               msOverflowStyle: "none",
               scrollbarWidth: "none",
@@ -54,6 +55,7 @@ const ImageCarousel: FC = () => {
                   alt=""
                   sx={{
                     width: "100%",
+                    height: "100%",
                     aspectRatio: `${264 / 198}`,
                     objectFit: "cover",
                   }}

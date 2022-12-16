@@ -17,7 +17,7 @@ import {
 
 import parse from "autosuggest-highlight/parse";
 
-import LocationIcon from "assets/icons/location.svg";
+import LocationSearchingIcon from "assets/icons/location-searching.svg";
 import SearchIcon from "assets/icons/search.svg";
 import useEffectState from "hooks/useEffectState";
 import usePlacePredictions from "hooks/usePlacePredictions";
@@ -104,7 +104,7 @@ const PlaceField: FC<PlaceFieldProps> = ({
             },
             startAdornment: (
               <InputAdornment position="start">
-                <LocationIcon />
+                <LocationSearchingIcon />
               </InputAdornment>
             ),
             endAdornment: (

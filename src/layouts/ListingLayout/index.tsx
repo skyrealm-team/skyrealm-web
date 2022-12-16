@@ -145,7 +145,14 @@ const ListingLayout: FC<PropsWithChildren> = ({ children }) => {
           )}
         </MenuList>
       </Drawer>
-      {children}
+      <Stack
+        sx={{
+          flex: 1,
+          overflow: "hidden",
+        }}
+      >
+        {children}
+      </Stack>
     </Stack>
   );
 };
