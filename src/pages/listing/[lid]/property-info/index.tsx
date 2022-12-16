@@ -53,6 +53,7 @@ const PropertyInfo: NextPageWithLayout = () => {
       <PropertyHeader />
       <ImageCarousel />
       <Container
+        maxWidth={false}
         sx={{
           py: 3,
         }}
