@@ -22,7 +22,7 @@ import PropertyInfoIcon from "assets/icons/property-info.svg";
 import VisitorProfileIcon from "assets/icons/visitor-profile.svg";
 import VisitsIcon from "assets/icons/visits.svg";
 
-const ListingLayout: FC<PropsWithChildren> = ({ children }) => {
+const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
   const { lid } = router.query;
 
@@ -157,4 +157,4 @@ const ListingLayout: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export default ListingLayout;
+export default PropertyLayout;

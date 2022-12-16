@@ -11,7 +11,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import InfoCard from "components/InfoCard";
 import PropertyHeader from "components/PropertyHeader";
 import PropertyMap from "components/PropertyMap";
-import ListingLayout from "layouts/ListingLayout";
+import PropertyLayout from "layouts/PropertyLayout";
 import { NextPageWithLayout } from "pages/_app";
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
@@ -144,7 +144,7 @@ const Visits: NextPageWithLayout = () => {
 };
 
 Visits.getLayout = (page) => {
-  return <ListingLayout>{page}</ListingLayout>;
+  return <PropertyLayout>{page}</PropertyLayout>;
 };
 
 export default Visits;

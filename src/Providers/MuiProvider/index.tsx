@@ -1,7 +1,6 @@
 import { FC, PropsWithChildren } from "react";
 
 import { CacheProvider, EmotionCache } from "@emotion/react";
-
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
 import createEmotionCache from "./createEmotionCache";
