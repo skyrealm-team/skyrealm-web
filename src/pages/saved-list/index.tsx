@@ -72,7 +72,6 @@ const SavedList: NextPageWithLayout = () => {
                         availableSpaces: [],
                         brokersInfo: [],
                         frequency: 0,
-                        isFavorite: true,
                         latitude: "",
                         longitude: "",
                         mediumIncome: 0,

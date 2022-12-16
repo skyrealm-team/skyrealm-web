@@ -1,14 +1,12 @@
 import { FC } from "react";
 
-import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import {
-  Avatar,
   Card,
   CardActions,
   CardProps,
   Divider,
-  IconButton,
   List,
+  Pagination,
   Stack,
   Typography,
 } from "@mui/material";
@@ -49,7 +47,6 @@ const ListingsCard: FC<ListingsCardProps> = ({
       keepPreviousData: true,
     }
   );
-  const currentPage = data?.queryListings?.currentPage ?? 1;
 
   return (
     <Card
@@ -117,50 +114,24 @@ const ListingsCard: FC<ListingsCardProps> = ({
         {!!data?.queryListings && (
           <>
             <Divider />
-            <CardActions>
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="center"
-                width="100%"
-              >
-                <IconButton
-                  size="small"
-                  onClick={() => {
-                    setRouterState({
-                      queryListingsArgs: {
-                        currentPage: currentPage - 1,
-                      },
-                    });
-                  }}
-                  disabled={isFetching || currentPage === 1}
-                >
-                  <NavigateBefore />
-                </IconButton>
-                <Avatar
-                  variant="rounded"
-                  color="primary"
-                  sx={{
-                    width: 30,
-                    height: 30,
-                  }}
-                >
-                  <Typography variant="caption">{currentPage}</Typography>
-                </Avatar>
-                <IconButton
-                  size="small"
-                  onClick={() => {
-                    setRouterState({
-                      queryListingsArgs: {
-                        currentPage: currentPage + 1,
-                      },
-                    });
-                  }}
-                  disabled={isFetching || !data?.queryListings?.hasNextPage}
-                >
-                  <NavigateNext />
-                </IconButton>
-              </Stack>
+            <CardActions
+              sx={{
+                justifyContent: "center",
+              }}
+            >
+              <Pagination
+                count={data.queryListings.totalPage}
+                page={data.queryListings.currentPage}
+                shape="rounded"
+                color="primary"
+                onChange={(event, page) => {
+                  setRouterState({
+                    queryListingsArgs: {
+                      currentPage: page,
+                    },
+                  });
+                }}
+              />
             </CardActions>
           </>
         )}

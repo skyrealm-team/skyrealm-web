@@ -82,8 +82,6 @@ type Queries = {
   queryListingFilters: Maybe<Array<Maybe<ListingFilter>>>;
   /** Returns listings that match the query param(s) */
   queryListings: Maybe<QueryListing>;
-  /** Deprecated */
-  queryListingsLite: Maybe<Array<Maybe<SingleListingLite>>>;
 };
 
 /** All User and Listing apis available */
@@ -94,24 +92,18 @@ type QueriesLoginArgs = {
 
 /** All User and Listing apis available */
 type QueriesQueryListingsArgs = {
-  addressState: InputMaybe<Scalars["String"]>;
   bounds: InputMaybe<QueryListingBounds>;
   currentPage: InputMaybe<Scalars["Int"]>;
-  listingId: InputMaybe<Scalars["String"]>;
   rowsPerPage: InputMaybe<Scalars["Int"]>;
-};
-
-/** All User and Listing apis available */
-type QueriesQueryListingsLiteArgs = {
-  freeText: InputMaybe<Scalars["String"]>;
+  spaceUse: InputMaybe<Scalars["String"]>;
 };
 
 type QueryListing = {
   __typename?: "QueryListing";
   currentPage: Maybe<Scalars["Int"]>;
-  hasNextPage: Maybe<Scalars["Boolean"]>;
   listings: Maybe<Array<Maybe<SingleListing>>>;
   rowsPerPage: Maybe<Scalars["Int"]>;
+  totalPage: Maybe<Scalars["Int"]>;
 };
 
 type QueryListingBounds = {
@@ -127,20 +119,11 @@ type SingleListing = {
   availableSpaces: Maybe<Array<Maybe<Scalars["String"]>>>;
   brokersInfo: Maybe<Array<Maybe<Broker>>>;
   frequency: Maybe<Scalars["Int"]>;
-  isFavorite: Maybe<Scalars["Boolean"]>;
   latitude: Maybe<Scalars["String"]>;
   listingId: Maybe<Scalars["String"]>;
   longitude: Maybe<Scalars["String"]>;
   mediumIncome: Maybe<Scalars["Int"]>;
   visitors: Maybe<Scalars["Int"]>;
-};
-
-type SingleListingLite = {
-  __typename?: "SingleListingLite";
-  isFavorite: Maybe<Scalars["Boolean"]>;
-  latitude: Maybe<Scalars["String"]>;
-  listingId: Maybe<Scalars["String"]>;
-  longitude: Maybe<Scalars["String"]>;
 };
 
 type User = {

@@ -8,21 +8,19 @@ import SelectField from "components/SelectField";
 import usePlaceDetails from "hooks/usePlaceDetails";
 import useRouterState from "hooks/useRouterState";
 
-export type Filters = {
+export type ListingsFilters = {
   address?: string;
   placeId?: string;
   for?: "lease" | "sale";
-  spaceUse?: string;
 };
 
-const FiltersBar: FC = () => {
+const ListingsFiltersBar: FC = () => {
   const { routerState, setRouterState } = useRouterState<{
     queryListingsArgs: QueriesQueryListingsArgs;
-    filters: Filters;
+    filters: ListingsFilters;
   }>({
     filters: {
       for: "lease",
-      spaceUse: "",
     },
   });
 
@@ -32,7 +30,7 @@ const FiltersBar: FC = () => {
 
   useUpdateEffect(() => {
     setRouterState({
-      filters: {
+      queryListingsArgs: {
         spaceUse: "",
       },
     });
@@ -85,7 +83,7 @@ const FiltersBar: FC = () => {
             onChange={(event) => {
               setRouterState({
                 filters: {
-                  for: event.target.value as Filters["for"],
+                  for: event.target.value as ListingsFilters["for"],
                 },
               });
             }}
@@ -110,10 +108,10 @@ const FiltersBar: FC = () => {
             ))}
           </SelectField>
           <SelectField
-            value={routerState.filters?.spaceUse}
+            value={routerState.queryListingsArgs?.spaceUse ?? ""}
             onChange={(event) => {
               setRouterState({
-                filters: {
+                queryListingsArgs: {
                   spaceUse: event.target.value,
                 },
               });
@@ -135,53 +133,53 @@ const FiltersBar: FC = () => {
               ? [
                   {
                     key: "Retail",
-                    value: "retail",
+                    value: "Retail",
                   },
                   {
                     key: "Restaurant",
-                    value: "restaurant",
+                    value: "Restaurant",
                   },
                   {
                     key: "Flex",
-                    value: "flex",
+                    value: "Flex",
                   },
                   {
                     key: "Office",
-                    value: "office",
+                    value: "Office",
                   },
                   {
                     key: "Medical",
-                    value: "medical",
+                    value: "Medical",
                   },
                 ]
               : [
                   {
                     key: "Retail",
-                    value: "retail",
+                    value: "Retail",
                   },
                   {
                     key: "Restaurant",
-                    value: "restaurant",
+                    value: "Restaurant",
                   },
                   {
                     key: "Office",
-                    value: "office",
+                    value: "Office",
                   },
                   {
                     key: "Medical",
-                    value: "medical",
+                    value: "Medical",
                   },
                   {
                     key: "Shopping Center",
-                    value: "shopping-center",
+                    value: "Shopping Center",
                   },
                   {
                     key: "Multifamily",
-                    value: "multifamily",
+                    value: "Multifamily",
                   },
                   {
                     key: "Hospitality",
-                    value: "hospitality",
+                    value: "Hospitality",
                   },
                 ]
             ).map(({ key, value }) => (
@@ -196,4 +194,4 @@ const FiltersBar: FC = () => {
   );
 };
 
-export default FiltersBar;
+export default ListingsFiltersBar;

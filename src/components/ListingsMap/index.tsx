@@ -6,7 +6,7 @@ import { LinearProgress } from "@mui/material";
 import { GoogleMap, GoogleMapProps } from "@react-google-maps/api";
 import { debounce, defaultsDeep } from "lodash";
 
-import { Filters } from "components/FiltersBar";
+import { ListingsFilters } from "components/ListingsFiltersBar";
 import useQueryListings from "graphql/useQueryListings";
 import useDefaultBounds from "hooks/useDefaultBounds";
 import useRouterState from "hooks/useRouterState";
@@ -23,7 +23,7 @@ const ListingsMap: FC<ListingsMapProps> = ({
 }) => {
   const { routerState, setRouterState } = useRouterState<{
     queryListingsArgs: QueriesQueryListingsArgs;
-    filters: Filters;
+    filters: ListingsFilters;
   }>();
   const setRouterStateDebounced = debounce(setRouterState, 500);
 
@@ -35,7 +35,8 @@ const ListingsMap: FC<ListingsMapProps> = ({
         routerState.queryListingsArgs?.bounds,
         defaultBounds
       ),
-      currentPage: 1,
+      currentPage:
+        ~~(((routerState.queryListingsArgs?.currentPage ?? 1) - 1) / 5) + 1,
       rowsPerPage: 500,
     },
     {

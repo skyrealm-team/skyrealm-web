@@ -20,9 +20,7 @@ export const getUserUserInfoQuery = gql`
   }
 `;
 
-export const getUserUserInfoRequest = (
-  options?: Partial<RequestOptions<QueriesQueryListingsArgs>>
-) => {
+export const getUserUserInfoRequest = (options?: Partial<RequestOptions>) => {
   return client.request({
     ...options,
     document: getUserUserInfoQuery,

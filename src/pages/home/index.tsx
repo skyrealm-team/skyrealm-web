@@ -4,8 +4,8 @@ import { Stack } from "@mui/material";
 
 import { NextPage } from "next";
 
-import FiltersBar from "components/FiltersBar";
 import ListingsCard from "components/ListingsCard";
+import ListingsFiltersBar from "components/ListingsFiltersBar";
 import ListingsMap from "components/ListingsMap";
 
 const Home: NextPage = () => {
@@ -13,7 +13,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <FiltersBar />
+      <ListingsFiltersBar />
       <Stack
         direction="row"
         sx={{

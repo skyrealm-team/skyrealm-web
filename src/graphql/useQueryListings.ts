@@ -8,23 +8,20 @@ export const queryListingsQuery = gql`
   query queryListings(
     $currentPage: Int
     $rowsPerPage: Int
-    $bounds: QueryListingBounds
-    $listingId: String
-    $addressState: String
+    $bounds: QueryListingBounds!
+    $spaceUse: String
   ) {
     queryListings(
       currentPage: $currentPage
       rowsPerPage: $rowsPerPage
       bounds: $bounds
-      listingId: $listingId
-      addressState: $addressState
+      spaceUse: $spaceUse
     ) {
       currentPage
       rowsPerPage
-      hasNextPage
+      totalPage
       listings {
         listingId
-        isFavorite
         latitude
         longitude
         address
