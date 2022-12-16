@@ -1,9 +1,7 @@
 import { FC } from "react";
 import { useMeasure } from "react-use";
 
-import Link from "next/link";
-
-import { AppBar, Stack, Toolbar } from "@mui/material";
+import { AppBar, Link, Stack, Toolbar } from "@mui/material";
 
 import LogoIcon from "assets/icons/logo.svg";
 import SkyrealmIcon from "assets/icons/skyrealm.svg";

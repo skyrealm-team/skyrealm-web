@@ -1,21 +1,50 @@
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
+
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 import {
   Avatar,
   IconButton,
   ListItemIcon,
+  ListItemIconProps,
   Menu,
   MenuItem,
+  MenuItemProps,
 } from "@mui/material";
 
 import LogoutIcon from "assets/icons/logout.svg";
+import SavedListIcon from "assets/icons/saved-list.svg";
 import useLogoff from "graphql/useLogoff";
 import useUserInfo from "graphql/useUserInfo";
 
 const AvatarButton: FC = () => {
+  const router = useRouter();
+
   const { data: userInfo } = useUserInfo();
   const { mutateAsync: logoff } = useLogoff();
   const [anchorEl, setAnchorEl] = useState<HTMLElement>();
+
+  const menu = useMemo<
+    {
+      pathname: string;
+      MenuItemProps: MenuItemProps;
+      ListItemIconProps: ListItemIconProps;
+    }[]
+  >(
+    () => [
+      {
+        pathname: "/saved-list",
+        MenuItemProps: {
+          children: "Saved List",
+        },
+        ListItemIconProps: {
+          children: <SavedListIcon />,
+        },
+      },
+    ],
+    []
+  );
 
   if (!userInfo) {
     return null;
@@ -57,6 +86,38 @@ const AvatarButton: FC = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
+        {menu.map(({ pathname, MenuItemProps, ListItemIconProps }, index) => {
+          const selected = router.asPath === pathname;
+
+          return (
+            <Link
+              key={index}
+              href={{
+                pathname,
+              }}
+              legacyBehavior
+            >
+              <MenuItem
+                selected={selected}
+                {...MenuItemProps}
+                sx={(theme) => ({
+                  ...(selected && {
+                    color: theme.palette.primary.main,
+                  }),
+                })}
+              >
+                <ListItemIcon
+                  {...ListItemIconProps}
+                  sx={{
+                    color: "inherit",
+                    ...ListItemIconProps.sx,
+                  }}
+                />
+                {MenuItemProps.children}
+              </MenuItem>
+            </Link>
+          );
+        })}
         <MenuItem
           onClick={async () => {
             await logoff({
@@ -64,7 +125,11 @@ const AvatarButton: FC = () => {
             });
           }}
         >
-          <ListItemIcon>
+          <ListItemIcon
+            sx={{
+              color: "inherit",
+            }}
+          >
             <LogoutIcon />
           </ListItemIcon>
           Logout

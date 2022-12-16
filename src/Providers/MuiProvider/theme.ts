@@ -184,6 +184,9 @@ theme.components = {
         "&.Mui-selected": {
           background: theme.palette.border?.light,
         },
+        "&:hover": {
+          background: alpha(theme.palette.border?.light ?? "", 0.7),
+        },
       },
     },
   },
