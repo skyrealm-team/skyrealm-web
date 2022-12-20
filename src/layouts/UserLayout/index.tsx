@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren } from "react";
-import { useMeasure } from "react-use";
+import { useMeasure, useUpdateEffect } from "react-use";
 
+import Error from "next/error";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -18,10 +19,17 @@ import {
 } from "@mui/material";
 
 import FavoriteIcon from "assets/icons/favorite.svg";
+import useUserInfo from "graphql/useUserInfo";
 
 const UserLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
   const { lid } = router.query;
+
+  const {
+    data: userInfo,
+    isLoading: userInfoIsLoading,
+    isFetched: userInfoIsFetched,
+  } = useUserInfo();
 
   const menu: {
     key: string;
@@ -41,6 +49,19 @@ const UserLayout: FC<PropsWithChildren> = ({ children }) => {
   ];
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
+
+  useUpdateEffect(() => {
+    if (
+      (!userInfoIsFetched && !userInfoIsLoading) ||
+      (userInfoIsFetched && !userInfo)
+    ) {
+      router.push("/");
+    }
+  }, [userInfoIsFetched, userInfoIsLoading, userInfo]);
+
+  if (!userInfoIsLoading && !userInfo) {
+    return <Error statusCode={401} />;
+  }
 
   return (
     <Stack direction="row">

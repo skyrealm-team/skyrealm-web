@@ -124,10 +124,6 @@ const AvatarButton: FC = () => {
             await logoff({
               email: userInfo.getUserUserInfo.email,
             });
-
-            if (router.asPath.startsWith("/user")) {
-              router.push("/");
-            }
           }}
         >
           <ListItemIcon
