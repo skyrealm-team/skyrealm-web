@@ -13,8 +13,9 @@ import {
   MenuItemProps,
 } from "@mui/material";
 
+import FavoriteIcon from "assets/icons/favorite.svg";
 import LogoutIcon from "assets/icons/logout.svg";
-import SavedListIcon from "assets/icons/saved-list.svg";
+import Loading from "components/Loading";
 import useLogoff from "graphql/useLogoff";
 import useUserInfo from "graphql/useUserInfo";
 
@@ -22,7 +23,7 @@ const AvatarButton: FC = () => {
   const router = useRouter();
 
   const { data: userInfo } = useUserInfo();
-  const { mutateAsync: logoff } = useLogoff();
+  const { mutateAsync: logoff, isLoading: logoffIsLoading } = useLogoff();
   const [anchorEl, setAnchorEl] = useState<HTMLElement>();
 
   const menu = useMemo<
@@ -34,12 +35,12 @@ const AvatarButton: FC = () => {
   >(
     () => [
       {
-        pathname: "/saved-list",
+        pathname: "/user/saved-list",
         MenuItemProps: {
           children: "Saved List",
         },
         ListItemIconProps: {
-          children: <SavedListIcon />,
+          children: <FavoriteIcon />,
         },
       },
     ],
@@ -123,6 +124,10 @@ const AvatarButton: FC = () => {
             await logoff({
               email: userInfo.getUserUserInfo.email,
             });
+
+            if (router.asPath.startsWith("/user")) {
+              router.push("/");
+            }
           }}
         >
           <ListItemIcon
@@ -135,6 +140,7 @@ const AvatarButton: FC = () => {
           Logout
         </MenuItem>
       </Menu>
+      <Loading open={logoffIsLoading} />
     </>
   );
 };

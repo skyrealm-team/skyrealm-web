@@ -14,8 +14,8 @@ import {
   Typography,
 } from "@mui/material";
 
-import FavoriteSelectedIcon from "assets/icons/favorite-selected.svg";
-import FavoriteIcon from "assets/icons/favorite.svg";
+import FavoriteButtonSelectedIcon from "assets/icons/favorite-button-selected.svg";
+import FavoriteButtonIcon from "assets/icons/favorite-button.svg";
 import ListingIcon from "assets/icons/listing.svg";
 import useUpdateFavoriteListings from "graphql/useUpdateFavoriteListings";
 import useUserInfo, { useSetUserInfoData } from "graphql/useUserInfo";
@@ -202,13 +202,13 @@ const ListingsItem: FC<ListingsItemProps> = ({
                     refetchUserInfo();
                   }
                 }}
-                disableFocusRipple
                 disabled={updateFavoriteListingsIsLoading}
-                sx={{
-                  p: 0,
-                }}
               >
-                {isFavorite ? <FavoriteSelectedIcon /> : <FavoriteIcon />}
+                {isFavorite ? (
+                  <FavoriteButtonSelectedIcon />
+                ) : (
+                  <FavoriteButtonIcon />
+                )}
               </IconButton>
             </Stack>
           </Stack>

@@ -1,10 +1,13 @@
 import { FC } from "react";
 
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop, BackdropProps, CircularProgress } from "@mui/material";
 
-const Loading: FC = () => {
+import { Optional } from "utility-types";
+
+export type LoadingProps = Optional<BackdropProps, "open">;
+const Loading: FC<LoadingProps> = ({ ...props }) => {
   return (
-    <Backdrop open={true} invisible>
+    <Backdrop open={true} {...props}>
       <CircularProgress />
     </Backdrop>
   );

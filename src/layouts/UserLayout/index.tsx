@@ -17,7 +17,7 @@ import {
   Toolbar,
 } from "@mui/material";
 
-import SavedListIcon from "assets/icons/saved-list.svg";
+import FavoriteIcon from "assets/icons/favorite.svg";
 
 const UserLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
@@ -32,7 +32,7 @@ const UserLayout: FC<PropsWithChildren> = ({ children }) => {
     {
       key: "saved-list",
       ListItemIconProps: {
-        children: <SavedListIcon />,
+        children: <FavoriteIcon />,
       },
       ListItemTextProps: {
         children: "Saved List",

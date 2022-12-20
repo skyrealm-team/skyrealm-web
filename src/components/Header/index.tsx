@@ -20,9 +20,10 @@ const Header: FC = () => {
     <>
       <AppBar
         color="inherit"
-        sx={{
+        sx={(theme) => ({
           boxShadow: "0px 1px 10px rgba(0, 0, 0, 0.1)",
-        }}
+          zIndex: theme.zIndex.appBar + 1,
+        })}
       >
         <Toolbar
           ref={ref}
