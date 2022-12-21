@@ -38,13 +38,7 @@ export const registerRequest = (
 };
 
 export const useRegister = (
-  options?: UseMutationOptions<
-    {
-      register: User;
-    },
-    ClientError,
-    MutationRegisterArgs
-  >
+  options?: UseMutationOptions<Mutation, ClientError, MutationRegisterArgs>
 ) => {
   const [, setAuthToken] = useLocalStorage<string>("auth-token");
   const queryClient = useQueryClient();
@@ -52,7 +46,7 @@ export const useRegister = (
   return useMutation([useRegister.name], registerRequest, {
     ...options,
     onSuccess: async (data, variables, context) => {
-      setAuthToken(data.register.authToken);
+      setAuthToken(data.register?.authToken);
       await queryClient.refetchQueries([useUserInfo.name]);
 
       options?.onSuccess?.(data, variables, context);

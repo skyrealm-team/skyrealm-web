@@ -22,13 +22,7 @@ export const loginRequest = (
 };
 
 export const useLogin = (
-  options?: UseMutationOptions<
-    {
-      login: User;
-    },
-    ClientError,
-    QueriesLoginArgs
-  >
+  options?: UseMutationOptions<Queries, ClientError, QueriesLoginArgs>
 ) => {
   const [, setAuthToken] = useLocalStorage<string>("auth-token");
   const queryClient = useQueryClient();
@@ -36,7 +30,7 @@ export const useLogin = (
   return useMutation([useLogin.name], loginRequest, {
     ...options,
     onSuccess: async (data, variables, context) => {
-      setAuthToken(data.login.authToken);
+      setAuthToken(data.login?.authToken);
       await queryClient.refetchQueries([useUserInfo.name]);
 
       options?.onSuccess?.(data, variables, context);

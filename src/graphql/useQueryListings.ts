@@ -26,6 +26,7 @@ export const queryListingsQuery = gql`
         longitude
         address
         visitors
+        totalVisits
         frequency
         mediumIncome
         availableSpaces
@@ -55,15 +56,11 @@ export const queryListingsRequest = (
   });
 };
 
-export const useQueryListings = <
-  TData = {
-    queryListings: QueryListing;
-  }
->(
+export const useQueryListings = (
   variables?: Partial<QueriesQueryListingsArgs>,
-  options?: UseQueryOptions<TData, ClientError>
+  options?: UseQueryOptions<Queries, ClientError>
 ) => {
-  return useQuery<TData, ClientError>(
+  return useQuery<Queries, ClientError>(
     [useQueryListings.name, variables],
     ({ signal }) => {
       return queryListingsRequest({

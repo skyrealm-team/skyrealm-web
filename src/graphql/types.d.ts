@@ -14,6 +14,7 @@ type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  BigInt: any;
 };
 
 type Broker = {
@@ -82,6 +83,8 @@ type Queries = {
   queryListingFilters: Maybe<Array<Maybe<ListingFilter>>>;
   /** Returns listings that match the query param(s) */
   queryListings: Maybe<QueryListing>;
+  /** Returns listings that match the query param(s) */
+  queryListingsByIDs: Maybe<QueryListings>;
 };
 
 /** All User and Listing apis available */
@@ -96,6 +99,11 @@ type QueriesQueryListingsArgs = {
   currentPage: InputMaybe<Scalars["Int"]>;
   rowsPerPage: InputMaybe<Scalars["Int"]>;
   spaceUse: InputMaybe<Scalars["String"]>;
+};
+
+/** All User and Listing apis available */
+type QueriesQueryListingsByIDsArgs = {
+  listingIDs: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
 };
 
 type QueryListing = {
@@ -113,17 +121,23 @@ type QueryListingBounds = {
   west: InputMaybe<Scalars["Float"]>;
 };
 
+type QueryListings = {
+  __typename?: "QueryListings";
+  listings: Maybe<Array<Maybe<SingleListing>>>;
+};
+
 type SingleListing = {
   __typename?: "SingleListing";
   address: Maybe<Scalars["String"]>;
   availableSpaces: Maybe<Array<Maybe<Scalars["String"]>>>;
   brokersInfo: Maybe<Array<Maybe<Broker>>>;
-  frequency: Maybe<Scalars["Int"]>;
+  frequency: Maybe<Scalars["BigInt"]>;
   latitude: Maybe<Scalars["String"]>;
   listingId: Maybe<Scalars["String"]>;
   longitude: Maybe<Scalars["String"]>;
-  mediumIncome: Maybe<Scalars["Int"]>;
-  visitors: Maybe<Scalars["Int"]>;
+  mediumIncome: Maybe<Scalars["BigInt"]>;
+  totalVisits: Maybe<Scalars["BigInt"]>;
+  visitors: Maybe<Scalars["BigInt"]>;
 };
 
 type User = {

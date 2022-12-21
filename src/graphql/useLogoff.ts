@@ -22,13 +22,7 @@ export const logoffRequest = (
 };
 
 export const useLogoff = (
-  options?: UseMutationOptions<
-    {
-      data: User;
-    },
-    ClientError,
-    MutationLogoffArgs
-  >
+  options?: UseMutationOptions<Mutation, ClientError, MutationLogoffArgs>
 ) => {
   const [, , removeAuthToken] = useLocalStorage<string>("auth-token");
   const queryClient = useQueryClient();

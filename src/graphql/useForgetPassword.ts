@@ -22,9 +22,7 @@ export const forgetPasswordRequest = (
 
 export const useForgetPassword = (
   options?: UseMutationOptions<
-    {
-      forgetPassword: User;
-    },
+    Mutation,
     ClientError,
     MutationForgetPasswordArgs
   >

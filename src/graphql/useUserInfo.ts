@@ -27,16 +27,12 @@ export const getUserUserInfoRequest = (options?: Partial<RequestOptions>) => {
   });
 };
 
-export const useUserInfo = <
-  TData = {
-    getUserUserInfo: User;
-  }
->(
-  options?: UseQueryOptions<TData, ClientError>
+export const useUserInfo = (
+  options?: UseQueryOptions<Queries, ClientError>
 ) => {
   const [authToken] = useLocalStorage<string>("auth-token");
 
-  return useQuery<TData, ClientError>(
+  return useQuery<Queries, ClientError>(
     [useUserInfo.name],
     () => {
       return getUserUserInfoRequest();
@@ -48,15 +44,11 @@ export const useUserInfo = <
   );
 };
 
-export const useSetUserInfoData = <
-  TData = {
-    getUserUserInfo: User;
-  }
->() => {
+export const useSetUserInfoData = () => {
   const queryClient = useQueryClient();
 
-  return (data: TData) => {
-    queryClient.setQueryData<TData>([useUserInfo.name], data);
+  return (data: Partial<Queries>) => {
+    queryClient.setQueryData<Partial<Queries>>([useUserInfo.name], data);
   };
 };
 

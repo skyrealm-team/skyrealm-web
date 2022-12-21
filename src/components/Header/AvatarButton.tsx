@@ -63,8 +63,8 @@ const AvatarButton: FC = () => {
             bgcolor: theme.palette.primary.main,
           })}
         >
-          {userInfo.getUserUserInfo.firstName?.[0].toUpperCase() ?? ""}
-          {userInfo.getUserUserInfo.lastName?.[0].toUpperCase() ?? ""}
+          {userInfo.getUserUserInfo?.firstName?.[0].toUpperCase() ?? ""}
+          {userInfo.getUserUserInfo?.lastName?.[0].toUpperCase() ?? ""}
         </Avatar>
       </IconButton>
       <Menu
@@ -122,7 +122,7 @@ const AvatarButton: FC = () => {
         <MenuItem
           onClick={async () => {
             await logoff({
-              email: userInfo.getUserUserInfo.email,
+              email: userInfo.getUserUserInfo?.email,
             });
           }}
         >

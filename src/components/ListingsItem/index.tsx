@@ -43,7 +43,7 @@ const ListingsItem: FC<ListingsItemProps> = ({
     isLoading: updateFavoriteListingsIsLoading,
   } = useUpdateFavoriteListings();
 
-  const isFavorite = userInfo?.getUserUserInfo.favorite?.includes(
+  const isFavorite = userInfo?.getUserUserInfo?.favorite?.includes(
     listing?.listingId
   );
 
@@ -181,19 +181,21 @@ const ListingsItem: FC<ListingsItemProps> = ({
                   }
 
                   try {
-                    setUserInfoData({
-                      getUserUserInfo: {
-                        ...userInfo.getUserUserInfo,
-                        favorite: !isFavorite
-                          ? [
-                              ...(userInfo.getUserUserInfo.favorite ?? []),
-                              listing?.listingId,
-                            ]
-                          : userInfo.getUserUserInfo.favorite?.filter(
-                              (item) => item !== listing?.listingId
-                            ),
-                      },
-                    });
+                    if (userInfo.getUserUserInfo) {
+                      setUserInfoData({
+                        getUserUserInfo: {
+                          ...userInfo.getUserUserInfo,
+                          favorite: !isFavorite
+                            ? [
+                                ...(userInfo.getUserUserInfo?.favorite ?? []),
+                                listing?.listingId,
+                              ]
+                            : userInfo.getUserUserInfo?.favorite?.filter(
+                                (item) => item !== listing?.listingId
+                              ),
+                        },
+                      });
+                    }
                     await updateFavoriteListings({
                       listingId: listing?.listingId,
                       toLike: !isFavorite,

@@ -9,12 +9,18 @@ import {
 } from "@mui/material";
 
 import ListingsItem from "components/ListingsItem";
+import useQueryListingsByIDs from "graphql/useQueryListingsByIDs";
 import useUserInfo from "graphql/useUserInfo";
 import UserLayout from "layouts/UserLayout";
 import { NextPageWithLayout } from "pages/_app";
 
 const SavedList: NextPageWithLayout = () => {
   const { data: userInfo, isLoading: userInfoIsLoading } = useUserInfo();
+  const { data: listings } = useQueryListingsByIDs({
+    listingIDs: userInfo?.getUserUserInfo?.favorite,
+  });
+
+  console.log(listings);
 
   return (
     <Container
@@ -50,11 +56,11 @@ const SavedList: NextPageWithLayout = () => {
         >
           <List disablePadding>
             {(userInfoIsLoading
-              ? Array.from(new Array(5))
-              : userInfo?.getUserUserInfo.favorite
-            )?.map((listingId, index, array) => (
+              ? Array.from<SingleListing>(new Array(5))
+              : listings?.queryListingsByIDs?.listings
+            )?.map((listing, index, array) => (
               <ListingsItem
-                key={listingId ?? index}
+                key={listing?.listingId ?? index}
                 ListItemProps={{
                   divider: index < array.length - 1,
                 }}
@@ -64,21 +70,7 @@ const SavedList: NextPageWithLayout = () => {
                     py: 1.5,
                   },
                 }}
-                listing={
-                  listingId
-                    ? {
-                        listingId,
-                        address: "test",
-                        availableSpaces: [],
-                        brokersInfo: [],
-                        frequency: 0,
-                        latitude: "",
-                        longitude: "",
-                        mediumIncome: 0,
-                        visitors: 0,
-                      }
-                    : undefined
-                }
+                listing={listing}
               />
             ))}
           </List>

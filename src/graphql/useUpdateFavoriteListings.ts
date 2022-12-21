@@ -25,9 +25,7 @@ export const updateFavoriteListingsRequest = (
 
 export const useUpdateFavoriteListings = (
   options?: UseMutationOptions<
-    {
-      data: User;
-    },
+    Mutation,
     ClientError,
     MutationUpdateFavoriteListingsArgs
   >

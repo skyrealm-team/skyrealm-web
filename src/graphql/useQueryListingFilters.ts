@@ -22,14 +22,10 @@ export const queryListingFiltersRequest = (
   });
 };
 
-export const useQueryListingFilters = <
-  TData = {
-    queryListingFilters: ListingFilter[];
-  }
->(
-  options?: UseQueryOptions<TData, ClientError>
+export const useQueryListingFilters = (
+  options?: UseQueryOptions<Queries, ClientError>
 ) => {
-  return useQuery<TData, ClientError>(
+  return useQuery<Queries, ClientError>(
     [useQueryListingFilters.name],
     () => {
       return queryListingFiltersRequest();
