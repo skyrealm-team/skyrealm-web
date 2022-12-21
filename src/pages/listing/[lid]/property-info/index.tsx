@@ -3,7 +3,6 @@ import { useWindowScroll } from "react-use";
 
 import {
   Avatar,
-  Button,
   Container,
   Divider,
   Stack,
@@ -11,9 +10,8 @@ import {
   Unstable_Grid2,
 } from "@mui/material";
 
-import ContactSmallIcon from "assets/icons/contact-small.svg";
-import ContactIcon from "assets/icons/contact.svg";
 import TelIcon from "assets/icons/tel.svg";
+import ContactButton from "components/ContactButton";
 import ImageCarousel from "components/ImageCarousel";
 import InfoCard from "components/InfoCard";
 import PropertyHeader from "components/PropertyHeader";
@@ -190,17 +188,8 @@ const PropertyInfo: NextPageWithLayout = () => {
                           <TelIcon />
                           <Typography>{tel}</Typography>
                         </Stack>
-                        <Button
-                          variant="contained"
-                          startIcon={<ContactSmallIcon />}
-                          sx={{
-                            fontSize: 18,
-                            width: 120,
-                            height: 40,
-                          }}
-                        >
-                          Contact
-                        </Button>
+
+                        <ContactButton size="small" />
                       </Stack>
                       <Stack>
                         <Typography
@@ -273,17 +262,7 @@ const PropertyInfo: NextPageWithLayout = () => {
                     </Stack>
                   </Stack>
                 </Stack>
-                <Button
-                  variant="contained"
-                  startIcon={<ContactIcon />}
-                  sx={{
-                    fontSize: 18,
-                    width: 190,
-                    height: 50,
-                  }}
-                >
-                  Contact
-                </Button>
+                <ContactButton />
               </Stack>
             </InfoCard>
           </Stack>

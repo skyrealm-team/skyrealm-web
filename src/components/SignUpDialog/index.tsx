@@ -131,6 +131,7 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
           ...props.PaperProps,
           sx: {
             maxWidth: 710,
+            ...props.PaperProps?.sx,
           },
         }}
       >

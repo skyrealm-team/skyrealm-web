@@ -87,6 +87,7 @@ const SignInDialog: FC<SignInDialogProps> = ({ ...props }) => {
         ...props.PaperProps,
         sx: {
           maxWidth: 710,
+          ...props.PaperProps?.sx,
         },
       }}
     >

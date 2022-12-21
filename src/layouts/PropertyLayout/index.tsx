@@ -21,6 +21,7 @@ import NearbyResidentsIcon from "assets/icons/nearby-residents.svg";
 import PropertyInfoIcon from "assets/icons/property-info.svg";
 import VisitorProfileIcon from "assets/icons/visitor-profile.svg";
 import VisitsIcon from "assets/icons/visits.svg";
+import ContactButton from "components/ContactButton";
 
 const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
@@ -83,6 +84,7 @@ const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
           sx: {
             width: "fit-content",
             filter: "drop-shadow(4px 0px 26px rgba(0, 0, 0, 0.03))",
+            alignItems: "center",
           },
         }}
         sx={(theme) => ({
@@ -144,6 +146,12 @@ const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
             }
           )}
         </MenuList>
+        <ContactButton
+          sx={{
+            width: 190,
+            height: 50,
+          }}
+        />
       </Drawer>
       <Stack
         sx={{
