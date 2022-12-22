@@ -19,7 +19,7 @@ import FavoriteButtonIcon from "assets/icons/favorite-button.svg";
 import ListingIcon from "assets/icons/listing.svg";
 import useUpdateFavoriteListings from "graphql/useUpdateFavoriteListings";
 import useUserInfo, { useSetUserInfoData } from "graphql/useUserInfo";
-import useOpen from "hooks/useOpen";
+import useOpens from "hooks/useOpens";
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
@@ -34,7 +34,7 @@ const ListingsItem: FC<ListingsItemProps> = ({
   ListItemProps,
   ListItemButtonProps,
 }) => {
-  const [open, setOpen] = useOpen();
+  const [opens, setOpens] = useOpens();
 
   const { data: userInfo, refetch: refetchUserInfo } = useUserInfo();
   const setUserInfoData = useSetUserInfoData();
@@ -52,7 +52,7 @@ const ListingsItem: FC<ListingsItemProps> = ({
       <Link
         target="_blank"
         href={{
-          pathname: `/listing/${listing?.listingId}/property-info`,
+          pathname: `/listing/${listing?.listingId}/visits`,
         }}
         legacyBehavior
         passHref
@@ -121,15 +121,15 @@ const ListingsItem: FC<ListingsItemProps> = ({
                   {[
                     {
                       key: "Visitors",
-                      value: listing?.visitors,
+                      value: formatter.format(listing?.visitors ?? 0),
                     },
                     {
                       key: "Frequency",
-                      value: listing?.frequency,
+                      value: formatter.format(listing?.frequency ?? 0),
                     },
                     {
                       key: "Medium income",
-                      value: listing?.mediumIncome,
+                      value: listing?.mediumIncome ?? 0,
                     },
                   ].map(({ key, value }) => (
                     <Stack
@@ -147,7 +147,7 @@ const ListingsItem: FC<ListingsItemProps> = ({
                             fontWeight: 700,
                           }}
                         >
-                          {formatter.format(value ?? 0)}
+                          {value}
                         </Typography>
                       ) : (
                         <Skeleton width="40%" />
@@ -173,8 +173,8 @@ const ListingsItem: FC<ListingsItemProps> = ({
                   event.preventDefault();
 
                   if (!userInfo) {
-                    setOpen({
-                      ...open,
+                    setOpens({
+                      ...opens,
                       signinDialog: true,
                     });
                     return;

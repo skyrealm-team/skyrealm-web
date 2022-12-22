@@ -19,7 +19,7 @@ import * as Yup from "yup";
 import CloseIcon from "assets/icons/close.svg";
 import InputField from "components/InputField";
 import useLogin from "graphql/useLogin";
-import useOpen from "hooks/useOpen";
+import useOpens from "hooks/useOpens";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -30,12 +30,12 @@ const validationSchema = Yup.object().shape({
 
 export type SignInDialogProps = Omit<DialogProps, "open">;
 const SignInDialog: FC<SignInDialogProps> = ({ ...props }) => {
-  const [open, setOpen] = useOpen();
+  const [opens, setOpens] = useOpens();
 
   const { mutateAsync: login } = useLogin({
     onSuccess: async () => {
-      setOpen({
-        ...open,
+      setOpens({
+        ...opens,
         signinDialog: false,
       });
     },
@@ -68,17 +68,17 @@ const SignInDialog: FC<SignInDialogProps> = ({ ...props }) => {
 
   useUpdateEffect(() => {
     formik.resetForm();
-  }, [open.signinDialog]);
+  }, [opens.signinDialog]);
 
   return (
     <Dialog
       scroll="body"
       fullWidth
       {...props}
-      open={open.signinDialog}
+      open={opens.signinDialog}
       onClose={(event, reason) => {
-        setOpen({
-          ...open,
+        setOpens({
+          ...opens,
           signinDialog: false,
         });
         props.onClose?.(event, reason);
@@ -93,8 +93,8 @@ const SignInDialog: FC<SignInDialogProps> = ({ ...props }) => {
     >
       <IconButton
         onClick={(event) => {
-          setOpen({
-            ...open,
+          setOpens({
+            ...opens,
             signinDialog: false,
           });
           props.onClose?.(event, "backdropClick");
@@ -156,8 +156,8 @@ const SignInDialog: FC<SignInDialogProps> = ({ ...props }) => {
                 align="center"
                 onClick={(event) => {
                   event.preventDefault();
-                  setOpen({
-                    ...open,
+                  setOpens({
+                    ...opens,
                     signinDialog: false,
                     signupDialog: true,
                   });
@@ -176,8 +176,8 @@ const SignInDialog: FC<SignInDialogProps> = ({ ...props }) => {
               align="center"
               onClick={(event) => {
                 event.preventDefault();
-                setOpen({
-                  ...open,
+                setOpens({
+                  ...opens,
                   signinDialog: false,
                   forgotPasswordDialog: true,
                 });

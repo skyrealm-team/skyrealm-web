@@ -2,17 +2,17 @@ import { FC } from "react";
 
 import { Button } from "@mui/material";
 
-import useOpen from "hooks/useOpen";
+import useOpens from "hooks/useOpens";
 
 const SignUpButton: FC = () => {
-  const [open, setOpen] = useOpen();
+  const [opens, setOpens] = useOpens();
 
   return (
     <Button
       variant="contained"
       onClick={() => {
-        setOpen({
-          ...open,
+        setOpens({
+          ...opens,
           signupDialog: true,
         });
       }}

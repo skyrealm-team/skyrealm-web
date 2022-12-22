@@ -30,9 +30,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
   CardProps,
   ListingsItemProps,
 }) => {
-  const { routerState, setRouterState } = useRouterState<{
-    queryListingsArgs: QueriesQueryListingsArgs;
-  }>();
+  const { routerState, setRouterState } = useRouterState();
 
   const [defaultBounds] = useDefaultBounds();
   const { data, isLoading, isFetching } = useQueryListings(

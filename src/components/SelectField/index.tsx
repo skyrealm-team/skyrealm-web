@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { useToggle } from "react-use";
+import { useMeasure, useToggle } from "react-use";
 
 import {
   FormControl,
@@ -31,6 +31,7 @@ const SelectField: FC<PropsWithChildren<SelectFieldProps>> = ({
   ...props
 }) => {
   const [open, setOpen] = useToggle(false);
+  const [menuRef, menuRect] = useMeasure<HTMLDivElement>();
 
   return (
     <FormControl fullWidth={fullWidth}>
@@ -84,6 +85,7 @@ const SelectField: FC<PropsWithChildren<SelectFieldProps>> = ({
                 },
                 ...props?.sx,
                 ...(open && {
+                  minWidth: menuRect.width,
                   fieldset: {
                     borderBottomLeftRadius: 0,
                     borderBottomRightRadius: 0,
@@ -96,6 +98,7 @@ const SelectField: FC<PropsWithChildren<SelectFieldProps>> = ({
             ...SelectProps?.MenuProps,
             PaperProps: {
               ...SelectProps?.MenuProps?.PaperProps,
+              ref: menuRef,
               sx: (theme) => ({
                 borderRadius: `0 0 ${theme.spacing(1)} ${theme.spacing(1)}`,
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",

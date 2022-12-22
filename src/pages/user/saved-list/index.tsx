@@ -16,11 +16,10 @@ import { NextPageWithLayout } from "pages/_app";
 
 const SavedList: NextPageWithLayout = () => {
   const { data: userInfo, isLoading: userInfoIsLoading } = useUserInfo();
-  const { data: listings } = useQueryListingsByIDs({
-    listingIDs: userInfo?.getUserUserInfo?.favorite,
-  });
-
-  console.log(listings);
+  const { data: listings, isLoading: listingsIsLoading } =
+    useQueryListingsByIDs({
+      listingIDs: userInfo?.getUserUserInfo?.favorite,
+    });
 
   return (
     <Container
@@ -55,7 +54,7 @@ const SavedList: NextPageWithLayout = () => {
           }}
         >
           <List disablePadding>
-            {(userInfoIsLoading
+            {(userInfoIsLoading || listingsIsLoading
               ? Array.from<SingleListing>(new Array(5))
               : listings?.queryListingsByIDs?.listings
             )?.map((listing, index, array) => (

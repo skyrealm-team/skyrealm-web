@@ -18,7 +18,7 @@ import * as Yup from "yup";
 import BackIcon from "assets/icons/back.svg";
 import InputField from "components/InputField";
 import { useForgetPassword } from "graphql/useForgetPassword";
-import useOpen from "hooks/useOpen";
+import useOpens from "hooks/useOpens";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -28,12 +28,12 @@ const validationSchema = Yup.object().shape({
 
 export type ForgotPasswordDialogProps = Omit<DialogProps, "open">;
 const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({ ...props }) => {
-  const [open, setOpen] = useOpen();
+  const [opens, setOpens] = useOpens();
 
   const { mutateAsync: forgetPassword } = useForgetPassword({
     onSuccess: async () => {
-      setOpen({
-        ...open,
+      setOpens({
+        ...opens,
         forgotPasswordDialog: false,
       });
     },
@@ -65,14 +65,14 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({ ...props }) => {
 
   useUpdateEffect(() => {
     formik.resetForm();
-  }, [open.forgotPasswordDialog]);
+  }, [opens.forgotPasswordDialog]);
 
   return (
     <Dialog
       scroll="body"
       fullWidth
       {...props}
-      open={open.forgotPasswordDialog}
+      open={opens.forgotPasswordDialog}
       PaperProps={{
         ...props.PaperProps,
         sx: {
@@ -83,8 +83,8 @@ const ForgotPasswordDialog: FC<ForgotPasswordDialogProps> = ({ ...props }) => {
       <IconButton
         onClick={(event) => {
           event.preventDefault();
-          setOpen({
-            ...open,
+          setOpens({
+            ...opens,
             signinDialog: true,
             forgotPasswordDialog: false,
           });

@@ -25,7 +25,7 @@ import InputField from "components/InputField";
 import SelectField from "components/SelectField";
 import { PrivacyPolicy, TermsOfService } from "consts/links";
 import useRegister from "graphql/useRegister";
-import useOpen from "hooks/useOpen";
+import useOpens from "hooks/useOpens";
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("Required"),
@@ -44,7 +44,7 @@ const validationSchema = Yup.object().shape({
 
 export type SignUpDialogProps = Omit<DialogProps, "open">;
 const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
-  const [open, setOpen] = useOpen();
+  const [opens, setOpens] = useOpens();
 
   const [success, setSuccess] = useToggle(false);
   const [count, { inc, reset }] = useCounter(0);
@@ -52,8 +52,8 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
 
   const { mutateAsync: register } = useRegister({
     onSuccess: async () => {
-      setOpen({
-        ...open,
+      setOpens({
+        ...opens,
         signupDialog: false,
       });
       setSuccess();
@@ -96,7 +96,7 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
 
   useUpdateEffect(() => {
     formik.resetForm();
-  }, [open.signupDialog]);
+  }, [opens.signupDialog]);
 
   useInterval(
     () => {
@@ -119,10 +119,10 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
         scroll="body"
         fullWidth
         {...props}
-        open={open.signupDialog}
+        open={opens.signupDialog}
         onClose={(event, reason) => {
-          setOpen({
-            ...open,
+          setOpens({
+            ...opens,
             signupDialog: false,
           });
           props.onClose?.(event, reason);
@@ -137,8 +137,8 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
       >
         <IconButton
           onClick={(event) => {
-            setOpen({
-              ...open,
+            setOpens({
+              ...opens,
               signupDialog: false,
             });
             props.onClose?.(event, "backdropClick");

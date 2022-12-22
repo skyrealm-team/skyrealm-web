@@ -8,24 +8,11 @@ import SelectField from "components/SelectField";
 import usePlaceDetails from "hooks/usePlaceDetails";
 import useRouterState from "hooks/useRouterState";
 
-export type ListingsFilters = {
-  address?: string;
-  placeId?: string;
-  for?: "lease" | "sale";
-};
-
 const ListingsFiltersBar: FC = () => {
-  const { routerState, setRouterState } = useRouterState<{
-    queryListingsArgs: QueriesQueryListingsArgs;
-    filters: ListingsFilters;
-  }>({
-    filters: {
-      for: "lease",
-    },
-  });
+  const { routerState, setRouterState } = useRouterState();
 
   const { data: placeDetails } = usePlaceDetails({
-    placeId: routerState.filters?.placeId ?? "",
+    placeId: routerState.queryListingsArgs?.placeId ?? "",
   });
 
   useUpdateEffect(() => {
@@ -34,7 +21,7 @@ const ListingsFiltersBar: FC = () => {
         spaceUse: "",
       },
     });
-  }, [routerState.filters?.for]);
+  }, [routerState.queryListingsArgs?.listingType]);
 
   useUpdateEffect(() => {
     if (placeDetails?.geometry?.viewport) {
@@ -68,10 +55,10 @@ const ListingsFiltersBar: FC = () => {
       >
         <Stack direction="row" gap={2}>
           <PlaceField
-            value={routerState.filters?.address}
+            value={routerState.queryListingsArgs?.address}
             onChange={(_, prediction) => {
               setRouterState({
-                filters: {
+                queryListingsArgs: {
                   address: prediction?.structured_formatting.main_text,
                   placeId: prediction?.place_id,
                 },
@@ -79,27 +66,27 @@ const ListingsFiltersBar: FC = () => {
             }}
           />
           <SelectField
-            value={routerState.filters?.for}
+            value={routerState.queryListingsArgs?.listingType ?? "For Lease"}
             onChange={(event) => {
               setRouterState({
-                filters: {
-                  for: event.target.value as ListingsFilters["for"],
+                queryListingsArgs: {
+                  listingType: event.target.value,
                 },
               });
             }}
             size="small"
             sx={{
-              minWidth: 142,
+              width: 142,
             }}
           >
             {[
               {
                 key: "For Lease",
-                value: "lease",
+                value: "For Lease",
               },
               {
                 key: "For Sale",
-                value: "sale",
+                value: "For Sale",
               },
             ].map(({ key, value }) => (
               <MenuItem key={key} value={value}>
@@ -118,7 +105,7 @@ const ListingsFiltersBar: FC = () => {
             }}
             size="small"
             sx={{
-              minWidth: 142,
+              width: 142,
             }}
           >
             <MenuItem
@@ -129,7 +116,7 @@ const ListingsFiltersBar: FC = () => {
             >
               Space Use
             </MenuItem>
-            {(routerState.filters?.for === "lease"
+            {(routerState.queryListingsArgs?.listingType === "lease"
               ? [
                   {
                     key: "Retail",

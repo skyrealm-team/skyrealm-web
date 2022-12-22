@@ -3,46 +3,50 @@ import { createGlobalState } from "react-use";
 
 import { useRouter } from "next/router";
 
-import { merge, defaultsDeep } from "lodash";
+import { defaultsDeep, merge } from "lodash";
 
-type DeepPartial<T> = T extends object
-  ? {
-      [P in keyof T]?: DeepPartial<T[P]>;
-    }
-  : T;
+type RouterState = {
+  queryListingsArgs?: Partial<QueriesQueryListingsArgs> & {
+    address?: string;
+    placeId?: string;
+  };
+};
 
-export const useGlobalRouterState = createGlobalState<Record<string, object>>(
-  {}
-);
-const useRouterState = <TData extends Record<string, object>>(
-  initialState?: DeepPartial<TData>
-) => {
+const useGlobalRouterState = createGlobalState<RouterState>({});
+
+const useRouterState = () => {
   const router = useRouter();
   const [state, setState] = useGlobalRouterState();
-  const routerState = useMemo(
-    () => defaultsDeep(state, initialState),
-    [initialState, state]
-  ) as DeepPartial<TData>;
+  const initialState: RouterState = {
+    queryListingsArgs: {
+      listingType: "For Lease",
+    },
+  };
+  const routerState = useMemo(() => {
+    return defaultsDeep(state, initialState);
+  }, [state]);
 
   return {
     routerState,
-    setRouterState: (values: DeepPartial<TData>) => {
+    setRouterState: (values: RouterState, silence?: boolean) => {
       return setState((state) => {
         const result = merge(state, values);
 
-        router.push({
-          pathname: router.pathname,
-          query: {
-            ...router.query,
-            ...Object.entries(result).reduce(
-              (acc, [key, val]) => ({
-                ...acc,
-                [key]: JSON.stringify(val),
-              }),
-              {}
-            ),
-          },
-        });
+        if (!silence) {
+          router.push({
+            pathname: router.pathname,
+            query: {
+              ...router.query,
+              ...Object.entries(result).reduce(
+                (acc, [key, val]) => ({
+                  ...acc,
+                  [key]: JSON.stringify(val),
+                }),
+                {}
+              ),
+            },
+          });
+        }
 
         return result;
       });

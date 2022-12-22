@@ -9,6 +9,7 @@ import {
 } from "@react-google-maps/api";
 
 import ListingsItem from "components/ListingsItem";
+import useUserInfo from "graphql/useUserInfo";
 
 export type InfoMarkerProps = Omit<MarkerProps, "position"> &
   Partial<Pick<MarkerProps, "position">> & {
@@ -24,19 +25,30 @@ const InfoMarker: FC<InfoMarkerProps> = ({
   InfoWindowProps,
   ...props
 }) => {
+  const { data: userInfo } = useUserInfo();
+
   const [marker, setMarker] = useState<google.maps.Marker>();
   const [hovering, setHovering] = useToggle(false);
 
   const focused = hovering || hovered || selected;
+  const favored = userInfo?.getUserUserInfo?.favorite?.includes(
+    listing?.listingId
+  );
+
+  const size = Math.min(listing?.visitors, 10 * 1000) / 1000 + 10;
 
   return (
     <Marker
       icon={
         {
-          url: focused ? "/icons/pin-focused.svg" : "/icons/pin.png",
+          url: favored
+            ? "/icons/pin-favored.svg"
+            : focused
+            ? "/icons/pin-focused.svg"
+            : "/icons/pin.png",
           scaledSize: {
-            width: 15,
-            height: 15,
+            width: size,
+            height: size,
           },
         } as google.maps.Icon
       }

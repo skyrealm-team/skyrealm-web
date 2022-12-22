@@ -18,7 +18,6 @@ import {
 } from "@mui/material";
 
 import NearbyResidentsIcon from "assets/icons/nearby-residents.svg";
-import PropertyInfoIcon from "assets/icons/property-info.svg";
 import VisitorProfileIcon from "assets/icons/visitor-profile.svg";
 import VisitsIcon from "assets/icons/visits.svg";
 import ContactButton from "components/ContactButton";
@@ -33,15 +32,15 @@ const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
     ListItemIconProps?: ListItemIconProps;
     ListItemTextProps?: ListItemTextProps;
   }[] = [
-    {
-      key: "property-info",
-      ListItemIconProps: {
-        children: <PropertyInfoIcon />,
-      },
-      ListItemTextProps: {
-        children: "Property info",
-      },
-    },
+    // {
+    //   key: "property-info",
+    //   ListItemIconProps: {
+    //     children: <PropertyInfoIcon />,
+    //   },
+    //   ListItemTextProps: {
+    //     children: "Property info",
+    //   },
+    // },
     {
       key: "visits",
       ListItemIconProps: {

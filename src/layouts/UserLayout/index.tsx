@@ -23,7 +23,6 @@ import useUserInfo from "graphql/useUserInfo";
 
 const UserLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
-  const { lid } = router.query;
 
   const {
     data: userInfo,
@@ -98,7 +97,7 @@ const UserLayout: FC<PropsWithChildren> = ({ children }) => {
                 <Link
                   key={key}
                   href={{
-                    pathname: `/listing/${lid}/${key}`,
+                    pathname: `/user/${key}`,
                   }}
                   legacyBehavior
                 >

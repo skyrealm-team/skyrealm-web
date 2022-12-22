@@ -11,7 +11,7 @@ import Providers from "Providers";
 import { NextPage } from "next";
 import { parse } from "querystring";
 
-import { useGlobalRouterState } from "hooks/useRouterState";
+import useRouterState from "hooks/useRouterState";
 import AppLayout from "layouts/AppLayout";
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<
@@ -28,7 +28,7 @@ export type MyAppProps = AppProps & {
 
 const MyApp: FC<MyAppProps> = ({ Component, emotionCache, pageProps }) => {
   const router = useRouter();
-  const [, setRouterState] = useGlobalRouterState();
+  const { setRouterState } = useRouterState();
 
   useMount(() => {
     const routeChangeComplete = (url: string) => {
@@ -42,7 +42,8 @@ const MyApp: FC<MyAppProps> = ({ Component, emotionCache, pageProps }) => {
           } catch {
             return acc;
           }
-        }, {})
+        }, {}),
+        true
       );
     };
     routeChangeComplete(router.asPath);

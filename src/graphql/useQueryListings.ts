@@ -10,12 +10,14 @@ export const queryListingsQuery = gql`
     $rowsPerPage: Int
     $bounds: QueryListingBounds!
     $spaceUse: String
+    $listingType: String
   ) {
     queryListings(
       currentPage: $currentPage
       rowsPerPage: $rowsPerPage
       bounds: $bounds
       spaceUse: $spaceUse
+      listingType: $listingType
     ) {
       currentPage
       rowsPerPage
