@@ -17,13 +17,12 @@ const useGlobalRouterState = createGlobalState<RouterState>({});
 const useRouterState = () => {
   const router = useRouter();
   const [state, setState] = useGlobalRouterState();
-  const initialState: RouterState = {
-    queryListingsArgs: {
-      listingType: "For Lease",
-    },
-  };
   const routerState = useMemo(() => {
-    return defaultsDeep(state, initialState);
+    return defaultsDeep(state, {
+      queryListingsArgs: {
+        listingType: "For Lease",
+      },
+    });
   }, [state]);
 
   return {

@@ -17,8 +17,8 @@ import {
 import FavoriteButtonSelectedIcon from "assets/icons/favorite-button-selected.svg";
 import FavoriteButtonIcon from "assets/icons/favorite-button.svg";
 import ListingIcon from "assets/icons/listing.svg";
+import useGetUserInfo, { useSetUserInfoData } from "graphql/useGetUserInfo";
 import useUpdateFavoriteListings from "graphql/useUpdateFavoriteListings";
-import useUserInfo, { useSetUserInfoData } from "graphql/useUserInfo";
 import useOpens from "hooks/useOpens";
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
@@ -36,16 +36,18 @@ const ListingsItem: FC<ListingsItemProps> = ({
 }) => {
   const [opens, setOpens] = useOpens();
 
-  const { data: userInfo, refetch: refetchUserInfo } = useUserInfo();
+  const {
+    data: userInfo,
+    refetch: refetchUserInfo,
+    isFetching: userInfoIsFetching,
+  } = useGetUserInfo();
   const setUserInfoData = useSetUserInfoData();
   const {
     mutateAsync: updateFavoriteListings,
     isLoading: updateFavoriteListingsIsLoading,
   } = useUpdateFavoriteListings();
 
-  const isFavorite = userInfo?.getUserUserInfo?.favorite?.includes(
-    listing?.listingId
-  );
+  const isFavorite = userInfo?.favorite?.includes(listing?.listingId);
 
   return (
     <ListItem disablePadding {...ListItemProps}>
@@ -181,19 +183,14 @@ const ListingsItem: FC<ListingsItemProps> = ({
                   }
 
                   try {
-                    if (userInfo.getUserUserInfo) {
+                    if (userInfo) {
                       setUserInfoData({
-                        getUserUserInfo: {
-                          ...userInfo.getUserUserInfo,
-                          favorite: !isFavorite
-                            ? [
-                                ...(userInfo.getUserUserInfo?.favorite ?? []),
-                                listing?.listingId,
-                              ]
-                            : userInfo.getUserUserInfo?.favorite?.filter(
-                                (item) => item !== listing?.listingId
-                              ),
-                        },
+                        ...userInfo,
+                        favorite: !isFavorite
+                          ? [...(userInfo?.favorite ?? []), listing?.listingId]
+                          : userInfo?.favorite?.filter(
+                              (item) => item !== listing?.listingId
+                            ),
                       });
                     }
                     await updateFavoriteListings({
@@ -204,7 +201,7 @@ const ListingsItem: FC<ListingsItemProps> = ({
                     refetchUserInfo();
                   }
                 }}
-                disabled={updateFavoriteListingsIsLoading}
+                disabled={updateFavoriteListingsIsLoading || userInfoIsFetching}
               >
                 {isFavorite ? (
                   <FavoriteButtonSelectedIcon />

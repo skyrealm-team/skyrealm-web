@@ -114,7 +114,7 @@ const ListingsMap: FC<ListingsMapProps> = ({
           }}
         />
       )}
-      <Markers {...MarkersProps} listings={data?.queryListings?.listings} />
+      <Markers {...MarkersProps} listings={data?.listings} />
     </GoogleMap>
   );
 };

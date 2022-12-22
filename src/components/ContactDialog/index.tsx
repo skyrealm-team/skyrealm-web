@@ -22,7 +22,7 @@ import * as Yup from "yup";
 import CloseIcon from "assets/icons/close.svg";
 import LocationIcon from "assets/icons/location.svg";
 import InputField from "components/InputField";
-import useUserInfo from "graphql/useUserInfo";
+import useGetUserInfo from "graphql/useGetUserInfo";
 import useOpens from "hooks/useOpens";
 
 const validationSchema = Yup.object().shape({
@@ -42,7 +42,7 @@ export type ContactDialogProps = DialogProps & {
 const ContactDialog: FC<ContactDialogProps> = ({ open, ...props }) => {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: userInfo } = useUserInfo();
+  const { data: userInfo } = useGetUserInfo();
 
   const formik = useFormik({
     initialValues: {
@@ -73,8 +73,8 @@ const ContactDialog: FC<ContactDialogProps> = ({ open, ...props }) => {
   }, [open]);
 
   useUpdateEffect(() => {
-    if (userInfo?.getUserUserInfo) {
-      const { firstName, lastName, email } = userInfo?.getUserUserInfo;
+    if (userInfo) {
+      const { firstName, lastName, email } = userInfo;
 
       formik.setValues(
         merge(formik.values, {

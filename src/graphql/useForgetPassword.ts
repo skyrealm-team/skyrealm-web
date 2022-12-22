@@ -17,19 +17,25 @@ export const forgetPasswordRequest = (
   variables: MutationForgetPasswordArgs,
   requestHeaders?: HeadersInit
 ) => {
-  return client.request(forgetPasswordMutation, variables, requestHeaders);
+  return client
+    .request<Mutation>(forgetPasswordMutation, variables, requestHeaders)
+    .then((data) => data.forgetPassword);
 };
 
 export const useForgetPassword = (
   options?: UseMutationOptions<
-    Mutation,
+    Mutation["forgetPassword"],
     ClientError,
     MutationForgetPasswordArgs
   >
 ) => {
   const { enqueueSnackbar } = useSnackbar();
 
-  return useMutation([useForgetPassword.name], forgetPasswordRequest, {
+  return useMutation<
+    Mutation["forgetPassword"],
+    ClientError,
+    MutationForgetPasswordArgs
+  >([useForgetPassword.name], forgetPasswordRequest, {
     ...options,
     onSuccess: async (data, variables, context) => {
       enqueueSnackbar(

@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 
 import FavoriteIcon from "assets/icons/favorite.svg";
-import useUserInfo from "graphql/useUserInfo";
+import useGetUserInfo from "graphql/useGetUserInfo";
 
 const UserLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
@@ -28,7 +28,7 @@ const UserLayout: FC<PropsWithChildren> = ({ children }) => {
     data: userInfo,
     isLoading: userInfoIsLoading,
     isFetched: userInfoIsFetched,
-  } = useUserInfo();
+  } = useGetUserInfo();
 
   const menu: {
     key: string;

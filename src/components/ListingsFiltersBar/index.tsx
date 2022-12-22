@@ -5,12 +5,15 @@ import { AppBar, MenuItem, Stack, Toolbar } from "@mui/material";
 
 import PlaceField from "components/PlaceField";
 import SelectField from "components/SelectField";
+import useQueryListingFilters from "graphql/useQueryListingFilters";
 import usePlaceDetails from "hooks/usePlaceDetails";
 import useRouterState from "hooks/useRouterState";
 
 const ListingsFiltersBar: FC = () => {
   const { routerState, setRouterState } = useRouterState();
 
+  const { data: listingFilters } = useQueryListingFilters();
+  console.log(listingFilters);
   const { data: placeDetails } = usePlaceDetails({
     placeId: routerState.queryListingsArgs?.placeId ?? "",
   });

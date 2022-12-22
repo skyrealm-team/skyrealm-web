@@ -21,19 +21,21 @@ export const getUserUserInfoQuery = gql`
 `;
 
 export const getUserUserInfoRequest = (options?: Partial<RequestOptions>) => {
-  return client.request({
-    ...options,
-    document: getUserUserInfoQuery,
-  });
+  return client
+    .request<Queries>({
+      ...options,
+      document: getUserUserInfoQuery,
+    })
+    .then((data) => data.getUserUserInfo);
 };
 
-export const useUserInfo = (
-  options?: UseQueryOptions<Queries, ClientError>
+export const useGetUserInfo = (
+  options?: UseQueryOptions<Queries["getUserUserInfo"], ClientError>
 ) => {
   const [authToken] = useLocalStorage<string>("auth-token");
 
-  return useQuery<Queries, ClientError>(
-    [useUserInfo.name],
+  return useQuery<Queries["getUserUserInfo"], ClientError>(
+    [useGetUserInfo.name],
     () => {
       return getUserUserInfoRequest();
     },
@@ -47,9 +49,9 @@ export const useUserInfo = (
 export const useSetUserInfoData = () => {
   const queryClient = useQueryClient();
 
-  return (data: Partial<Queries>) => {
-    queryClient.setQueryData<Partial<Queries>>([useUserInfo.name], data);
+  return (data: Partial<Queries["getUserUserInfo"]>) => {
+    queryClient.setQueryData([useGetUserInfo.name], data);
   };
 };
 
-export default useUserInfo;
+export default useGetUserInfo;

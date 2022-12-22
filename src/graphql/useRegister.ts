@@ -4,7 +4,7 @@ import { useLocalStorage } from "react-use";
 import { ClientError, gql } from "graphql-request";
 
 import client from "./client";
-import useUserInfo from "./useUserInfo";
+import useGetUserInfo from "./useGetUserInfo";
 
 export const registerMutation = gql`
   mutation register(
@@ -34,24 +34,34 @@ export const registerRequest = (
   variables: MutationRegisterArgs,
   requestHeaders?: HeadersInit
 ) => {
-  return client.request(registerMutation, variables, requestHeaders);
+  return client
+    .request<Mutation>(registerMutation, variables, requestHeaders)
+    .then((data) => data.register);
 };
 
 export const useRegister = (
-  options?: UseMutationOptions<Mutation, ClientError, MutationRegisterArgs>
+  options?: UseMutationOptions<
+    Mutation["register"],
+    ClientError,
+    MutationRegisterArgs
+  >
 ) => {
   const [, setAuthToken] = useLocalStorage<string>("auth-token");
   const queryClient = useQueryClient();
 
-  return useMutation([useRegister.name], registerRequest, {
-    ...options,
-    onSuccess: async (data, variables, context) => {
-      setAuthToken(data.register?.authToken);
-      await queryClient.refetchQueries([useUserInfo.name]);
+  return useMutation<Mutation["register"], ClientError, MutationRegisterArgs>(
+    [useRegister.name],
+    registerRequest,
+    {
+      ...options,
+      onSuccess: async (data, variables, context) => {
+        setAuthToken(data?.authToken);
+        await queryClient.refetchQueries([useGetUserInfo.name]);
 
-      options?.onSuccess?.(data, variables, context);
-    },
-  });
+        options?.onSuccess?.(data, variables, context);
+      },
+    }
+  );
 };
 
 export default useRegister;

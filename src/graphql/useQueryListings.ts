@@ -47,22 +47,24 @@ export const queryListingsRequest = (
     >
   >
 ) => {
-  return client.request({
-    ...options,
-    variables: {
-      currentPage: 1,
-      rowsPerPage: 100,
-      ...options?.variables,
-    },
-    document: queryListingsQuery,
-  });
+  return client
+    .request<Queries>({
+      ...options,
+      variables: {
+        currentPage: 1,
+        rowsPerPage: 100,
+        ...options?.variables,
+      },
+      document: queryListingsQuery,
+    })
+    .then((data) => data.queryListings);
 };
 
 export const useQueryListings = (
   variables?: Partial<QueriesQueryListingsArgs>,
-  options?: UseQueryOptions<Queries, ClientError>
+  options?: UseQueryOptions<Queries["queryListings"], ClientError>
 ) => {
-  return useQuery<Queries, ClientError>(
+  return useQuery<Queries["queryListings"], ClientError>(
     [useQueryListings.name, variables],
     ({ signal }) => {
       return queryListingsRequest({

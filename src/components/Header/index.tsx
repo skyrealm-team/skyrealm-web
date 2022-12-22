@@ -5,14 +5,14 @@ import { AppBar, Link, Stack, Toolbar } from "@mui/material";
 
 import LogoIcon from "assets/icons/logo.svg";
 import SkyrealmIcon from "assets/icons/skyrealm.svg";
-import useUserInfo from "graphql/useUserInfo";
+import useGetUserInfo from "graphql/useGetUserInfo";
 
 import AvatarButton from "./AvatarButton";
 import SignInButton from "./SignInButton";
 import SignUpButton from "./SignUpButton";
 
 const Header: FC = () => {
-  const { data: userInfo, isLoading } = useUserInfo();
+  const { data: userInfo, isLoading } = useGetUserInfo();
 
   const [ref, { height }] = useMeasure<HTMLDivElement>();
 

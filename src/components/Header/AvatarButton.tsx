@@ -16,13 +16,13 @@ import {
 import FavoriteIcon from "assets/icons/favorite.svg";
 import LogoutIcon from "assets/icons/logout.svg";
 import Loading from "components/Loading";
+import useGetUserInfo from "graphql/useGetUserInfo";
 import useLogoff from "graphql/useLogoff";
-import useUserInfo from "graphql/useUserInfo";
 
 const AvatarButton: FC = () => {
   const router = useRouter();
 
-  const { data: userInfo } = useUserInfo();
+  const { data: userInfo } = useGetUserInfo();
   const { mutateAsync: logoff, isLoading: logoffIsLoading } = useLogoff();
   const [anchorEl, setAnchorEl] = useState<HTMLElement>();
 
@@ -63,8 +63,8 @@ const AvatarButton: FC = () => {
             bgcolor: theme.palette.primary.main,
           })}
         >
-          {userInfo.getUserUserInfo?.firstName?.[0].toUpperCase() ?? ""}
-          {userInfo.getUserUserInfo?.lastName?.[0].toUpperCase() ?? ""}
+          {userInfo?.firstName?.[0].toUpperCase() ?? ""}
+          {userInfo?.lastName?.[0].toUpperCase() ?? ""}
         </Avatar>
       </IconButton>
       <Menu
@@ -122,7 +122,7 @@ const AvatarButton: FC = () => {
         <MenuItem
           onClick={async () => {
             await logoff({
-              email: userInfo.getUserUserInfo?.email,
+              email: userInfo?.email,
             });
           }}
         >

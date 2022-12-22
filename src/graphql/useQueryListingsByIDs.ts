@@ -27,17 +27,19 @@ export const queryListingsByIDsRequest = (
     RequestOptions<Partial<QueriesQueryListingsByIDsArgs>, Queries>
   >
 ) => {
-  return client.request({
-    ...options,
-    document: queryListingsByIDs,
-  });
+  return client
+    .request<Queries>({
+      ...options,
+      document: queryListingsByIDs,
+    })
+    .then((data) => data.queryListingsByIDs);
 };
 
 export const useQueryListingsByIDs = (
   variables?: Partial<QueriesQueryListingsByIDsArgs>,
-  options?: UseQueryOptions<Queries, ClientError>
+  options?: UseQueryOptions<Queries["queryListingsByIDs"], ClientError>
 ) => {
-  return useQuery<Queries, ClientError>(
+  return useQuery<Queries["queryListingsByIDs"], ClientError>(
     [useQueryListingsByIDs.name],
     () => {
       return queryListingsByIDsRequest({

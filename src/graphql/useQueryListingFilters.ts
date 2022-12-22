@@ -7,8 +7,23 @@ import client from "./client";
 export const queryListingFiltersQuery = gql`
   query queryListingFilters {
     queryListingFilters {
-      filterName
-      filterValues
+      key
+      options {
+        name
+        value
+        match {
+          key
+          value
+        }
+      }
+      defaultValue {
+        name
+        value
+        match {
+          key
+          value
+        }
+      }
     }
   }
 `;
@@ -16,16 +31,18 @@ export const queryListingFiltersQuery = gql`
 export const queryListingFiltersRequest = (
   options?: Partial<RequestOptions>
 ) => {
-  return client.request({
-    ...options,
-    document: queryListingFiltersQuery,
-  });
+  return client
+    .request<Queries>({
+      ...options,
+      document: queryListingFiltersQuery,
+    })
+    .then((data) => data.queryListingFilters);
 };
 
 export const useQueryListingFilters = (
-  options?: UseQueryOptions<Queries, ClientError>
+  options?: UseQueryOptions<Queries["queryListingFilters"], ClientError>
 ) => {
-  return useQuery<Queries, ClientError>(
+  return useQuery<Queries["queryListingFilters"], ClientError>(
     [useQueryListingFilters.name],
     () => {
       return queryListingFiltersRequest();

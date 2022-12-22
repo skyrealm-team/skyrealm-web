@@ -9,16 +9,16 @@ import {
 } from "@mui/material";
 
 import ListingsItem from "components/ListingsItem";
+import useGetUserInfo from "graphql/useGetUserInfo";
 import useQueryListingsByIDs from "graphql/useQueryListingsByIDs";
-import useUserInfo from "graphql/useUserInfo";
 import UserLayout from "layouts/UserLayout";
 import { NextPageWithLayout } from "pages/_app";
 
 const SavedList: NextPageWithLayout = () => {
-  const { data: userInfo, isLoading: userInfoIsLoading } = useUserInfo();
+  const { data: userInfo, isLoading: userInfoIsLoading } = useGetUserInfo();
   const { data: listings, isLoading: listingsIsLoading } =
     useQueryListingsByIDs({
-      listingIDs: userInfo?.getUserUserInfo?.favorite,
+      listingIDs: userInfo?.favorite,
     });
 
   return (
@@ -56,7 +56,7 @@ const SavedList: NextPageWithLayout = () => {
           <List disablePadding>
             {(userInfoIsLoading || listingsIsLoading
               ? Array.from<SingleListing>(new Array(5))
-              : listings?.queryListingsByIDs?.listings
+              : listings?.listings
             )?.map((listing, index, array) => (
               <ListingsItem
                 key={listing?.listingId ?? index}

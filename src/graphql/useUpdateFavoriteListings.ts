@@ -16,16 +16,18 @@ export const updateFavoriteListingsRequest = (
   variables: MutationUpdateFavoriteListingsArgs,
   requestHeaders?: HeadersInit
 ) => {
-  return client.request(
-    updateFavoriteListingsMutation,
-    variables,
-    requestHeaders
-  );
+  return client
+    .request<Mutation>(
+      updateFavoriteListingsMutation,
+      variables,
+      requestHeaders
+    )
+    .then((data) => data.updateFavoriteListings);
 };
 
 export const useUpdateFavoriteListings = (
   options?: UseMutationOptions<
-    Mutation,
+    Mutation["updateFavoriteListings"],
     ClientError,
     MutationUpdateFavoriteListingsArgs
   >

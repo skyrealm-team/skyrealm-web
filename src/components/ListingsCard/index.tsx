@@ -66,7 +66,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
             overflow: "auto",
           }}
         >
-          {data?.queryListings?.listings?.length === 0 ? (
+          {data?.listings?.length === 0 ? (
             <Stack alignItems="center">
               <EmptyIcon />
               <Typography
@@ -80,36 +80,35 @@ const ListingsCard: FC<ListingsCardProps> = ({
             </Stack>
           ) : (
             <List disablePadding>
-              {(isLoading
-                ? Array.from(new Array(100))
-                : data?.queryListings?.listings
-              )?.map((listing, index) => {
-                const itemProps = ListingsItemProps?.(listing?.listingId);
-                return (
-                  <ListingsItem
-                    key={listing?.listingId ?? index}
-                    {...itemProps}
-                    ListItemProps={{
-                      divider: true,
-                      ...itemProps?.ListItemProps,
-                    }}
-                    ListItemButtonProps={{
-                      disabled: isFetching,
-                      ...itemProps?.ListItemButtonProps,
-                      sx: {
-                        px: 2,
-                        py: 1.5,
-                        ...itemProps?.ListItemButtonProps?.sx,
-                      },
-                    }}
-                    listing={listing}
-                  />
-                );
-              })}
+              {(isLoading ? Array.from(new Array(100)) : data?.listings)?.map(
+                (listing, index) => {
+                  const itemProps = ListingsItemProps?.(listing?.listingId);
+                  return (
+                    <ListingsItem
+                      key={listing?.listingId ?? index}
+                      {...itemProps}
+                      ListItemProps={{
+                        divider: true,
+                        ...itemProps?.ListItemProps,
+                      }}
+                      ListItemButtonProps={{
+                        disabled: isFetching,
+                        ...itemProps?.ListItemButtonProps,
+                        sx: {
+                          px: 2,
+                          py: 1.5,
+                          ...itemProps?.ListItemButtonProps?.sx,
+                        },
+                      }}
+                      listing={listing}
+                    />
+                  );
+                }
+              )}
             </List>
           )}
         </Stack>
-        {!!data?.queryListings && (
+        {!!data && (
           <>
             <Divider />
             <CardActions
@@ -118,8 +117,8 @@ const ListingsCard: FC<ListingsCardProps> = ({
               }}
             >
               <Pagination
-                count={data.queryListings.totalPage}
-                page={data.queryListings.currentPage}
+                count={data.totalPage}
+                page={data.currentPage}
                 shape="rounded"
                 color="primary"
                 onChange={(event, page) => {

@@ -4,7 +4,7 @@ import { useLocalStorage } from "react-use";
 import { ClientError, gql } from "graphql-request";
 
 import client from "./client";
-import useUserInfo from "./useUserInfo";
+import useGetUserInfo from "./useGetUserInfo";
 
 export const loginQuery = gql`
   query login($email: String!, $password: String!) {
@@ -18,24 +18,30 @@ export const loginRequest = (
   variables: QueriesLoginArgs,
   requestHeaders?: HeadersInit
 ) => {
-  return client.request(loginQuery, variables, requestHeaders);
+  return client
+    .request<Queries>(loginQuery, variables, requestHeaders)
+    .then((data) => data.login);
 };
 
 export const useLogin = (
-  options?: UseMutationOptions<Queries, ClientError, QueriesLoginArgs>
+  options?: UseMutationOptions<Queries["login"], ClientError, QueriesLoginArgs>
 ) => {
   const [, setAuthToken] = useLocalStorage<string>("auth-token");
   const queryClient = useQueryClient();
 
-  return useMutation([useLogin.name], loginRequest, {
-    ...options,
-    onSuccess: async (data, variables, context) => {
-      setAuthToken(data.login?.authToken);
-      await queryClient.refetchQueries([useUserInfo.name]);
+  return useMutation<Queries["login"], ClientError, QueriesLoginArgs>(
+    [useLogin.name],
+    loginRequest,
+    {
+      ...options,
+      onSuccess: async (data, variables, context) => {
+        setAuthToken(data?.authToken);
+        await queryClient.refetchQueries([useGetUserInfo.name]);
 
-      options?.onSuccess?.(data, variables, context);
-    },
-  });
+        options?.onSuccess?.(data, variables, context);
+      },
+    }
+  );
 };
 
 export default useLogin;
