@@ -1,6 +1,8 @@
 import { FC } from "react";
 import { useUpdateEffect } from "react-use";
 
+import { useRouter } from "next/router";
+
 import {
   Button,
   CircularProgress,
@@ -16,12 +18,12 @@ import {
 
 import { useFormik } from "formik";
 import { merge } from "lodash";
-import { useSnackbar } from "notistack";
 import * as Yup from "yup";
 
 import CloseIcon from "assets/icons/close.svg";
 import LocationIcon from "assets/icons/location.svg";
 import InputField from "components/InputField";
+import useContactBroker from "graphql/useContactBroker";
 import useGetUserInfo from "graphql/useGetUserInfo";
 import useOpens from "hooks/useOpens";
 
@@ -40,24 +42,26 @@ export type ContactDialogProps = DialogProps & {
 };
 
 const ContactDialog: FC<ContactDialogProps> = ({ open, ...props }) => {
-  const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
+  const { lid } = router.query;
 
   const { data: userInfo } = useGetUserInfo();
+  const { mutateAsync: contactBroker } = useContactBroker();
 
-  const formik = useFormik({
+  const formik = useFormik<MutationContactBrokerArgs>({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
+      listingId: String(lid),
+      firstName: userInfo?.firstName ?? "",
+      lastName: userInfo?.lastName ?? "",
+      email: userInfo?.email ?? "",
+      phone: userInfo?.phoneNumber ?? "",
       company: "",
       message: "",
     },
     validationSchema,
-    onSubmit: async () => {
+    onSubmit: async (values) => {
       try {
-        enqueueSnackbar("Message Sent", {
-          variant: "success",
-        });
+        await contactBroker(values);
 
         props.onClose?.({}, "backdropClick");
       } catch {

@@ -15,6 +15,13 @@ type Scalars = {
   Int: number;
   Float: number;
   BigInt: any;
+  JSON: any;
+};
+
+type BasicResponse = {
+  __typename?: "BasicResponse";
+  message: Maybe<Scalars["String"]>;
+  status: Maybe<Scalars["String"]>;
 };
 
 type Broker = {
@@ -46,6 +53,8 @@ type ListingFilterOption = {
 
 type Mutation = {
   __typename?: "Mutation";
+  /** Contact broker */
+  contactBroker: Maybe<BasicResponse>;
   /** forget password */
   forgetPassword: Maybe<User>;
   /** Logoff */
@@ -56,6 +65,16 @@ type Mutation = {
   resetForgetPassword: Maybe<User>;
   /** Update (add or remove) listing for user */
   updateFavoriteListings: Maybe<User>;
+};
+
+type MutationContactBrokerArgs = {
+  company: InputMaybe<Scalars["String"]>;
+  email: InputMaybe<Scalars["String"]>;
+  firstName: InputMaybe<Scalars["String"]>;
+  lastName: InputMaybe<Scalars["String"]>;
+  listingId: InputMaybe<Scalars["String"]>;
+  message: InputMaybe<Scalars["String"]>;
+  phone: InputMaybe<Scalars["String"]>;
 };
 
 type MutationForgetPasswordArgs = {
@@ -151,6 +170,7 @@ type SingleListing = {
   listingId: Maybe<Scalars["String"]>;
   longitude: Maybe<Scalars["String"]>;
   mediumIncome: Maybe<Scalars["String"]>;
+  stats: Maybe<Scalars["JSON"]>;
   totalVisits: Maybe<Scalars["BigInt"]>;
   visitors: Maybe<Scalars["BigInt"]>;
 };
