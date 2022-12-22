@@ -66,7 +66,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
             overflow: "auto",
           }}
         >
-          {data?.listings?.length === 0 ? (
+          {!isFetching && data?.listings?.length === 0 ? (
             <Stack alignItems="center">
               <EmptyIcon />
               <Typography
@@ -80,35 +80,36 @@ const ListingsCard: FC<ListingsCardProps> = ({
             </Stack>
           ) : (
             <List disablePadding>
-              {(isLoading ? Array.from(new Array(100)) : data?.listings)?.map(
-                (listing, index) => {
-                  const itemProps = ListingsItemProps?.(listing?.listingId);
-                  return (
-                    <ListingsItem
-                      key={listing?.listingId ?? index}
-                      {...itemProps}
-                      ListItemProps={{
-                        divider: true,
-                        ...itemProps?.ListItemProps,
-                      }}
-                      ListItemButtonProps={{
-                        disabled: isFetching,
-                        ...itemProps?.ListItemButtonProps,
-                        sx: {
-                          px: 2,
-                          py: 1.5,
-                          ...itemProps?.ListItemButtonProps?.sx,
-                        },
-                      }}
-                      listing={listing}
-                    />
-                  );
-                }
-              )}
+              {(isLoading || (isFetching && data?.listings?.length === 0)
+                ? Array.from(new Array(100))
+                : data?.listings
+              )?.map((listing, index) => {
+                const itemProps = ListingsItemProps?.(listing?.listingId);
+                return (
+                  <ListingsItem
+                    key={listing?.listingId ?? index}
+                    {...itemProps}
+                    ListItemProps={{
+                      divider: true,
+                      ...itemProps?.ListItemProps,
+                    }}
+                    ListItemButtonProps={{
+                      disabled: isFetching,
+                      ...itemProps?.ListItemButtonProps,
+                      sx: {
+                        px: 2,
+                        py: 1.5,
+                        ...itemProps?.ListItemButtonProps?.sx,
+                      },
+                    }}
+                    listing={listing}
+                  />
+                );
+              })}
             </List>
           )}
         </Stack>
-        {!!data && (
+        {!!data?.totalPage && (
           <>
             <Divider />
             <CardActions

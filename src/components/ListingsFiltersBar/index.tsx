@@ -1,7 +1,9 @@
 import { FC } from "react";
-import { useUpdateEffect } from "react-use";
+import { useDeepCompareEffect, useUpdateEffect } from "react-use";
 
 import { AppBar, MenuItem, Stack, Toolbar } from "@mui/material";
+
+import { isEmpty, isUndefined } from "lodash";
 
 import PlaceField from "components/PlaceField";
 import SelectField from "components/SelectField";
@@ -13,18 +15,46 @@ const ListingsFiltersBar: FC = () => {
   const { routerState, setRouterState } = useRouterState();
 
   const { data: listingFilters } = useQueryListingFilters();
-  console.log(listingFilters);
   const { data: placeDetails } = usePlaceDetails({
     placeId: routerState.queryListingsArgs?.placeId ?? "",
   });
 
-  useUpdateEffect(() => {
+  useDeepCompareEffect(() => {
+    const options = listingFilters?.reduce((acc, cur) => {
+      const value = routerState.queryListingsArgs?.[cur?.key as never];
+
+      const matchedOption = cur?.options?.find((option) => {
+        return (
+          option?.value === value &&
+          (!option?.match ||
+            option.match.value ===
+              routerState.queryListingsArgs?.[option?.match?.key as never])
+        );
+      });
+
+      if (isUndefined(value) || !!matchedOption) {
+        return acc;
+      }
+
+      return {
+        ...acc,
+        [cur?.key as never]: cur?.defaultValue?.value,
+      };
+    }, {});
+
+    if (!Object.keys(options ?? {}).length) {
+      return;
+    }
+
     setRouterState({
-      queryListingsArgs: {
-        spaceUse: "",
-      },
+      queryListingsArgs: options,
     });
-  }, [routerState.queryListingsArgs?.listingType]);
+  }, [
+    listingFilters?.map(
+      (listingFilter) =>
+        routerState.queryListingsArgs?.[listingFilter?.key as never]
+    ),
+  ]);
 
   useUpdateEffect(() => {
     if (placeDetails?.geometry?.viewport) {
@@ -68,116 +98,51 @@ const ListingsFiltersBar: FC = () => {
               });
             }}
           />
-          <SelectField
-            value={routerState.queryListingsArgs?.listingType ?? "For Lease"}
-            onChange={(event) => {
-              setRouterState({
-                queryListingsArgs: {
-                  listingType: event.target.value,
-                },
-              });
-            }}
-            size="small"
-            sx={{
-              width: 142,
-            }}
-          >
-            {[
-              {
-                key: "For Lease",
-                value: "For Lease",
-              },
-              {
-                key: "For Sale",
-                value: "For Sale",
-              },
-            ].map(({ key, value }) => (
-              <MenuItem key={key} value={value}>
-                {key}
-              </MenuItem>
-            ))}
-          </SelectField>
-          <SelectField
-            value={routerState.queryListingsArgs?.spaceUse ?? ""}
-            onChange={(event) => {
-              setRouterState({
-                queryListingsArgs: {
-                  spaceUse: event.target.value,
-                },
-              });
-            }}
-            size="small"
-            sx={{
-              width: 142,
-            }}
-          >
-            <MenuItem
-              value=""
-              sx={(theme) => ({
-                color: theme.palette.text.disabled,
-              })}
-            >
-              Space Use
-            </MenuItem>
-            {(routerState.queryListingsArgs?.listingType === "lease"
-              ? [
-                  {
-                    key: "Retail",
-                    value: "Retail",
-                  },
-                  {
-                    key: "Restaurant",
-                    value: "Restaurant",
-                  },
-                  {
-                    key: "Flex",
-                    value: "Flex",
-                  },
-                  {
-                    key: "Office",
-                    value: "Office",
-                  },
-                  {
-                    key: "Medical",
-                    value: "Medical",
-                  },
-                ]
-              : [
-                  {
-                    key: "Retail",
-                    value: "Retail",
-                  },
-                  {
-                    key: "Restaurant",
-                    value: "Restaurant",
-                  },
-                  {
-                    key: "Office",
-                    value: "Office",
-                  },
-                  {
-                    key: "Medical",
-                    value: "Medical",
-                  },
-                  {
-                    key: "Shopping Center",
-                    value: "Shopping Center",
-                  },
-                  {
-                    key: "Multifamily",
-                    value: "Multifamily",
-                  },
-                  {
-                    key: "Hospitality",
-                    value: "Hospitality",
-                  },
-                ]
-            ).map(({ key, value }) => (
-              <MenuItem key={key} value={value}>
-                {key}
-              </MenuItem>
-            ))}
-          </SelectField>
+          {listingFilters?.map((listingFilter) => {
+            return (
+              <SelectField
+                key={listingFilter?.key}
+                value={
+                  routerState.queryListingsArgs?.[
+                    listingFilter?.key as never
+                  ] ?? listingFilter?.defaultValue?.value
+                }
+                onChange={(event) => {
+                  setRouterState({
+                    queryListingsArgs: {
+                      [listingFilter?.key as never]: event.target.value,
+                    },
+                  });
+                }}
+                size="small"
+                sx={{
+                  width: 142,
+                }}
+              >
+                {listingFilter?.options
+                  ?.filter((item): item is ListingFilterOption => !!item)
+                  .filter(
+                    ({ match }) =>
+                      !match ||
+                      routerState.queryListingsArgs?.[match.key as never] ===
+                        match.value
+                  )
+                  .map(({ name, value }) => (
+                    <MenuItem
+                      key={name}
+                      value={value}
+                      sx={(theme) => ({
+                        ...(isEmpty(value) && {
+                          color: theme.palette.text.disabled,
+                        }),
+                      })}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+              </SelectField>
+            );
+          })}
         </Stack>
       </Toolbar>
     </AppBar>

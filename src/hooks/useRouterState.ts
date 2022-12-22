@@ -3,7 +3,9 @@ import { createGlobalState } from "react-use";
 
 import { useRouter } from "next/router";
 
-import { defaultsDeep, merge } from "lodash";
+import { defaultsDeep, isEmpty, merge } from "lodash";
+
+import useQueryListingFilters from "graphql/useQueryListingFilters";
 
 type RouterState = {
   queryListingsArgs?: Partial<QueriesQueryListingsArgs> & {
@@ -17,13 +19,23 @@ const useGlobalRouterState = createGlobalState<RouterState>({});
 const useRouterState = () => {
   const router = useRouter();
   const [state, setState] = useGlobalRouterState();
-  const routerState = useMemo(() => {
+
+  const { data: listingFilters } = useQueryListingFilters();
+
+  const routerState = useMemo<RouterState>(() => {
     return defaultsDeep(state, {
-      queryListingsArgs: {
-        listingType: "For Lease",
-      },
+      queryListingsArgs: listingFilters?.reduce((acc, cur) => {
+        if (isEmpty(cur?.defaultValue?.value)) {
+          return acc;
+        }
+
+        return {
+          ...acc,
+          [cur?.key as never]: cur?.defaultValue?.value,
+        };
+      }, {}),
     });
-  }, [state]);
+  }, [state, listingFilters]);
 
   return {
     routerState,

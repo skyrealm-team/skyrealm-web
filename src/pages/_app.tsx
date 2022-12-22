@@ -1,17 +1,13 @@
 import { FC, ReactElement, ReactNode } from "react";
-import { useMount } from "react-use";
 
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { useRouter } from "next/router";
 
 import { EmotionCache } from "@emotion/react";
 
 import Providers from "Providers";
 import { NextPage } from "next";
-import { parse } from "querystring";
 
-import useRouterState from "hooks/useRouterState";
 import AppLayout from "layouts/AppLayout";
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<
@@ -27,32 +23,6 @@ export type MyAppProps = AppProps & {
 };
 
 const MyApp: FC<MyAppProps> = ({ Component, emotionCache, pageProps }) => {
-  const router = useRouter();
-  const { setRouterState } = useRouterState();
-
-  useMount(() => {
-    const routeChangeComplete = (url: string) => {
-      setRouterState(
-        Object.entries(parse(url.slice(2))).reduce((acc, [key, val]) => {
-          try {
-            return {
-              ...acc,
-              [key]: JSON.parse(String(val)),
-            };
-          } catch {
-            return acc;
-          }
-        }, {}),
-        true
-      );
-    };
-    routeChangeComplete(router.asPath);
-    router.events.on("routeChangeComplete", routeChangeComplete);
-
-    return () => {
-      router.events.off("routeChangeComplete", routeChangeComplete);
-    };
-  });
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
