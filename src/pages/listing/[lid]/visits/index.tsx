@@ -14,7 +14,7 @@ import ChartCard from "components/ChartCard";
 import InfoCard from "components/InfoCard";
 import PropertyHeader from "components/PropertyHeader";
 import PropertyMap from "components/PropertyMap";
-import useQueryListingByID from "graphql/useQueryListingByID";
+import useQueryListing from "graphql/useQueryListing";
 import PropertyLayout from "layouts/PropertyLayout";
 import { NextPageWithLayout } from "pages/_app";
 
@@ -24,8 +24,8 @@ const Visits: NextPageWithLayout = () => {
   const router = useRouter();
   const { lid } = router.query;
 
-  const { data: listing, isLoading: listingIsLoading } = useQueryListingByID({
-    listingId: String(lid),
+  const { data: listing, isLoading: listingIsLoading } = useQueryListing({
+    listingId: lid && String(lid),
   });
 
   return (

@@ -46,14 +46,14 @@ export const queryListingByIDRequest = async (
     .then((data) => data.queryListingsByIDs?.listings?.[0]);
 };
 
-export const useQueryListingById = (
+export const useQueryListing = (
   variables: {
     listingId?: string;
   },
   options?: UseQueryOptions<Listing, ClientError>
 ) => {
   return useQuery<Listing, ClientError>(
-    [useQueryListingById.name],
+    [useQueryListing.name],
     () => {
       return queryListingByIDRequest({ variables });
     },
@@ -64,4 +64,4 @@ export const useQueryListingById = (
   );
 };
 
-export default useQueryListingById;
+export default useQueryListing;
