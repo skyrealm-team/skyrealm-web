@@ -6,7 +6,10 @@ import FavoriteIcon from "assets/icons/favorite.svg";
 import LocationIcon from "assets/icons/location.svg";
 import InfoCard from "components/InfoCard";
 
-const PropertyHeader: FC = () => {
+export type PropertyHeaderProps = {
+  listing?: SingleListing;
+};
+const PropertyHeader: FC<PropertyHeaderProps> = ({ listing }) => {
   return (
     <InfoCard
       CardProps={{
@@ -32,7 +35,7 @@ const PropertyHeader: FC = () => {
               fontWeight: 700,
             }}
           >
-            270 W 43rd St, New York, NY 100
+            {listing?.address}
           </Typography>
           <Stack direction="row" alignItems="center" gap={0.5}>
             <LocationIcon />
@@ -41,7 +44,7 @@ const PropertyHeader: FC = () => {
                 color: "#999999",
               }}
             >
-              Washington Square, New York, NY 10012
+              {listing?.address}
             </Typography>
           </Stack>
         </Stack>
