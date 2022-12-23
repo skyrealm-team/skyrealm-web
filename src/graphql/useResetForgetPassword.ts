@@ -13,7 +13,7 @@ export const resetForgetPasswordMutation = gql`
   }
 `;
 
-export const resetForgetPasswordRequest = (
+export const resetForgetPasswordRequest = async (
   variables: MutationResetForgetPasswordArgs,
   requestHeaders?: HeadersInit
 ) => {

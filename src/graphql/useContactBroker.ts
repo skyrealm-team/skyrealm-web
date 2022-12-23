@@ -30,7 +30,7 @@ export const contactBrokerMutation = gql`
   }
 `;
 
-export const contactBrokerRequest = (
+export const contactBrokerRequest = async (
   variables: MutationContactBrokerArgs,
   requestHeaders?: HeadersInit
 ) => {

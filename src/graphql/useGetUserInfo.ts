@@ -20,7 +20,9 @@ export const getUserUserInfoQuery = gql`
   }
 `;
 
-export const getUserUserInfoRequest = (options?: Partial<RequestOptions>) => {
+export const getUserUserInfoRequest = async (
+  options?: Partial<RequestOptions<undefined, Queries["getUserUserInfo"]>>
+) => {
   return client
     .request<Queries>({
       ...options,

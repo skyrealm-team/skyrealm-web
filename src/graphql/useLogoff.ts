@@ -14,7 +14,7 @@ export const logoffMutation = gql`
   }
 `;
 
-export const logoffRequest = (
+export const logoffRequest = async (
   variables: MutationLogoffArgs,
   requestHeaders?: HeadersInit
 ) => {

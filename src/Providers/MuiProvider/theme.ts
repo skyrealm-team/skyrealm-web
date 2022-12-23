@@ -144,6 +144,9 @@ theme.components = {
       },
     },
     styleOverrides: {
+      select: {
+        paddingRight: `${theme.spacing(4)} !important`,
+      },
       icon: {
         color: theme.palette.border?.dark,
         top: "calc(50% - 10px)",

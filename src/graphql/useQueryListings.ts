@@ -37,14 +37,9 @@ export const queryListingsQuery = gql`
   }
 `;
 
-export const queryListingsRequest = (
+export const queryListingsRequest = async (
   options?: Partial<
-    RequestOptions<
-      Partial<QueriesQueryListingsArgs>,
-      {
-        queryListings: QueryListing;
-      }
-    >
+    RequestOptions<Partial<QueriesQueryListingsArgs>, Queries["queryListings"]>
   >
 ) => {
   return client

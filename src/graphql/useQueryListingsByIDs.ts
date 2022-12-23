@@ -22,9 +22,12 @@ export const queryListingsByIDs = gql`
   }
 `;
 
-export const queryListingsByIDsRequest = (
+export const queryListingsByIDsRequest = async (
   options?: Partial<
-    RequestOptions<Partial<QueriesQueryListingsByIDsArgs>, Queries>
+    RequestOptions<
+      Partial<QueriesQueryListingsByIDsArgs>,
+      Queries["queryListingsByIDs"]
+    >
   >
 ) => {
   return client

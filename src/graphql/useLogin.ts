@@ -14,7 +14,7 @@ export const loginQuery = gql`
   }
 `;
 
-export const loginRequest = (
+export const loginRequest = async (
   variables: QueriesLoginArgs,
   requestHeaders?: HeadersInit
 ) => {

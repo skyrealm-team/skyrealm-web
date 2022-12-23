@@ -44,10 +44,8 @@ const InfoMarker: FC<InfoMarkerProps> = ({
             : focused
             ? "/icons/pin-focused.svg"
             : "/icons/pin.png",
-          scaledSize: {
-            width: size,
-            height: size,
-          },
+          scaledSize: new google.maps.Size(size, size),
+          anchor: new google.maps.Point(size / 2, size / 2),
         } as google.maps.Icon
       }
       {...(focused && {

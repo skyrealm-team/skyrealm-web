@@ -1,23 +1,26 @@
-import {
-  Container,
-  Stack,
-  Typography,
-  Unstable_Grid2,
-  useTheme,
-} from "@mui/material";
+import { useRouter } from "next/router";
 
-import { ResponsiveBar } from "@nivo/bar";
+import { Container, Stack, Typography, Unstable_Grid2 } from "@mui/material";
 
+import moment from "moment";
+
+import ChartCard from "components/ChartCard";
 import InfoCard from "components/InfoCard";
 import PropertyHeader from "components/PropertyHeader";
 import PropertyMap from "components/PropertyMap";
+import useQueryListingByID from "graphql/useQueryListingByID";
 import PropertyLayout from "layouts/PropertyLayout";
 import { NextPageWithLayout } from "pages/_app";
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
 const Visits: NextPageWithLayout = () => {
-  const theme = useTheme();
+  const router = useRouter();
+  const { lid } = router.query;
+
+  const { data: listing } = useQueryListingByID({
+    listingId: String(lid),
+  });
 
   return (
     <Stack>
@@ -26,6 +29,14 @@ const Visits: NextPageWithLayout = () => {
         mapContainerStyle={{
           aspectRatio: 1667 / 410,
         }}
+        {...(listing && {
+          MarkerProps: {
+            position: {
+              lat: Number(listing?.latitude),
+              lng: Number(listing?.longitude),
+            },
+          },
+        })}
       />
       <Container
         sx={{
@@ -39,15 +50,15 @@ const Visits: NextPageWithLayout = () => {
               {[
                 {
                   key: "Visits",
-                  value: "7.5M",
+                  value: formatter.format(listing?.totalVisits ?? 0),
                 },
                 {
                   key: "Visit Frequency",
-                  value: "3.72",
+                  value: formatter.format(listing?.frequency ?? 0),
                 },
                 {
                   key: "Visitors",
-                  value: "952.4K",
+                  value: formatter.format(listing?.visitors ?? 0),
                 },
               ].map(({ key, value }, index) => (
                 <Unstable_Grid2
@@ -86,57 +97,71 @@ const Visits: NextPageWithLayout = () => {
               ))}
             </Unstable_Grid2>
           </InfoCard>
-          <InfoCard
-            title="Visits Trend"
-            CardContentProps={{
-              sx: {
-                height: 468,
+          {/* <ChartCard
+            InfoCardProps={{
+              title: "Visits Trend",
+            }}
+          /> */}
+          <ChartCard
+            InfoCardProps={{
+              title: "Hourly Visits",
+            }}
+            data={listing?.stats["Time of day"]}
+            BarSvgProps={{
+              axisBottom: {
+                format: (value) => {
+                  return value % 2 === 0
+                    ? moment(value, "H").format("hh:mm A")
+                    : "";
+                },
               },
             }}
-          >
-            <ResponsiveBar
-              data={[
-                {
-                  date: "Sep 26",
-                  visits: 678 * 1000,
-                },
-                {
-                  date: "Oct 03",
-                  visits: 789 * 1000,
-                },
-                {
-                  date: "Oct 10",
-                  visits: 890 * 1000,
-                },
-                {
-                  date: "Oct 17",
-                  visits: 567 * 1000,
-                },
-                {
-                  date: "Oct 24",
-                  visits: 678 * 1000,
-                },
-              ]}
-              keys={["visits"]}
-              indexBy="date"
-              margin={{ bottom: 20, left: 100 }}
-              padding={0.4}
-              borderRadius={4}
-              colors={theme.palette.primary.main}
-              axisLeft={{
+            LineSvgProps={{
+              axisLeft: {
                 legend: "Visits",
-                legendPosition: "start",
-                legendOffset: -80,
-                format: (value) => formatter.format(Number(value)),
-              }}
-              enableLabel={false}
-              valueFormat={(value) => formatter.format(value)}
-            />
-          </InfoCard>
-          <InfoCard title="Visits Trend"></InfoCard>
-          <InfoCard title="Daily Visits"></InfoCard>
-          <InfoCard title="Frequency"></InfoCard>
-          <InfoCard title="Visitor type"></InfoCard>
+              },
+              axisBottom: {
+                format: (value) => {
+                  return value % 2 === 0
+                    ? moment(value, "H").format("hh:mm A")
+                    : "";
+                },
+              },
+            }}
+            indexFormat={(value) => {
+              return moment(value, "H").format("hh:mm A");
+            }}
+          />
+          <ChartCard
+            InfoCardProps={{
+              title: "Daily Visits",
+            }}
+            data={listing?.stats["Day of week"]}
+            LineSvgProps={{
+              axisLeft: {
+                legend: "Visits",
+              },
+            }}
+            indexFormat={(value) => {
+              return moment((Number(value) + 1) % 7, "e").format("dddd");
+            }}
+          />
+          <ChartCard
+            InfoCardProps={{
+              title: "Visit Frequency",
+            }}
+            data={listing?.stats["Frequency"]}
+            LineSvgProps={{
+              axisLeft: {
+                legend: "Visits",
+              },
+            }}
+          />
+          {/* <ChartCard
+            InfoCardProps={{
+              title: "Visitor type",
+            }}
+          /> */}
         </Stack>
       </Container>
     </Stack>

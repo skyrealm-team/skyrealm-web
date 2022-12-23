@@ -12,7 +12,7 @@ export const updateFavoriteListingsMutation = gql`
   }
 `;
 
-export const updateFavoriteListingsRequest = (
+export const updateFavoriteListingsRequest = async (
   variables: MutationUpdateFavoriteListingsArgs,
   requestHeaders?: HeadersInit
 ) => {

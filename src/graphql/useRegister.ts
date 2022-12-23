@@ -30,7 +30,7 @@ export const registerMutation = gql`
   }
 `;
 
-export const registerRequest = (
+export const registerRequest = async (
   variables: MutationRegisterArgs,
   requestHeaders?: HeadersInit
 ) => {

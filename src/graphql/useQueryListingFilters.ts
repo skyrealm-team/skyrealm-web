@@ -28,8 +28,8 @@ export const queryListingFiltersQuery = gql`
   }
 `;
 
-export const queryListingFiltersRequest = (
-  options?: Partial<RequestOptions>
+export const queryListingFiltersRequest = async (
+  options?: Partial<RequestOptions<undefined, Queries["queryListingFilters"]>>
 ) => {
   return client
     .request<Queries>({

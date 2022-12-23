@@ -1,14 +1,25 @@
 import { FC } from "react";
 
-import { GoogleMap, GoogleMapProps } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  GoogleMapProps,
+  Marker,
+  MarkerProps,
+} from "@react-google-maps/api";
 
-export type PropertyMapProps = GoogleMapProps;
-const PropertyMap: FC<PropertyMapProps> = ({ ...props }) => {
+export type PropertyMapProps = GoogleMapProps & {
+  MarkerProps?: MarkerProps;
+};
+const PropertyMap: FC<PropertyMapProps> = ({ MarkerProps, ...props }) => {
+  if (!MarkerProps?.position) {
+    return null;
+  }
+
   return (
     <GoogleMap
-      center={{ lat: 40.7830603, lng: -73.9712488 }}
       zoom={12}
       {...props}
+      center={MarkerProps?.position}
       options={{
         mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID,
         minZoom: 2,
@@ -25,7 +36,20 @@ const PropertyMap: FC<PropertyMapProps> = ({ ...props }) => {
         gestureHandling: "none",
         ...props.options,
       }}
-    />
+    >
+      <Marker
+        icon={{
+          url: "/icons/pin-circle.svg",
+          anchor: new google.maps.Point(70, 70),
+          scaledSize: new google.maps.Size(140, 140),
+        }}
+        {...MarkerProps}
+        options={{
+          optimized: true,
+          ...MarkerProps?.options,
+        }}
+      />
+    </GoogleMap>
   );
 };
 
