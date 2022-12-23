@@ -1,29 +1,37 @@
 import React, { FC, useState } from "react";
 
-import { MenuItem, Paper, Stack, Typography, useTheme } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  MenuItem,
+  Paper,
+  Stack,
+  StackProps,
+  Typography,
+  useTheme,
+} from "@mui/material";
 
 import { BarDatum, BarSvgProps, ResponsiveBar } from "@nivo/bar";
 import { ResponsiveLine, LineSvgProps } from "@nivo/line";
 
 import BarChartIcon from "assets/icons/bar-chart.svg";
 import LineChartIcon from "assets/icons/line-chart.svg";
-import InfoCard, { InfoCardProps } from "components/InfoCard";
 import SelectField from "components/SelectField";
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
-export type ChartCardProps = {
+export type BarLineChartProps = {
+  StackProps?: StackProps;
   data?: object;
   defaultType?: "bar" | "line";
-  InfoCardProps?: InfoCardProps;
   BarSvgProps?: Omit<BarSvgProps<BarDatum>, "data" | "height" | "width">;
   LineSvgProps?: Omit<LineSvgProps, "data" | "height" | "width">;
   indexFormat?: (indexValue?: string | number) => string;
 };
-const ChartCard: FC<ChartCardProps> = ({
+const BarLineChart: FC<BarLineChartProps> = ({
+  StackProps,
   data,
   defaultType = "bar",
-  InfoCardProps,
   BarSvgProps,
   LineSvgProps,
   indexFormat,
@@ -33,15 +41,17 @@ const ChartCard: FC<ChartCardProps> = ({
   const [type, setType] = useState(defaultType);
 
   return (
-    <InfoCard {...InfoCardProps}>
-      {data && (
-        <Stack
-          sx={{
-            width: "100%",
-            height: "100%",
-            aspectRatio: `${1240 / 468}`,
-          }}
-        >
+    <Stack
+      {...StackProps}
+      sx={{
+        width: "100%",
+        height: "100%",
+        aspectRatio: `${1240 / 468}`,
+        ...StackProps?.sx,
+      }}
+    >
+      {data ? (
+        <>
           <Stack direction="row" alignItems="center" gap={4}>
             <Stack direction="row" alignItems="center">
               <Typography
@@ -80,29 +90,36 @@ const ChartCard: FC<ChartCardProps> = ({
           </Stack>
           {type === "bar" && (
             <ResponsiveBar
+              margin={{ top: 30, bottom: 30, left: 60, right: 30 }}
+              padding={0.4}
+              borderRadius={4}
+              colors={theme.palette.primary.main}
+              enableLabel={false}
               {...BarSvgProps}
               data={Object.entries(data ?? {}).map(([key, val]) => ({
                 id: key,
                 value: String(val),
               }))}
-              margin={{ top: 30, bottom: 60, left: 60, right: 30 }}
-              padding={0.4}
-              borderRadius={4}
-              colors={theme.palette.primary.main}
-              enableLabel={false}
               valueFormat={(value) => {
                 return formatter.format(value);
               }}
               axisLeft={{
                 legendPosition: "middle",
                 legendOffset: -50,
-                format: (value) => {
-                  return formatter.format(Number(value));
-                },
-                ...LineSvgProps?.axisLeft,
+                ...(BarSvgProps?.layout !== "horizontal" && {
+                  format: (value) => {
+                    return formatter.format(Number(value));
+                  },
+                }),
+                ...BarSvgProps?.axisLeft,
               }}
               axisBottom={{
                 format: indexFormat,
+                ...(BarSvgProps?.layout === "horizontal" && {
+                  format: (value) => {
+                    return formatter.format(Number(value));
+                  },
+                }),
                 ...BarSvgProps?.axisBottom,
               }}
               tooltip={({ indexValue, formattedValue, color }) => {
@@ -137,23 +154,24 @@ const ChartCard: FC<ChartCardProps> = ({
           )}
           {type === "line" && (
             <ResponsiveLine
+              margin={{ top: 30, bottom: 30, left: 60, right: 30 }}
+              colors={theme.palette.primary.main}
+              useMesh={true}
+              enablePoints={false}
+              enableGridX={false}
+              {...LineSvgProps}
               data={[
                 {
-                  id: InfoCardProps?.title ?? "skyrealm",
+                  id: Math.random(),
                   data: Object.entries(data ?? {}).map(([key, val]) => ({
                     x: key,
                     y: Number(val),
                   })),
                 },
               ]}
-              margin={{ top: 30, bottom: 60, left: 60, right: 30 }}
-              colors={theme.palette.primary.main}
               yFormat={(value) => {
                 return formatter.format(Number(value));
               }}
-              useMesh={true}
-              enablePoints={false}
-              enableGridX={false}
               axisLeft={{
                 legendPosition: "middle",
                 legendOffset: -50,
@@ -198,10 +216,15 @@ const ChartCard: FC<ChartCardProps> = ({
               }}
             />
           )}
-        </Stack>
+        </>
+      ) : (
+        <Alert severity="error">
+          <AlertTitle>Data Unavailable</AlertTitle>
+          We are unable to retrieve data at this time.
+        </Alert>
       )}
-    </InfoCard>
+    </Stack>
   );
 };
 
-export default ChartCard;
+export default BarLineChart;

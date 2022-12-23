@@ -17,7 +17,7 @@ import useQueryListingById, {
 import PropertyLayout from "layouts/PropertyLayout";
 import { NextPageWithLayout } from "pages/_app";
 
-const ChartCard = dynamic(() => import("components/ChartCard"), {
+const BarLineChart = dynamic(() => import("components/BarLineChart"), {
   ssr: false,
 });
 
@@ -136,71 +136,99 @@ const Visits: NextPageWithLayout = () => {
               ))}
             </Unstable_Grid2>
           </InfoCard>
-          {/* <ChartCard
-          InfoCardProps={{
-            title: "Visits Trend",
-          }}
-        /> */}
-          <ChartCard
-            InfoCardProps={{
-              title: "Hourly Visits",
-            }}
-            data={listing?.stats["Time of day"]}
-            BarSvgProps={{
-              axisBottom: {
-                format: (value) => {
-                  return value % 2 === 0
-                    ? moment(value, "H").format("hh:mm A")
-                    : "";
+          <InfoCard title="Visits Trend">
+            <BarLineChart
+              BarSvgProps={{
+                axisLeft: {
+                  legend: "Visits",
                 },
-              },
-            }}
-            LineSvgProps={{
-              axisLeft: {
-                legend: "Visits",
-              },
-              axisBottom: {
-                format: (value) => {
-                  return value % 2 === 0
-                    ? moment(value, "H").format("hh:mm A")
-                    : "";
+              }}
+              LineSvgProps={{
+                axisLeft: {
+                  legend: "Visits",
                 },
-              },
-            }}
-            indexFormat={(value) => {
-              return moment(value, "H").format("hh:mm A");
-            }}
-          />
-          <ChartCard
-            InfoCardProps={{
-              title: "Daily Visits",
-            }}
-            data={listing?.stats["Day of week"]}
-            LineSvgProps={{
-              axisLeft: {
-                legend: "Visits",
-              },
-            }}
-            indexFormat={(value) => {
-              return moment((Number(value) + 1) % 7, "e").format("dddd");
-            }}
-          />
-          <ChartCard
-            InfoCardProps={{
-              title: "Visit Frequency",
-            }}
-            data={listing?.stats["Frequency"]}
-            LineSvgProps={{
-              axisLeft: {
-                legend: "Visits",
-              },
-            }}
-          />
-          {/* <ChartCard
-          InfoCardProps={{
-            title: "Visitor type",
-          }}
-        /> */}
+              }}
+            />
+          </InfoCard>
+          <InfoCard title="Hourly Visits">
+            <BarLineChart
+              data={listing?.stats["Time of day"]}
+              BarSvgProps={{
+                axisLeft: {
+                  legend: "Visits",
+                },
+                axisBottom: {
+                  format: (value) => {
+                    return value % 2 === 0
+                      ? moment(value, "H").format("hh:mm A")
+                      : "";
+                  },
+                },
+              }}
+              LineSvgProps={{
+                axisLeft: {
+                  legend: "Visits",
+                },
+                axisBottom: {
+                  format: (value) => {
+                    return value % 2 === 0
+                      ? moment(value, "H").format("hh:mm A")
+                      : "";
+                  },
+                },
+              }}
+              indexFormat={(value) => {
+                return moment(value, "H").format("hh:mm A");
+              }}
+            />
+          </InfoCard>
+          <InfoCard title="Daily Visits">
+            <BarLineChart
+              data={listing?.stats["Day of week"]}
+              BarSvgProps={{
+                axisLeft: {
+                  legend: "Visits",
+                },
+              }}
+              LineSvgProps={{
+                axisLeft: {
+                  legend: "Visits",
+                },
+              }}
+              indexFormat={(value) => {
+                return moment((Number(value) + 1) % 7, "e").format("dddd");
+              }}
+            />
+          </InfoCard>
+          <InfoCard title="Visit Frequency">
+            <BarLineChart
+              data={listing?.stats["Frequency"]}
+              BarSvgProps={{
+                axisLeft: {
+                  legend: "Visits",
+                },
+              }}
+              LineSvgProps={{
+                axisLeft: {
+                  legend: "Visits",
+                },
+              }}
+            />
+          </InfoCard>
+          <InfoCard title="Visit type">
+            <BarLineChart
+              BarSvgProps={{
+                axisLeft: {
+                  legend: "Visits",
+                },
+              }}
+              LineSvgProps={{
+                axisLeft: {
+                  legend: "Visits",
+                },
+              }}
+            />
+          </InfoCard>
         </Stack>
       </Container>
     </Stack>

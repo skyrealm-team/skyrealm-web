@@ -26,7 +26,16 @@ const InfoCard: FC<PropsWithChildren<InfoCardProps>> = ({
   CardContentProps,
 }) => {
   return (
-    <Card elevation={0} square={false} {...CardProps}>
+    <Card
+      elevation={0}
+      square={false}
+      {...CardProps}
+      sx={{
+        ...CardProps?.sx,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {title && (
         <>
           <CardHeader
@@ -51,6 +60,7 @@ const InfoCard: FC<PropsWithChildren<InfoCardProps>> = ({
       <CardContent
         {...CardContentProps}
         sx={{
+          flex: 1,
           p: 3,
           pt: 1.5,
           ...CardContentProps?.sx,

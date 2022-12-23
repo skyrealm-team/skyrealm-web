@@ -7,7 +7,13 @@ import { Optional } from "utility-types";
 export type LoadingProps = Optional<BackdropProps, "open">;
 const Loading: FC<LoadingProps> = ({ ...props }) => {
   return (
-    <Backdrop open={true} {...props}>
+    <Backdrop
+      open={true}
+      {...props}
+      sx={(theme) => ({
+        zIndex: theme.zIndex.tooltip + 1,
+      })}
+    >
       <CircularProgress />
     </Backdrop>
   );
