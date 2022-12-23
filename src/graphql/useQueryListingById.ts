@@ -23,9 +23,9 @@ export const queryListingsByID = gql`
   }
 `;
 
-type Listing = Maybe<SingleListing>;
+export type Listing = Maybe<SingleListing>;
 
-export const queryListingByIDRequest = async (
+export const queryListingByIdRequest = async (
   options?: Partial<
     RequestOptions<
       Partial<{
@@ -46,16 +46,16 @@ export const queryListingByIDRequest = async (
     .then((data) => data.queryListingsByIDs?.listings?.[0]);
 };
 
-export const useQueryListing = (
+export const useQueryListingById = (
   variables: {
     listingId?: string;
   },
   options?: UseQueryOptions<Listing, ClientError>
 ) => {
   return useQuery<Listing, ClientError>(
-    [useQueryListing.name],
+    [useQueryListingById.name],
     () => {
-      return queryListingByIDRequest({ variables });
+      return queryListingByIdRequest({ variables });
     },
     {
       enabled: !!variables.listingId,
@@ -64,4 +64,4 @@ export const useQueryListing = (
   );
 };
 
-export default useQueryListing;
+export default useQueryListingById;

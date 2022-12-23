@@ -2,7 +2,9 @@ import { GraphQLClient } from "graphql-request";
 
 const client = new GraphQLClient(process.env.NEXT_PUBLIC_BACKEND_API ?? "", {
   requestMiddleware: (request) => {
-    const authToken = window.localStorage.getItem("auth-token");
+    const authToken =
+      typeof window !== "undefined" &&
+      window.localStorage.getItem("auth-token");
 
     return {
       ...request,
@@ -17,7 +19,8 @@ const client = new GraphQLClient(process.env.NEXT_PUBLIC_BACKEND_API ?? "", {
   responseMiddleware: (response) => {
     if (response instanceof Error) {
       if (response.message.includes("Invalid Token")) {
-        window.localStorage.removeItem("auth-token");
+        typeof window !== "undefined" &&
+          window.localStorage.removeItem("auth-token");
       }
     }
   },
