@@ -70,17 +70,16 @@ MyDocument.getInitialProps = async (ctx) => {
 
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: (App: AppType) =>
-        function EnhanceApp(props) {
-          return (
-            <App
-              {...{
-                emotionCache: cache,
-              }}
-              {...props}
-            />
-          );
-        },
+      enhanceApp: (App: AppType) => (props) => {
+        return (
+          <App
+            {...{
+              emotionCache: cache,
+            }}
+            {...props}
+          />
+        );
+      },
     });
 
   const initialProps = await Document.getInitialProps(ctx);

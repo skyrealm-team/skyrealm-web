@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { useToggle } from "react-use";
 
 import { LocationOn } from "@mui/icons-material";
@@ -28,13 +28,20 @@ export type PlaceFieldProps = {
     value: string,
     prediction?: google.maps.places.AutocompletePrediction
   ) => void;
+  onResult?: (detail: google.maps.places.PlaceResult) => void;
   TextFieldProps?: TextFieldProps;
 };
 const PlaceField: FC<PlaceFieldProps> = ({
   value,
   onChange,
+  onResult,
   TextFieldProps,
 }) => {
+  const PlacesService = useMemo(
+    () => new google.maps.places.PlacesService(document.createElement("div")),
+    []
+  );
+
   const [open, setOpen] = useToggle(false);
   const [inputValue, setInputValue] = useEffectState(value);
 
@@ -136,6 +143,19 @@ const PlaceField: FC<PlaceFieldProps> = ({
               props.onClick?.(event);
 
               onChange?.(inputValue ?? "", option);
+
+              PlacesService.getDetails(
+                {
+                  placeId: option.place_id,
+                },
+                async (result) => {
+                  if (!result) {
+                    return;
+                  }
+
+                  onResult?.(result);
+                }
+              );
             }}
           >
             <ListItemIcon>

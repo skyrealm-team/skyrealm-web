@@ -1,24 +1,24 @@
 import { FC } from "react";
 import { useMeasure } from "react-use";
 
+import dynamic from "next/dynamic";
+
 import { AppBar, Link, Stack, Toolbar } from "@mui/material";
 
 import LogoIcon from "assets/icons/logo.svg";
 import SkyrealmIcon from "assets/icons/skyrealm.svg";
-import useGetUserInfo from "graphql/useGetUserInfo";
 
-import AvatarButton from "./AvatarButton";
-import SignInButton from "./SignInButton";
-import SignUpButton from "./SignUpButton";
+const AuthButtons = dynamic(() => import("./AuthButtons"), {
+  ssr: false,
+});
 
 const Header: FC = () => {
-  const { data: userInfo, isLoading } = useGetUserInfo();
-
   const [ref, { height }] = useMeasure<HTMLDivElement>();
 
   return (
     <>
       <AppBar
+        component="div"
         color="inherit"
         sx={(theme) => ({
           boxShadow: "0px 1px 10px rgba(0, 0, 0, 0.1)",
@@ -37,15 +37,7 @@ const Header: FC = () => {
               <SkyrealmIcon />
             </Stack>
           </Link>
-          <Stack direction="row" alignItems="center" gap={3}>
-            {!isLoading && !userInfo && (
-              <>
-                <SignInButton />
-                <SignUpButton />
-              </>
-            )}
-            <AvatarButton />
-          </Stack>
+          <AuthButtons />
         </Toolbar>
       </AppBar>
       <Toolbar

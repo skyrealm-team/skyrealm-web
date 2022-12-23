@@ -13,7 +13,6 @@ const config: CodegenConfig = {
       config: {
         avoidOptionals: true,
         noExport: true,
-        maybeValue: "T | undefined",
       },
     },
   },

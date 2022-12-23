@@ -47,10 +47,6 @@ const AvatarButton: FC = () => {
     []
   );
 
-  if (!userInfo) {
-    return null;
-  }
-
   return (
     <>
       <IconButton

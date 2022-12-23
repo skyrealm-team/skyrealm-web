@@ -1,12 +1,13 @@
 import { FC, ReactElement, ReactNode } from "react";
+import { Hydrate } from "react-query";
 
+import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
 
 import { EmotionCache } from "@emotion/react";
 
 import Providers from "Providers";
-import { NextPage } from "next";
 
 import AppLayout from "layouts/AppLayout";
 
@@ -31,7 +32,9 @@ const MyApp: FC<MyAppProps> = ({ Component, emotionCache, pageProps }) => {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <Providers emotionCache={emotionCache}>
-        <AppLayout>{getLayout(<Component {...pageProps} />)}</AppLayout>
+        <Hydrate state={pageProps.dehydratedState}>
+          <AppLayout>{getLayout(<Component {...pageProps} />)}</AppLayout>
+        </Hydrate>
       </Providers>
     </>
   );

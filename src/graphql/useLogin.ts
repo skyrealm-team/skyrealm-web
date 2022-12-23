@@ -1,5 +1,5 @@
 import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
-import { useLocalStorage } from "react-use";
+import { useCookie, useLocalStorage } from "react-use";
 
 import { ClientError, gql } from "graphql-request";
 
@@ -26,6 +26,7 @@ export const loginRequest = async (
 export const useLogin = (
   options?: UseMutationOptions<Queries["login"], ClientError, QueriesLoginArgs>
 ) => {
+  const [, setAuthToken2] = useCookie("auth-token");
   const [, setAuthToken] = useLocalStorage<string>("auth-token");
   const queryClient = useQueryClient();
 
@@ -35,7 +36,8 @@ export const useLogin = (
     {
       ...options,
       onSuccess: async (data, variables, context) => {
-        setAuthToken(data?.authToken);
+        setAuthToken(data?.authToken ?? "");
+        setAuthToken2(data?.authToken ?? "");
         await queryClient.refetchQueries([useGetUserInfo.name]);
 
         options?.onSuccess?.(data, variables, context);

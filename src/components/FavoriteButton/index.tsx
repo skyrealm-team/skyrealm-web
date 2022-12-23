@@ -9,24 +9,21 @@ import useUpdateFavoriteListings from "graphql/useUpdateFavoriteListings";
 import useOpens from "hooks/useOpens";
 
 export type FavoriteButtonProps = {
-  listing?: SingleListing;
+  listing?: Maybe<SingleListing>;
 };
 
 const FavoriteButton: FC<FavoriteButtonProps> = ({ listing }) => {
   const [opens, setOpens] = useOpens();
 
-  const {
-    data: userInfo,
-    refetch: refetchUserInfo,
-    isFetching: userInfoIsFetching,
-  } = useGetUserInfo();
+  const { data: userInfo, refetch: refetchUserInfo } = useGetUserInfo();
+
   const setUserInfoData = useSetUserInfoData();
   const {
     mutateAsync: updateFavoriteListings,
     isLoading: updateFavoriteListingsIsLoading,
   } = useUpdateFavoriteListings();
 
-  const isFavorite = userInfo?.favorite?.includes(listing?.listingId);
+  const isFavorite = userInfo?.favorite?.includes(listing?.listingId ?? "");
 
   return (
     <IconButton
@@ -46,21 +43,21 @@ const FavoriteButton: FC<FavoriteButtonProps> = ({ listing }) => {
             setUserInfoData({
               ...userInfo,
               favorite: !isFavorite
-                ? [...(userInfo?.favorite ?? []), listing?.listingId]
+                ? [...(userInfo?.favorite ?? []), listing?.listingId ?? ""]
                 : userInfo?.favorite?.filter(
                     (item) => item !== listing?.listingId
                   ),
             });
           }
           await updateFavoriteListings({
-            listingId: listing?.listingId,
+            listingId: listing?.listingId ?? "",
             toLike: !isFavorite,
           });
         } finally {
           refetchUserInfo();
         }
       }}
-      disabled={updateFavoriteListingsIsLoading || userInfoIsFetching}
+      disabled={updateFavoriteListingsIsLoading}
     >
       {isFavorite ? <FavoriteButtonSelectedIcon /> : <FavoriteButtonIcon />}
     </IconButton>

@@ -7,7 +7,7 @@ import FavoriteButton from "components/FavoriteButton";
 import InfoCard from "components/InfoCard";
 
 export type PropertyHeaderProps = {
-  listing?: SingleListing;
+  listing?: Maybe<SingleListing>;
 };
 const PropertyHeader: FC<PropertyHeaderProps> = ({ listing }) => {
   return (

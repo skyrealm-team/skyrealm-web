@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren } from "react";
 import { useMeasure } from "react-use";
 
+import Error from "next/error";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -21,6 +22,7 @@ import NearbyResidentsIcon from "assets/icons/nearby-residents.svg";
 import VisitorProfileIcon from "assets/icons/visitor-profile.svg";
 import VisitsIcon from "assets/icons/visits.svg";
 import ContactButton from "components/ContactButton";
+import useQueryListingById from "graphql/useQueryListingById";
 
 const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
@@ -71,6 +73,14 @@ const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
   ];
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
+
+  const { data: listing } = useQueryListingById({
+    listingId: lid && String(lid),
+  });
+
+  if (!listing) {
+    return <Error statusCode={404} withDarkMode={false} />;
+  }
 
   return (
     <Stack direction="row">

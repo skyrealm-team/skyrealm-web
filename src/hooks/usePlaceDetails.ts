@@ -2,28 +2,22 @@ import { useMemo } from "react";
 import { useQuery, UseQueryOptions } from "react-query";
 
 export const usePlaceDetails = (
-  variables: {
-    map?: google.maps.Map;
-  } & google.maps.places.PlaceDetailsRequest,
+  variables: google.maps.places.PlaceDetailsRequest,
   options?: UseQueryOptions<google.maps.places.PlaceResult>
 ) => {
-  const { map, ...request } = variables;
   const PlacesService = useMemo(
-    () =>
-      new google.maps.places.PlacesService(
-        map ?? document.createElement("div")
-      ),
-    [map]
+    () => new google.maps.places.PlacesService(document.createElement("div")),
+    []
   );
 
   return useQuery<google.maps.places.PlaceResult>(
-    [usePlaceDetails.name, request],
+    [usePlaceDetails.name, variables],
     async () => {
       return new Promise((resolve, reject) => {
-        if (!request.placeId) {
+        if (!variables.placeId) {
           return reject("place_id is required");
         }
-        PlacesService.getDetails(request, async (result) => {
+        PlacesService.getDetails(variables, async (result) => {
           if (!result) {
             return reject("result is empty");
           }
@@ -33,7 +27,7 @@ export const usePlaceDetails = (
       });
     },
     {
-      enabled: !!request.placeId,
+      enabled: !!variables.placeId,
       ...options,
     }
   );

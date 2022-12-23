@@ -1,51 +1,66 @@
+import { dehydrate, QueryClient } from "react-query";
+
+import { GetServerSideProps } from "next";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+
 import { Container, Stack, Typography, Unstable_Grid2 } from "@mui/material";
 
 import moment from "moment";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-import ChartCard from "components/ChartCard";
 import InfoCard from "components/InfoCard";
 import PropertyHeader from "components/PropertyHeader";
 import PropertyMap from "components/PropertyMap";
-import { Listing, queryListingByIdRequest } from "graphql/useQueryListingById";
+import useQueryListingById, {
+  queryListingByIdRequest,
+} from "graphql/useQueryListingById";
 import PropertyLayout from "layouts/PropertyLayout";
 import { NextPageWithLayout } from "pages/_app";
 
+const ChartCard = dynamic(() => import("components/ChartCard"), {
+  ssr: false,
+});
+
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
-export const getServerSideProps: GetServerSideProps<{
-  listing: Listing;
-}> = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const { lid } = context.query;
 
-  if (!lid) {
-    return {
-      notFound: true,
-    };
-  }
+  const queryClient = new QueryClient();
 
-  const listing = await queryListingByIdRequest({
-    variables: {
-      listingId: String(lid),
-    },
-  });
-
-  if (!listing) {
-    return {
-      notFound: true,
-    };
-  }
+  await Promise.allSettled([
+    queryClient.prefetchQuery(
+      [
+        useQueryListingById.name,
+        {
+          listingId: String(lid),
+        },
+      ],
+      () => {
+        return queryListingByIdRequest({
+          variables: {
+            listingId: String(lid),
+          },
+        });
+      }
+    ),
+  ]);
 
   return {
     props: {
-      listing,
+      dehydratedState: dehydrate(queryClient),
     },
   };
 };
 
-const Visits: NextPageWithLayout<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ listing }) => {
+const Visits: NextPageWithLayout = () => {
+  const router = useRouter();
+  const { lid } = router.query;
+
+  const { data: listing } = useQueryListingById({
+    listingId: lid && String(lid),
+  });
+
   return (
     <Stack>
       <PropertyHeader listing={listing} />

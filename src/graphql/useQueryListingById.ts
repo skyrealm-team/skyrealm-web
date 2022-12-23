@@ -23,15 +23,13 @@ export const queryListingsByID = gql`
   }
 `;
 
-export type Listing = Maybe<SingleListing>;
-
 export const queryListingByIdRequest = async (
   options?: Partial<
     RequestOptions<
       Partial<{
         listingId?: string;
       }>,
-      Listing
+      Maybe<SingleListing>
     >
   >
 ) => {
@@ -43,17 +41,17 @@ export const queryListingByIdRequest = async (
       },
       document: queryListingsByID,
     })
-    .then((data) => data.queryListingsByIDs?.listings?.[0]);
+    .then((data) => data.queryListingsByIDs?.listings?.[0] ?? null);
 };
 
 export const useQueryListingById = (
   variables: {
     listingId?: string;
   },
-  options?: UseQueryOptions<Listing, ClientError>
+  options?: UseQueryOptions<Maybe<SingleListing>, ClientError>
 ) => {
-  return useQuery<Listing, ClientError>(
-    [useQueryListingById.name],
+  return useQuery<Maybe<SingleListing>, ClientError>(
+    [useQueryListingById.name, variables],
     () => {
       return queryListingByIdRequest({ variables });
     },

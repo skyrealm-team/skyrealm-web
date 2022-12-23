@@ -20,7 +20,7 @@ export const getUserUserInfoQuery = gql`
   }
 `;
 
-export const getUserUserInfoRequest = async (
+export const getUserInfoRequest = async (
   options?: Partial<RequestOptions<undefined, Queries["getUserUserInfo"]>>
 ) => {
   return client
@@ -39,7 +39,7 @@ export const useGetUserInfo = (
   return useQuery<Queries["getUserUserInfo"], ClientError>(
     [useGetUserInfo.name],
     () => {
-      return getUserUserInfoRequest();
+      return getUserInfoRequest();
     },
     {
       enabled: !!authToken,

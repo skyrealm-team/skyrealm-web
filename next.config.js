@@ -9,6 +9,7 @@ const nextConfig = {
 
     return config;
   },
+  optimizeFonts: true,
 };
 
 module.exports = nextConfig;

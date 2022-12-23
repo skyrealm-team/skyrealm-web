@@ -1,8 +1,5 @@
 import { FC, PropsWithChildren } from "react";
 
-import GoogleMapsProvider, {
-  GoogleMapsProviderProps,
-} from "./GoogleMapsProvider";
 import MuiProvider, { MuiProviderProps } from "./MuiProvider";
 import NotistackProvider, { NotistackProviderProps } from "./NotistackProvider";
 import ReactQueryProvider, {
@@ -11,16 +8,16 @@ import ReactQueryProvider, {
 
 export type ProvidersProps = ReactQueryProviderProps &
   MuiProviderProps &
-  NotistackProviderProps &
-  GoogleMapsProviderProps;
+  NotistackProviderProps;
 
-const Providers: FC<PropsWithChildren<ProvidersProps>> = ({ children }) => {
+const Providers: FC<PropsWithChildren<ProvidersProps>> = ({
+  children,
+  emotionCache,
+}) => {
   return (
     <ReactQueryProvider>
-      <MuiProvider>
-        <NotistackProvider>
-          <GoogleMapsProvider>{children}</GoogleMapsProvider>
-        </NotistackProvider>
+      <MuiProvider emotionCache={emotionCache}>
+        <NotistackProvider>{children}</NotistackProvider>
       </MuiProvider>
     </ReactQueryProvider>
   );

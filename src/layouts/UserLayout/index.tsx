@@ -59,7 +59,7 @@ const UserLayout: FC<PropsWithChildren> = ({ children }) => {
   }, [userInfoIsFetched, userInfoIsLoading, userInfo]);
 
   if (!userInfoIsLoading && !userInfo) {
-    return <Error statusCode={401} />;
+    return <Error statusCode={401} withDarkMode={false} />;
   }
 
   return (

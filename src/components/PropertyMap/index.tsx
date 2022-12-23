@@ -3,9 +3,13 @@ import { FC } from "react";
 import {
   GoogleMap,
   GoogleMapProps,
-  Marker,
+  LoadScriptNext,
   MarkerProps,
 } from "@react-google-maps/api";
+
+import Loading from "components/Loading";
+
+import CircleMarker from "./CircleMarker";
 
 export type PropertyMapProps = GoogleMapProps & {
   MarkerProps?: MarkerProps;
@@ -16,40 +20,34 @@ const PropertyMap: FC<PropertyMapProps> = ({ MarkerProps, ...props }) => {
   }
 
   return (
-    <GoogleMap
-      zoom={12}
-      {...props}
-      center={MarkerProps?.position}
-      options={{
-        mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID,
-        minZoom: 2,
-        clickableIcons: false,
-        controlSize: 30,
-        disableDefaultUI: false,
-        fullscreenControl: false,
-        mapTypeControl: false,
-        streetViewControl: false,
-        panControl: false,
-        zoomControl: false,
-        scrollwheel: false,
-        disableDoubleClickZoom: true,
-        gestureHandling: "none",
-        ...props.options,
-      }}
+    <LoadScriptNext
+      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}
+      loadingElement={<Loading />}
     >
-      <Marker
-        icon={{
-          url: "/icons/pin-circle.svg",
-          anchor: new google.maps.Point(70, 70),
-          scaledSize: new google.maps.Size(140, 140),
-        }}
-        {...MarkerProps}
+      <GoogleMap
+        zoom={12}
+        {...props}
+        center={MarkerProps?.position}
         options={{
-          optimized: true,
-          ...MarkerProps?.options,
+          mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID,
+          minZoom: 2,
+          clickableIcons: false,
+          controlSize: 30,
+          disableDefaultUI: false,
+          fullscreenControl: false,
+          mapTypeControl: false,
+          streetViewControl: false,
+          panControl: false,
+          zoomControl: false,
+          scrollwheel: false,
+          disableDoubleClickZoom: true,
+          gestureHandling: "none",
+          ...props.options,
         }}
-      />
-    </GoogleMap>
+      >
+        <CircleMarker {...MarkerProps} />
+      </GoogleMap>
+    </LoadScriptNext>
   );
 };
 

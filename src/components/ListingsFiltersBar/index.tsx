@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useDeepCompareEffect, useUpdateEffect } from "react-use";
+import { useDeepCompareEffect } from "react-use";
 
 import { AppBar, MenuItem, Stack, Toolbar } from "@mui/material";
 
@@ -8,16 +8,12 @@ import { isEmpty, isUndefined } from "lodash";
 import PlaceField from "components/PlaceField";
 import SelectField from "components/SelectField";
 import useQueryListingFilters from "graphql/useQueryListingFilters";
-import usePlaceDetails from "hooks/usePlaceDetails";
 import useRouterState from "hooks/useRouterState";
 
 const ListingsFiltersBar: FC = () => {
   const { routerState, setRouterState } = useRouterState();
 
   const { data: listingFilters } = useQueryListingFilters();
-  const { data: placeDetails } = usePlaceDetails({
-    placeId: routerState.queryListingsArgs?.placeId ?? "",
-  });
 
   useDeepCompareEffect(() => {
     const options = listingFilters?.reduce((acc, cur) => {
@@ -56,17 +52,6 @@ const ListingsFiltersBar: FC = () => {
     ),
   ]);
 
-  useUpdateEffect(() => {
-    if (placeDetails?.geometry?.viewport) {
-      setRouterState({
-        queryListingsArgs: {
-          bounds: placeDetails?.geometry?.viewport.toJSON(),
-          currentPage: 1,
-        },
-      });
-    }
-  }, [placeDetails]);
-
   return (
     <AppBar
       position="static"
@@ -93,9 +78,20 @@ const ListingsFiltersBar: FC = () => {
               setRouterState({
                 queryListingsArgs: {
                   address: prediction?.structured_formatting.main_text,
-                  placeId: prediction?.place_id,
                 },
               });
+            }}
+            onResult={(result) => {
+              const bounds = result?.geometry?.viewport?.toJSON();
+
+              if (bounds) {
+                setRouterState({
+                  queryListingsArgs: {
+                    bounds,
+                    currentPage: 1,
+                  },
+                });
+              }
             }}
           />
           {listingFilters?.map((listingFilter) => {
