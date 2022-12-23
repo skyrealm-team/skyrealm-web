@@ -1,9 +1,9 @@
 import { FC } from "react";
 
-import { IconButton, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 
-import FavoriteIcon from "assets/icons/favorite.svg";
 import LocationIcon from "assets/icons/location.svg";
+import FavoriteButton from "components/FavoriteButton";
 import InfoCard from "components/InfoCard";
 
 export type PropertyHeaderProps = {
@@ -48,9 +48,7 @@ const PropertyHeader: FC<PropertyHeaderProps> = ({ listing }) => {
             </Typography>
           </Stack>
         </Stack>
-        <IconButton>
-          <FavoriteIcon />
-        </IconButton>
+        <FavoriteButton listing={listing} />
       </Stack>
     </InfoCard>
   );
