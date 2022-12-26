@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient, UseQueryOptions } from "react-query";
-import { useLocalStorage } from "react-use";
+import { useCookie } from "react-use";
 
 import { ClientError, gql, RequestOptions } from "graphql-request";
 
@@ -34,7 +34,7 @@ export const getUserInfoRequest = async (
 export const useGetUserInfo = (
   options?: UseQueryOptions<Queries["getUserUserInfo"], ClientError>
 ) => {
-  const [authToken] = useLocalStorage<string>("auth-token");
+  const [authToken] = useCookie("auth-token");
 
   return useQuery<Queries["getUserUserInfo"], ClientError>(
     [useGetUserInfo.name],

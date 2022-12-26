@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
 
+import { PieChartOutline } from "@mui/icons-material";
 import {
   Alert,
   AlertTitle,
@@ -13,6 +14,8 @@ import {
 
 import { BarDatum, BarSvgProps, ResponsiveBar } from "@nivo/bar";
 import { ResponsiveLine, LineSvgProps } from "@nivo/line";
+import { DefaultRawDatum, PieSvgProps, ResponsivePie } from "@nivo/pie";
+import uniqolor from "uniqolor";
 
 import BarChartIcon from "assets/icons/bar-chart.svg";
 import LineChartIcon from "assets/icons/line-chart.svg";
@@ -20,20 +23,22 @@ import SelectField from "components/SelectField";
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
-export type BarLineChartProps = {
+export type ChartsProps = {
   StackProps?: StackProps;
   data?: object;
-  defaultType?: "bar" | "line";
-  BarSvgProps?: Omit<BarSvgProps<BarDatum>, "data" | "height" | "width">;
-  LineSvgProps?: Omit<LineSvgProps, "data" | "height" | "width">;
+  defaultType?: "bar" | "line" | "pie";
+  BarSvgProps?: Omit<BarSvgProps<BarDatum>, "data" | "width" | "height">;
+  LineSvgProps?: Omit<LineSvgProps, "data" | "width" | "height">;
+  PieSvgProps?: Omit<PieSvgProps<DefaultRawDatum>, "data" | "width" | "height">;
   indexFormat?: (indexValue?: string | number) => string;
 };
-const BarLineChart: FC<BarLineChartProps> = ({
+const Charts: FC<ChartsProps> = ({
   StackProps,
   data,
   defaultType = "bar",
   BarSvgProps,
   LineSvgProps,
+  PieSvgProps,
   indexFormat,
 }) => {
   const theme = useTheme();
@@ -85,17 +90,30 @@ const BarLineChart: FC<BarLineChartProps> = ({
                 <MenuItem value="line">
                   <LineChartIcon />
                 </MenuItem>
+                <MenuItem value="pie">
+                  <PieChartOutline
+                    sx={{
+                      color: "#999999",
+                    }}
+                  />
+                </MenuItem>
               </SelectField>
             </Stack>
           </Stack>
           {type === "bar" && (
             <ResponsiveBar
-              margin={{ top: 30, bottom: 30, left: 60, right: 30 }}
               padding={0.4}
               borderRadius={4}
               colors={theme.palette.primary.main}
               enableLabel={false}
               {...BarSvgProps}
+              margin={{
+                top: 20,
+                bottom: 60,
+                left: 60,
+                right: 20,
+                ...BarSvgProps?.margin,
+              }}
               data={Object.entries(data ?? {}).map(([key, val]) => ({
                 id: key,
                 value: String(val),
@@ -120,6 +138,51 @@ const BarLineChart: FC<BarLineChartProps> = ({
                     return formatter.format(Number(value));
                   },
                 }),
+                renderTick: ({
+                  opacity,
+                  textAnchor,
+                  textBaseline,
+                  textX,
+                  textY,
+                  value,
+                  x,
+                  y,
+                }) => {
+                  const values = String(
+                    indexFormat ? indexFormat(value) : value
+                  )
+                    .split(" ")
+                    .filter(Boolean);
+                  return (
+                    <g transform={`translate(${x},${y})`} style={{ opacity }}>
+                      <line
+                        x1={0}
+                        x2={0}
+                        y1={0}
+                        y2={5}
+                        style={{
+                          stroke: "rgb(119, 119, 119)",
+                          strokeWidth: 1,
+                        }}
+                      />
+                      <text
+                        alignmentBaseline={textBaseline as never}
+                        textAnchor={textAnchor}
+                        transform={`translate(${textX},${textY})`}
+                        fontSize={10}
+                      >
+                        {(values.length <= 4
+                          ? values
+                          : [...values.slice(0, 3), "..."]
+                        ).map((item, index) => (
+                          <tspan key={index} x={0} y={(index + 1) * 10}>
+                            {item}
+                          </tspan>
+                        ))}
+                      </text>
+                    </g>
+                  );
+                },
                 ...BarSvgProps?.axisBottom,
               }}
               tooltip={({ indexValue, formattedValue, color }) => {
@@ -154,12 +217,22 @@ const BarLineChart: FC<BarLineChartProps> = ({
           )}
           {type === "line" && (
             <ResponsiveLine
-              margin={{ top: 30, bottom: 30, left: 60, right: 30 }}
               colors={theme.palette.primary.main}
               useMesh={true}
               enablePoints={false}
               enableGridX={false}
+              yScale={{
+                type: "linear",
+                min: "auto",
+              }}
               {...LineSvgProps}
+              margin={{
+                top: 20,
+                bottom: 60,
+                left: 60,
+                right: 20,
+                ...LineSvgProps?.margin,
+              }}
               data={[
                 {
                   id: Math.random(),
@@ -182,6 +255,51 @@ const BarLineChart: FC<BarLineChartProps> = ({
               }}
               axisBottom={{
                 format: indexFormat,
+                renderTick: ({
+                  opacity,
+                  textAnchor,
+                  textBaseline,
+                  textX,
+                  textY,
+                  value,
+                  x,
+                  y,
+                }) => {
+                  const values = String(
+                    indexFormat ? indexFormat(value) : value
+                  )
+                    .split(" ")
+                    .filter(Boolean);
+                  return (
+                    <g transform={`translate(${x},${y})`} style={{ opacity }}>
+                      <line
+                        x1={0}
+                        x2={0}
+                        y1={0}
+                        y2={5}
+                        style={{
+                          stroke: "rgb(119, 119, 119)",
+                          strokeWidth: 1,
+                        }}
+                      />
+                      <text
+                        alignmentBaseline={textBaseline as never}
+                        textAnchor={textAnchor}
+                        transform={`translate(${textX},${textY})`}
+                        fontSize={10}
+                      >
+                        {(values.length <= 4
+                          ? values
+                          : [...values.slice(0, 3), "..."]
+                        ).map((item, index) => (
+                          <tspan key={index} x={0} y={(index + 1) * 10}>
+                            {item}
+                          </tspan>
+                        ))}
+                      </text>
+                    </g>
+                  );
+                },
                 ...LineSvgProps?.axisBottom,
               }}
               tooltip={({ point }) => {
@@ -216,6 +334,57 @@ const BarLineChart: FC<BarLineChartProps> = ({
               }}
             />
           )}
+          {type === "pie" && (
+            <ResponsivePie
+              colors={Object.keys(data).map((item) => uniqolor(item).color)}
+              margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
+              padAngle={0.7}
+              cornerRadius={3}
+              activeOuterRadiusOffset={8}
+              arcLinkLabelsTextColor="#333333"
+              arcLinkLabelsThickness={2}
+              arcLabelsTextColor="#FFF"
+              arcLinkLabelsColor={(d) => {
+                return d.color;
+              }}
+              {...PieSvgProps}
+              data={Object.entries(data ?? {}).map(([key, val]) => ({
+                id: key,
+                value: Number(val),
+              }))}
+              valueFormat={(value) => {
+                return formatter.format(value);
+              }}
+              tooltip={({ datum }) => {
+                return (
+                  <Paper
+                    sx={{
+                      p: 1.5,
+                    }}
+                  >
+                    <Stack direction="row" alignItems="center" gap={10}>
+                      <Typography
+                        sx={{
+                          fontWeight: 700,
+                        }}
+                      >
+                        {datum.label}
+                      </Typography>
+                      <Typography
+                        color={datum.color}
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: 600,
+                        }}
+                      >
+                        {datum.formattedValue}
+                      </Typography>
+                    </Stack>
+                  </Paper>
+                );
+              }}
+            />
+          )}
         </>
       ) : (
         <Alert severity="error">
@@ -227,4 +396,4 @@ const BarLineChart: FC<BarLineChartProps> = ({
   );
 };
 
-export default BarLineChart;
+export default Charts;

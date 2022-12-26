@@ -118,7 +118,7 @@ const AvatarButton: FC = () => {
         <MenuItem
           onClick={async () => {
             await logoff({
-              email: userInfo?.email,
+              email: userInfo?.email ?? null,
             });
           }}
         >

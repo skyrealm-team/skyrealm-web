@@ -1,5 +1,5 @@
 import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
-import { useLocalStorage } from "react-use";
+import { useCookie } from "react-use";
 
 import { ClientError, gql } from "graphql-request";
 
@@ -46,7 +46,7 @@ export const useRegister = (
     MutationRegisterArgs
   >
 ) => {
-  const [, setAuthToken] = useLocalStorage<string>("auth-token");
+  const [, setAuthToken] = useCookie("auth-token");
   const queryClient = useQueryClient();
 
   return useMutation<Mutation["register"], ClientError, MutationRegisterArgs>(
@@ -55,7 +55,7 @@ export const useRegister = (
     {
       ...options,
       onSuccess: async (data, variables, context) => {
-        setAuthToken(data?.authToken);
+        setAuthToken(data?.authToken ?? "");
         await queryClient.refetchQueries([useGetUserInfo.name]);
 
         options?.onSuccess?.(data, variables, context);

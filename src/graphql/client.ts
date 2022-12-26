@@ -1,26 +1,24 @@
 import { GraphQLClient } from "graphql-request";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 const client = new GraphQLClient(process.env.NEXT_PUBLIC_BACKEND_API ?? "", {
   requestMiddleware: (request) => {
-    const authToken =
-      typeof window !== "undefined" &&
-      window.localStorage.getItem("auth-token");
+    const authToken = cookies.get("auth-token");
 
     return {
       ...request,
       headers: {
+        authorization: authToken,
         ...request.headers,
-        ...(authToken && {
-          authorization: JSON.parse(authToken),
-        }),
       },
     };
   },
   responseMiddleware: (response) => {
     if (response instanceof Error) {
       if (response.message.includes("Invalid Token")) {
-        typeof window !== "undefined" &&
-          window.localStorage.removeItem("auth-token");
+        cookies.remove("auth-token");
       }
     }
   },

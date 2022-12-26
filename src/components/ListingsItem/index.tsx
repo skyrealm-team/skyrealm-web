@@ -19,7 +19,7 @@ import FavoriteButton from "components/FavoriteButton";
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
 export type ListingsItemProps = {
-  listing?: SingleListing;
+  listing?: Maybe<SingleListing>;
   ListItemProps?: ListItemProps;
   ListItemButtonProps?: ListItemButtonProps<"a">;
 };

@@ -119,7 +119,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
             >
               <Pagination
                 count={data.totalPage}
-                page={data.currentPage}
+                page={data.currentPage ?? undefined}
                 shape="rounded"
                 color="primary"
                 onChange={(event, page) => {

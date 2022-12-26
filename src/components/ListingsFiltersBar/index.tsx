@@ -126,7 +126,7 @@ const ListingsFiltersBar: FC = () => {
                   .map(({ name, value }) => (
                     <MenuItem
                       key={name}
-                      value={value}
+                      value={value ?? undefined}
                       sx={(theme) => ({
                         ...(isEmpty(value) && {
                           color: theme.palette.text.disabled,

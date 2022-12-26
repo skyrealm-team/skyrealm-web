@@ -17,7 +17,7 @@ import useQueryListingById, {
 import PropertyLayout from "layouts/PropertyLayout";
 import { NextPageWithLayout } from "pages/_app";
 
-const BarLineChart = dynamic(() => import("components/BarLineChart"), {
+const Charts = dynamic(() => import("components/Charts"), {
   ssr: false,
 });
 
@@ -137,7 +137,7 @@ const Visits: NextPageWithLayout = () => {
             </Unstable_Grid2>
           </InfoCard>
           <InfoCard title="Visits Trend">
-            <BarLineChart
+            <Charts
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visits",
@@ -151,7 +151,7 @@ const Visits: NextPageWithLayout = () => {
             />
           </InfoCard>
           <InfoCard title="Hourly Visits">
-            <BarLineChart
+            <Charts
               data={listing?.stats["Time of day"]}
               BarSvgProps={{
                 axisLeft: {
@@ -183,7 +183,7 @@ const Visits: NextPageWithLayout = () => {
             />
           </InfoCard>
           <InfoCard title="Daily Visits">
-            <BarLineChart
+            <Charts
               data={listing?.stats["Day of week"]}
               BarSvgProps={{
                 axisLeft: {
@@ -201,7 +201,7 @@ const Visits: NextPageWithLayout = () => {
             />
           </InfoCard>
           <InfoCard title="Visit Frequency">
-            <BarLineChart
+            <Charts
               data={listing?.stats["Frequency"]}
               BarSvgProps={{
                 axisLeft: {
@@ -216,7 +216,7 @@ const Visits: NextPageWithLayout = () => {
             />
           </InfoCard>
           <InfoCard title="Visit type">
-            <BarLineChart
+            <Charts
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visits",

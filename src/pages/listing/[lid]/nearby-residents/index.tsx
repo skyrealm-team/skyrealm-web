@@ -49,7 +49,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-const VisitorProfile: NextPageWithLayout = () => {
+const NearbyResidents: NextPageWithLayout = () => {
   const router = useRouter();
   const { lid } = router.query;
 
@@ -273,8 +273,8 @@ const VisitorProfile: NextPageWithLayout = () => {
   );
 };
 
-VisitorProfile.getLayout = (page) => {
+NearbyResidents.getLayout = (page) => {
   return <PropertyLayout>{page}</PropertyLayout>;
 };
 
-export default VisitorProfile;
+export default NearbyResidents;

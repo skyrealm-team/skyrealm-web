@@ -1,5 +1,5 @@
 import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
-import { useLocalStorage } from "react-use";
+import { useCookie } from "react-use";
 
 import { ClientError, gql } from "graphql-request";
 
@@ -30,7 +30,7 @@ export const useLogoff = (
     MutationLogoffArgs
   >
 ) => {
-  const [, , removeAuthToken] = useLocalStorage<string>("auth-token");
+  const [, , removeAuthToken] = useCookie("auth-token");
   const queryClient = useQueryClient();
 
   return useMutation<Mutation["logoff"], ClientError, MutationLogoffArgs>(

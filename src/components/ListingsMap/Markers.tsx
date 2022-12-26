@@ -4,7 +4,7 @@ import { useUpdateEffect } from "react-use";
 import InfoMarker, { InfoMarkerProps } from "./InfoMarker";
 
 export type MarkersProps = {
-  listings?: Maybe<SingleListing>[];
+  listings?: Maybe<Maybe<SingleListing>[]>;
   MarkerProps?: InfoMarkerProps;
   hovering?: SingleListing["listingId"];
   selections?: Array<SingleListing["listingId"]>;

@@ -13,7 +13,7 @@ import useGetUserInfo from "graphql/useGetUserInfo";
 
 export type InfoMarkerProps = Omit<MarkerProps, "position"> &
   Partial<Pick<MarkerProps, "position">> & {
-    listing?: SingleListing;
+    listing?: Maybe<SingleListing>;
     hovered?: boolean;
     selected?: boolean;
     InfoWindowProps?: InfoWindowProps;
@@ -31,7 +31,7 @@ const InfoMarker: FC<InfoMarkerProps> = ({
   const [hovering, setHovering] = useToggle(false);
 
   const focused = hovering || hovered || selected;
-  const favored = userInfo?.favorite?.includes(listing?.listingId);
+  const favored = userInfo?.favorite?.includes(listing?.listingId ?? null);
 
   const size = Math.min(listing?.visitors, 10 * 1000) / 1000 + 10;
 

@@ -9,7 +9,7 @@ import {
 
 import Loading from "components/Loading";
 
-import CircleMarker from "./CircleMarker";
+import Makers from "./Makers";
 
 export type PropertyMapProps = GoogleMapProps & {
   MarkerProps?: MarkerProps;
@@ -45,7 +45,7 @@ const PropertyMap: FC<PropertyMapProps> = ({ MarkerProps, ...props }) => {
           ...props.options,
         }}
       >
-        <CircleMarker {...MarkerProps} />
+        <Makers {...MarkerProps} />
       </GoogleMap>
     </LoadScriptNext>
   );
