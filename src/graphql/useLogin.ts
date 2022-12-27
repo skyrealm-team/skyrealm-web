@@ -4,7 +4,7 @@ import { useCookie } from "react-use";
 import { ClientError, gql } from "graphql-request";
 
 import client from "./client";
-import useGetUserInfo from "./useGetUserInfo";
+import { getUserUserInfoQuery } from "./useGetUserInfo";
 
 export const loginQuery = gql`
   query login($email: String!, $password: String!) {
@@ -30,13 +30,13 @@ export const useLogin = (
   const queryClient = useQueryClient();
 
   return useMutation<Queries["login"], ClientError, QueriesLoginArgs>(
-    [useLogin.name],
+    [loginQuery],
     loginRequest,
     {
       ...options,
       onSuccess: async (data, variables, context) => {
         setAuthToken(data?.authToken ?? "");
-        await queryClient.refetchQueries([useGetUserInfo.name]);
+        await queryClient.refetchQueries([getUserUserInfoQuery]);
 
         options?.onSuccess?.(data, variables, context);
       },

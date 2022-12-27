@@ -4,7 +4,7 @@ import { useCookie } from "react-use";
 import { ClientError, gql } from "graphql-request";
 
 import client from "./client";
-import useGetUserInfo from "./useGetUserInfo";
+import { getUserUserInfoQuery } from "./useGetUserInfo";
 
 export const logoffMutation = gql`
   mutation logoff($email: String!) {
@@ -34,13 +34,13 @@ export const useLogoff = (
   const queryClient = useQueryClient();
 
   return useMutation<Mutation["logoff"], ClientError, MutationLogoffArgs>(
-    [useLogoff.name],
+    [logoffMutation],
     logoffRequest,
     {
       ...options,
       onSuccess: (data, variables, context) => {
         removeAuthToken();
-        queryClient.setQueryData([useGetUserInfo.name], undefined);
+        queryClient.setQueryData([getUserUserInfoQuery], undefined);
 
         options?.onSuccess?.(data, variables, context);
       },

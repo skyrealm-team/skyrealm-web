@@ -11,6 +11,7 @@ import PropertyHeader from "components/PropertyHeader";
 import PropertyMap from "components/PropertyMap";
 import useQueryListingById, {
   queryListingByIdRequest,
+  queryListingByIdQuery,
 } from "graphql/useQueryListingById";
 import PropertyLayout from "layouts/PropertyLayout";
 import { NextPageWithLayout } from "pages/_app";
@@ -27,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   await Promise.allSettled([
     queryClient.prefetchQuery(
       [
-        useQueryListingById.name,
+        queryListingByIdQuery,
         {
           listingId: String(lid),
         },
@@ -203,7 +204,7 @@ const VisitorProfile: NextPageWithLayout = () => {
                 keys: [
                   "value",
                   ...Object.keys(
-                    listing?.stats["Educational attainment"]
+                    listing?.stats["Educational attainment"] ?? {}
                   ).filter((item) => item.toLowerCase().includes("grade")),
                 ],
                 axisLeft: {

@@ -60,7 +60,7 @@ export const useQueryListings = (
   options?: UseQueryOptions<Queries["queryListings"], ClientError>
 ) => {
   return useQuery<Queries["queryListings"], ClientError>(
-    [useQueryListings.name, variables],
+    [queryListingsQuery, variables],
     ({ signal }) => {
       return queryListingsRequest({
         variables,

@@ -4,7 +4,7 @@ import { useCookie } from "react-use";
 import { ClientError, gql } from "graphql-request";
 
 import client from "./client";
-import useGetUserInfo from "./useGetUserInfo";
+import { getUserUserInfoQuery } from "./useGetUserInfo";
 
 export const registerMutation = gql`
   mutation register(
@@ -50,13 +50,13 @@ export const useRegister = (
   const queryClient = useQueryClient();
 
   return useMutation<Mutation["register"], ClientError, MutationRegisterArgs>(
-    [useRegister.name],
+    [registerMutation],
     registerRequest,
     {
       ...options,
       onSuccess: async (data, variables, context) => {
         setAuthToken(data?.authToken ?? "");
-        await queryClient.refetchQueries([useGetUserInfo.name]);
+        await queryClient.refetchQueries([getUserUserInfoQuery]);
 
         options?.onSuccess?.(data, variables, context);
       },

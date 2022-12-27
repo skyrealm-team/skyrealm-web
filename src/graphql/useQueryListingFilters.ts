@@ -29,7 +29,7 @@ export const queryListingFiltersQuery = gql`
 `;
 
 export const queryListingFiltersRequest = async (
-  options?: Partial<RequestOptions<undefined, Queries["queryListingFilters"]>>
+  options?: Partial<RequestOptions<object, Queries["queryListingFilters"]>>
 ) => {
   return client
     .request<Queries>({
@@ -43,7 +43,7 @@ export const useQueryListingFilters = (
   options?: UseQueryOptions<Queries["queryListingFilters"], ClientError>
 ) => {
   return useQuery<Queries["queryListingFilters"], ClientError>(
-    [useQueryListingFilters.name],
+    [queryListingFiltersQuery],
     () => {
       return queryListingFiltersRequest();
     },

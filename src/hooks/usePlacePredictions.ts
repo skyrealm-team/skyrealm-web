@@ -13,7 +13,7 @@ export const usePlacePredictions = (
   );
 
   return useQuery<google.maps.places.AutocompleteResponse["predictions"]>(
-    [usePlacePredictions.name, variables],
+    ["usePlacePredictions", variables],
     async () => {
       const res = await AutocompleteService.getPlacePredictions({
         language: "en",

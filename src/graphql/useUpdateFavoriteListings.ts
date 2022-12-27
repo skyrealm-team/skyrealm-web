@@ -33,7 +33,7 @@ export const useUpdateFavoriteListings = (
   >
 ) => {
   return useMutation(
-    [useUpdateFavoriteListings.name],
+    [updateFavoriteListingsMutation],
     updateFavoriteListingsRequest,
     options
   );

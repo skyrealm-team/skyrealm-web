@@ -18,7 +18,7 @@ export const useGeoJSON = (
   options?: QueryObserverOptions<GeoJSON[]>
 ) => {
   return useQuery<GeoJSON[]>(
-    [useGeoJSON.name, variables],
+    ["useGeoJSON", variables],
     async () => {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search.php?q=${variables.q}&polygon_geojson=1&format=json`

@@ -35,7 +35,7 @@ export const useForgetPassword = (
     Mutation["forgetPassword"],
     ClientError,
     MutationForgetPasswordArgs
-  >([useForgetPassword.name], forgetPasswordRequest, {
+  >([forgetPasswordMutation], forgetPasswordRequest, {
     ...options,
     onSuccess: async (data, variables, context) => {
       enqueueSnackbar(

@@ -52,7 +52,7 @@ export const useContactBroker = (
     Mutation["contactBroker"],
     ClientError,
     MutationContactBrokerArgs
-  >([useContactBroker.name], contactBrokerRequest, {
+  >([contactBrokerMutation], contactBrokerRequest, {
     ...options,
     onSuccess: async (data, variables, context) => {
       enqueueSnackbar("Your submission has been sent.", {

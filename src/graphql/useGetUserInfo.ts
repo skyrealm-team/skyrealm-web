@@ -21,7 +21,7 @@ export const getUserUserInfoQuery = gql`
 `;
 
 export const getUserInfoRequest = async (
-  options?: Partial<RequestOptions<undefined, Queries["getUserUserInfo"]>>
+  options?: Partial<RequestOptions<object, Queries["getUserUserInfo"]>>
 ) => {
   return client
     .request<Queries>({
@@ -37,7 +37,7 @@ export const useGetUserInfo = (
   const [authToken] = useCookie("auth-token");
 
   return useQuery<Queries["getUserUserInfo"], ClientError>(
-    [useGetUserInfo.name],
+    [getUserUserInfoQuery],
     () => {
       return getUserInfoRequest();
     },
@@ -52,7 +52,7 @@ export const useSetUserInfoData = () => {
   const queryClient = useQueryClient();
 
   return (data: Partial<Queries["getUserUserInfo"]>) => {
-    queryClient.setQueryData([useGetUserInfo.name], data);
+    queryClient.setQueryData([getUserUserInfoQuery], data);
   };
 };
 

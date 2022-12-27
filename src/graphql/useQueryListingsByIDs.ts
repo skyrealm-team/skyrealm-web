@@ -4,7 +4,7 @@ import { ClientError, gql, RequestOptions } from "graphql-request";
 
 import client from "./client";
 
-export const queryListingsByIDs = gql`
+export const queryListingsByIDsQuery = gql`
   query queryListingsByIDs($listingIDs: [String]) {
     queryListingsByIDs(listingIDs: $listingIDs) {
       listings {
@@ -33,7 +33,7 @@ export const queryListingsByIDsRequest = async (
   return client
     .request<Queries>({
       ...options,
-      document: queryListingsByIDs,
+      document: queryListingsByIDsQuery,
     })
     .then((data) => data.queryListingsByIDs);
 };
@@ -43,7 +43,7 @@ export const useQueryListingsByIDs = (
   options?: UseQueryOptions<Queries["queryListingsByIDs"], ClientError>
 ) => {
   return useQuery<Queries["queryListingsByIDs"], ClientError>(
-    [useQueryListingsByIDs.name],
+    [queryListingsByIDsQuery],
     () => {
       return queryListingsByIDsRequest({
         variables,

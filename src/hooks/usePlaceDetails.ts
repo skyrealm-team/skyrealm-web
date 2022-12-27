@@ -11,7 +11,7 @@ export const usePlaceDetails = (
   );
 
   return useQuery<google.maps.places.PlaceResult>(
-    [usePlaceDetails.name, variables],
+    ["usePlaceDetails", variables],
     async () => {
       return new Promise((resolve, reject) => {
         if (!variables.placeId) {

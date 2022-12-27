@@ -35,7 +35,7 @@ export const useResetForgetPassword = (
     Mutation["resetForgetPassword"],
     ClientError,
     MutationResetForgetPasswordArgs
-  >([useResetForgetPassword.name], resetForgetPasswordRequest, {
+  >([resetForgetPasswordMutation], resetForgetPasswordRequest, {
     ...options,
     onSuccess: async (data, variables, context) => {
       enqueueSnackbar("Password successfully updated.", {
