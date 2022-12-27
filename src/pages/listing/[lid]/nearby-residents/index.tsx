@@ -53,7 +53,7 @@ const NearbyResidents: NextPageWithLayout = () => {
   const router = useRouter();
   const { lid } = router.query;
 
-  const { data: listing } = useQueryListingById({
+  const { data: listing, isLoading: listingIsLoading } = useQueryListingById({
     listingId: lid && String(lid),
   });
 
@@ -89,7 +89,14 @@ const NearbyResidents: NextPageWithLayout = () => {
             >
               <Charts
                 defaultType="pie"
+                types={["bar", "pie"]}
+                isLoading={listingIsLoading}
                 data={listing?.stats["Sex"]}
+                StackProps={{
+                  sx: {
+                    aspectRatio: `${635 / 348}`,
+                  },
+                }}
                 PieSvgProps={{
                   colors: ["#208AFF", "#ED6AB5"],
                 }}
@@ -102,12 +109,14 @@ const NearbyResidents: NextPageWithLayout = () => {
               }}
             >
               <Charts
+                types={["bar"]}
+                isLoading={listingIsLoading}
+                data={listing?.stats["Age"]}
                 StackProps={{
                   sx: {
                     aspectRatio: `${635 / 348}`,
                   },
                 }}
-                data={listing?.stats["Age"]}
                 BarSvgProps={{
                   axisLeft: {
                     legend: "Visitors",
@@ -126,6 +135,8 @@ const NearbyResidents: NextPageWithLayout = () => {
           </Stack>
           <InfoCard title="Race and Ethnicity">
             <Charts
+              types={["bar"]}
+              isLoading={listingIsLoading}
               data={listing?.stats["Recoded detailed race code"]}
               BarSvgProps={{
                 axisLeft: {
@@ -141,6 +152,8 @@ const NearbyResidents: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Household Income">
             <Charts
+              types={["bar"]}
+              isLoading={listingIsLoading}
               data={
                 listing?.stats[
                   "Household income (past 12 months, use ADJINC to adjust HINCP to constant dollars)"
@@ -160,6 +173,8 @@ const NearbyResidents: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Education">
             <Charts
+              types={["bar"]}
+              isLoading={listingIsLoading}
               data={listing?.stats["Educational attainment"]}
               BarSvgProps={{
                 axisLeft: {
@@ -175,6 +190,8 @@ const NearbyResidents: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Employment Status">
             <Charts
+              types={["bar"]}
+              isLoading={listingIsLoading}
               data={listing?.stats["Employment status recode"]}
               BarSvgProps={{
                 axisLeft: {
@@ -190,6 +207,8 @@ const NearbyResidents: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Occupation">
             <Charts
+              types={["bar"]}
+              isLoading={listingIsLoading}
               data={
                 listing?.stats[
                   "Standard Occupational Classification (SOC) codes for 2018 and later based on 2018 SOC codes"
@@ -209,6 +228,8 @@ const NearbyResidents: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Transportation to work">
             <Charts
+              types={["bar"]}
+              isLoading={listingIsLoading}
               data={listing?.stats["Means of transportation to work"]}
               BarSvgProps={{
                 axisLeft: {
@@ -224,6 +245,8 @@ const NearbyResidents: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Travel time to work">
             <Charts
+              types={["bar"]}
+              isLoading={listingIsLoading}
               data={listing?.stats["Travel time to work"]}
               BarSvgProps={{
                 axisLeft: {
@@ -239,6 +262,8 @@ const NearbyResidents: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Family size">
             <Charts
+              types={["bar"]}
+              isLoading={listingIsLoading}
               data={listing?.stats["Number of persons in family (unweighted)"]}
               BarSvgProps={{
                 axisLeft: {
@@ -254,6 +279,8 @@ const NearbyResidents: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Marital Status">
             <Charts
+              types={["bar"]}
+              isLoading={listingIsLoading}
               data={listing?.stats["Marital status"]}
               BarSvgProps={{
                 axisLeft: {

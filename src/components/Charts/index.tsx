@@ -23,19 +23,25 @@ import SelectField from "components/SelectField";
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
+type ChartType = "bar" | "line" | "pie";
+
 export type ChartsProps = {
-  StackProps?: StackProps;
+  isLoading?: boolean;
   data?: object;
-  defaultType?: "bar" | "line" | "pie";
+  defaultType?: ChartType;
+  types?: ChartType[];
+  StackProps?: StackProps;
   BarSvgProps?: Omit<BarSvgProps<BarDatum>, "data" | "width" | "height">;
   LineSvgProps?: Omit<LineSvgProps, "data" | "width" | "height">;
   PieSvgProps?: Omit<PieSvgProps<DefaultRawDatum>, "data" | "width" | "height">;
   indexFormat?: (indexValue?: string | number) => string;
 };
 const Charts: FC<ChartsProps> = ({
-  StackProps,
+  isLoading,
   data,
   defaultType = "bar",
+  types = ["bar", "line", "bar"],
+  StackProps,
   BarSvgProps,
   LineSvgProps,
   PieSvgProps,
@@ -55,51 +61,53 @@ const Charts: FC<ChartsProps> = ({
         ...StackProps?.sx,
       }}
     >
-      {data ? (
+      {data && (
         <>
-          <Stack direction="row" alignItems="center" gap={4}>
-            <Stack direction="row" alignItems="center">
-              <Typography
-                sx={{
-                  color: "#999999",
-                  fontSize: 14,
-                }}
-              >
-                Chart Type
-              </Typography>
-              <SelectField
-                value={type}
-                onChange={(event) => {
-                  setType(event.target.value as never);
-                }}
-                size="small"
-                sx={{
-                  fieldset: {
-                    border: "none !important",
-                  },
-                  "&.Mui-focused": {
+          {types.length > 1 && (
+            <Stack direction="row" alignItems="center" gap={4}>
+              <Stack direction="row" alignItems="center">
+                <Typography
+                  sx={{
+                    color: "#999999",
+                    fontSize: 14,
+                  }}
+                >
+                  Chart Type
+                </Typography>
+                <SelectField
+                  value={type}
+                  onChange={(event) => {
+                    setType(event.target.value as never);
+                  }}
+                  size="small"
+                  sx={{
                     fieldset: {
                       border: "none !important",
                     },
-                  },
-                }}
-              >
-                <MenuItem value="bar">
-                  <BarChartIcon />
-                </MenuItem>
-                <MenuItem value="line">
-                  <LineChartIcon />
-                </MenuItem>
-                <MenuItem value="pie">
-                  <PieChartOutline
-                    sx={{
-                      color: "#999999",
-                    }}
-                  />
-                </MenuItem>
-              </SelectField>
+                    "&.Mui-focused": {
+                      fieldset: {
+                        border: "none !important",
+                      },
+                    },
+                  }}
+                >
+                  {types.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      {item === "bar" && <BarChartIcon />}
+                      {item === "line" && <LineChartIcon />}
+                      {item === "pie" && (
+                        <PieChartOutline
+                          sx={{
+                            color: "#999999",
+                          }}
+                        />
+                      )}
+                    </MenuItem>
+                  ))}
+                </SelectField>
+              </Stack>
             </Stack>
-          </Stack>
+          )}
           {type === "bar" && (
             <ResponsiveBar
               padding={0.4}
@@ -386,7 +394,8 @@ const Charts: FC<ChartsProps> = ({
             />
           )}
         </>
-      ) : (
+      )}
+      {!isLoading && !data && (
         <Alert severity="error">
           <AlertTitle>Data Unavailable</AlertTitle>
           We are unable to retrieve data at this time.

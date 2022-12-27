@@ -57,7 +57,7 @@ const Visits: NextPageWithLayout = () => {
   const router = useRouter();
   const { lid } = router.query;
 
-  const { data: listing } = useQueryListingById({
+  const { data: listing, isLoading: listingIsLoading } = useQueryListingById({
     listingId: lid && String(lid),
   });
 
@@ -138,6 +138,7 @@ const Visits: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Visits Trend">
             <Charts
+              isLoading={listingIsLoading}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visits",
@@ -152,6 +153,8 @@ const Visits: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Hourly Visits">
             <Charts
+              types={["bar", "line"]}
+              isLoading={listingIsLoading}
               data={listing?.stats["Time of day"]}
               BarSvgProps={{
                 axisLeft: {
@@ -184,6 +187,8 @@ const Visits: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Daily Visits">
             <Charts
+              types={["bar", "line"]}
+              isLoading={listingIsLoading}
               data={listing?.stats["Day of week"]}
               BarSvgProps={{
                 axisLeft: {
@@ -202,6 +207,8 @@ const Visits: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Visit Frequency">
             <Charts
+              types={["bar", "line"]}
+              isLoading={listingIsLoading}
               data={listing?.stats["Frequency"]}
               BarSvgProps={{
                 axisLeft: {
@@ -215,8 +222,10 @@ const Visits: NextPageWithLayout = () => {
               }}
             />
           </InfoCard>
-          <InfoCard title="Visit type">
+          <InfoCard title="Visitor type">
             <Charts
+              types={["pie", "bar"]}
+              isLoading={listingIsLoading}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visits",
