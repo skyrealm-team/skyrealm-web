@@ -27,7 +27,7 @@ type ChartType = "bar" | "line" | "pie";
 
 export type ChartsProps = {
   isLoading?: boolean;
-  data?: object;
+  data?: Record<string, string | number>[];
   defaultType?: ChartType;
   types?: ChartType[];
   StackProps?: StackProps;
@@ -111,8 +111,11 @@ const Charts: FC<ChartsProps> = ({
           {type === "bar" && (
             <ResponsiveBar
               padding={0.4}
-              borderRadius={4}
-              colors={theme.palette.primary.main}
+              colors={(d) => {
+                return d.id === "value"
+                  ? theme.palette.primary.main
+                  : uniqolor(d.id).color;
+              }}
               enableLabel={false}
               {...BarSvgProps}
               margin={{
@@ -122,10 +125,7 @@ const Charts: FC<ChartsProps> = ({
                 right: 20,
                 ...BarSvgProps?.margin,
               }}
-              data={Object.entries(data ?? {}).map(([key, val]) => ({
-                id: key,
-                value: String(val),
-              }))}
+              data={data}
               valueFormat={(value) => {
                 return formatter.format(value);
               }}
@@ -193,31 +193,32 @@ const Charts: FC<ChartsProps> = ({
                 },
                 ...BarSvgProps?.axisBottom,
               }}
-              tooltip={({ indexValue, formattedValue, color }) => {
+              tooltip={({ formattedValue, color, id, indexValue }) => {
+                const index = id === "value" ? indexValue : id;
+
                 return (
                   <Paper
                     sx={{
                       p: 1.5,
                     }}
                   >
-                    <Stack direction="row" alignItems="center" gap={10}>
-                      <Typography
-                        sx={{
-                          fontWeight: 700,
-                        }}
-                      >
-                        {indexFormat ? indexFormat(indexValue) : indexValue}
-                      </Typography>
-                      <Typography
-                        color={color}
-                        sx={{
-                          fontSize: 14,
-                          fontWeight: 600,
-                        }}
-                      >
-                        {formattedValue}
-                      </Typography>
-                    </Stack>
+                    <Typography
+                      color={color}
+                      sx={{
+                        fontSize: 14,
+                        fontWeight: 700,
+                      }}
+                    >
+                      {formattedValue}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: 12,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {indexFormat ? indexFormat(index) : index}
+                    </Typography>
                   </Paper>
                 );
               }}
@@ -244,9 +245,10 @@ const Charts: FC<ChartsProps> = ({
               data={[
                 {
                   id: Math.random(),
-                  data: Object.entries(data ?? {}).map(([key, val]) => ({
-                    x: key,
-                    y: Number(val),
+                  data: data.map(({ id, value, ...item }) => ({
+                    x: id,
+                    y: Number(value),
+                    ...item,
                   })),
                 },
               ]}
@@ -317,26 +319,25 @@ const Charts: FC<ChartsProps> = ({
                       p: 1.5,
                     }}
                   >
-                    <Stack direction="row" alignItems="center" gap={10}>
-                      <Typography
-                        sx={{
-                          fontWeight: 700,
-                        }}
-                      >
-                        {indexFormat
-                          ? indexFormat(point.data.xFormatted)
-                          : point.data.xFormatted}
-                      </Typography>
-                      <Typography
-                        color={point.color}
-                        sx={{
-                          fontSize: 14,
-                          fontWeight: 600,
-                        }}
-                      >
-                        {point.data.yFormatted}
-                      </Typography>
-                    </Stack>
+                    <Typography
+                      color={point.color}
+                      sx={{
+                        fontSize: 14,
+                        fontWeight: 700,
+                      }}
+                    >
+                      {point.data.yFormatted}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: 12,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {indexFormat
+                        ? indexFormat(point.data.xFormatted)
+                        : point.data.xFormatted}
+                    </Typography>
                   </Paper>
                 );
               }}
@@ -344,7 +345,7 @@ const Charts: FC<ChartsProps> = ({
           )}
           {type === "pie" && (
             <ResponsivePie
-              colors={Object.keys(data).map((item) => uniqolor(item).color)}
+              colors={data.map(({ id }) => uniqolor(id).color)}
               margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
               padAngle={0.7}
               cornerRadius={3}
@@ -356,9 +357,10 @@ const Charts: FC<ChartsProps> = ({
                 return d.color;
               }}
               {...PieSvgProps}
-              data={Object.entries(data ?? {}).map(([key, val]) => ({
-                id: key,
-                value: Number(val),
+              data={data.map(({ id, value, ...item }) => ({
+                id,
+                value: Number(value),
+                ...item,
               }))}
               valueFormat={(value) => {
                 return formatter.format(value);

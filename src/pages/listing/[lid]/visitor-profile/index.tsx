@@ -91,7 +91,12 @@ const VisitorProfile: NextPageWithLayout = () => {
                 defaultType="pie"
                 types={["bar", "pie"]}
                 isLoading={listingIsLoading}
-                data={listing?.stats["Sex"]}
+                data={Object.entries(listing?.stats["Sex"]).map(
+                  ([id, value]) => ({
+                    id,
+                    value: Number(value),
+                  })
+                )}
                 StackProps={{
                   sx: {
                     aspectRatio: `${635 / 348}`,
@@ -111,7 +116,12 @@ const VisitorProfile: NextPageWithLayout = () => {
               <Charts
                 types={["bar"]}
                 isLoading={listingIsLoading}
-                data={listing?.stats["Age"]}
+                data={Object.entries(listing?.stats["Age"]).map(
+                  ([id, value]) => ({
+                    id,
+                    value: Number(value),
+                  })
+                )}
                 StackProps={{
                   sx: {
                     aspectRatio: `${635 / 348}`,
@@ -132,7 +142,12 @@ const VisitorProfile: NextPageWithLayout = () => {
             <Charts
               types={["bar"]}
               isLoading={listingIsLoading}
-              data={listing?.stats["Recoded detailed race code"]}
+              data={Object.entries(
+                listing?.stats["Recoded detailed race code"]
+              ).map(([id, value]) => ({
+                id,
+                value: Number(value),
+              }))}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visitors",
@@ -144,11 +159,14 @@ const VisitorProfile: NextPageWithLayout = () => {
             <Charts
               types={["bar"]}
               isLoading={listingIsLoading}
-              data={
+              data={Object.entries(
                 listing?.stats[
                   "Household income (past 12 months, use ADJINC to adjust HINCP to constant dollars)"
                 ]
-              }
+              ).map(([id, value]) => ({
+                id,
+                value: Number(value),
+              }))}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visitors",
@@ -160,8 +178,30 @@ const VisitorProfile: NextPageWithLayout = () => {
             <Charts
               types={["bar"]}
               isLoading={listingIsLoading}
-              data={listing?.stats["Educational attainment"]}
+              data={[
+                {
+                  id: "Grade",
+                  ...Object.entries(listing?.stats["Educational attainment"])
+                    .filter(([id]) => id.toLowerCase().includes("grade"))
+                    .reduce(
+                      (acc, [id, value]) => ({ ...acc, [id]: value }),
+                      {}
+                    ),
+                },
+                ...Object.entries(listing?.stats["Educational attainment"])
+                  .filter(([id]) => !id.toLowerCase().includes("grade"))
+                  .map(([id, value]) => ({
+                    id,
+                    value: Number(value),
+                  })),
+              ]}
               BarSvgProps={{
+                keys: [
+                  "value",
+                  ...Object.keys(
+                    listing?.stats["Educational attainment"]
+                  ).filter((item) => item.toLowerCase().includes("grade")),
+                ],
                 axisLeft: {
                   legend: "Visitors",
                 },
@@ -172,7 +212,12 @@ const VisitorProfile: NextPageWithLayout = () => {
             <Charts
               types={["bar"]}
               isLoading={listingIsLoading}
-              data={listing?.stats["Employment status recode"]}
+              data={Object.entries(
+                listing?.stats["Employment status recode"]
+              ).map(([id, value]) => ({
+                id,
+                value: Number(value),
+              }))}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visitors",
@@ -184,11 +229,14 @@ const VisitorProfile: NextPageWithLayout = () => {
             <Charts
               types={["bar"]}
               isLoading={listingIsLoading}
-              data={
+              data={Object.entries(
                 listing?.stats[
                   "Standard Occupational Classification (SOC) codes for 2018 and later based on 2018 SOC codes"
                 ]
-              }
+              ).map(([id, value]) => ({
+                id,
+                value: Number(value),
+              }))}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visitors",
@@ -200,7 +248,12 @@ const VisitorProfile: NextPageWithLayout = () => {
             <Charts
               types={["bar"]}
               isLoading={listingIsLoading}
-              data={listing?.stats["Means of transportation to work"]}
+              data={Object.entries(
+                listing?.stats["Means of transportation to work"]
+              ).map(([id, value]) => ({
+                id,
+                value: Number(value),
+              }))}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visitors",
@@ -212,7 +265,12 @@ const VisitorProfile: NextPageWithLayout = () => {
             <Charts
               types={["bar"]}
               isLoading={listingIsLoading}
-              data={listing?.stats["Travel time to work"]}
+              data={Object.entries(listing?.stats["Travel time to work"]).map(
+                ([id, value]) => ({
+                  id,
+                  value: Number(value),
+                })
+              )}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visitors",
@@ -224,7 +282,12 @@ const VisitorProfile: NextPageWithLayout = () => {
             <Charts
               types={["bar"]}
               isLoading={listingIsLoading}
-              data={listing?.stats["Number of persons in family (unweighted)"]}
+              data={Object.entries(
+                listing?.stats["Number of persons in family (unweighted)"]
+              ).map(([id, value]) => ({
+                id,
+                value: Number(value),
+              }))}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visitors",
@@ -236,7 +299,12 @@ const VisitorProfile: NextPageWithLayout = () => {
             <Charts
               types={["bar"]}
               isLoading={listingIsLoading}
-              data={listing?.stats["Marital status"]}
+              data={Object.entries(listing?.stats["Marital status"]).map(
+                ([id, value]) => ({
+                  id,
+                  value: Number(value),
+                })
+              )}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visitors",

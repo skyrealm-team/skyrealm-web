@@ -25,7 +25,7 @@ const PropertyMap: FC<PropertyMapProps> = ({ MarkerProps, ...props }) => {
       loadingElement={<Loading />}
     >
       <GoogleMap
-        zoom={12}
+        zoom={18.8}
         {...props}
         center={MarkerProps?.position}
         options={{

@@ -155,7 +155,12 @@ const Visits: NextPageWithLayout = () => {
             <Charts
               types={["bar", "line"]}
               isLoading={listingIsLoading}
-              data={listing?.stats["Time of day"]}
+              data={Object.entries(listing?.stats["Time of day"]).map(
+                ([id, value]) => ({
+                  id,
+                  value: Number(value),
+                })
+              )}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visits",
@@ -189,7 +194,12 @@ const Visits: NextPageWithLayout = () => {
             <Charts
               types={["bar", "line"]}
               isLoading={listingIsLoading}
-              data={listing?.stats["Day of week"]}
+              data={Object.entries(listing?.stats["Day of week"]).map(
+                ([id, value]) => ({
+                  id,
+                  value: Number(value),
+                })
+              )}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visits",
@@ -209,7 +219,12 @@ const Visits: NextPageWithLayout = () => {
             <Charts
               types={["bar", "line"]}
               isLoading={listingIsLoading}
-              data={listing?.stats["Frequency"]}
+              data={Object.entries(listing?.stats["Frequency"]).map(
+                ([id, value]) => ({
+                  id,
+                  value: Number(value),
+                })
+              )}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visits",
