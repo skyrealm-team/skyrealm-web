@@ -155,7 +155,7 @@ const Visits: NextPageWithLayout = () => {
             <Charts
               types={["bar", "line"]}
               isLoading={listingIsLoading}
-              data={Object.entries(listing?.stats["Time of day"]).map(
+              data={Object.entries(listing?.stats["Time of day"] ?? {}).map(
                 ([id, value]) => ({
                   id,
                   value: Number(value),
@@ -194,7 +194,7 @@ const Visits: NextPageWithLayout = () => {
             <Charts
               types={["bar", "line"]}
               isLoading={listingIsLoading}
-              data={Object.entries(listing?.stats["Day of week"]).map(
+              data={Object.entries(listing?.stats["Day of week"] ?? {}).map(
                 ([id, value]) => ({
                   id,
                   value: Number(value),
@@ -219,7 +219,7 @@ const Visits: NextPageWithLayout = () => {
             <Charts
               types={["bar", "line"]}
               isLoading={listingIsLoading}
-              data={Object.entries(listing?.stats["Frequency"]).map(
+              data={Object.entries(listing?.stats["Frequency"] ?? {}).map(
                 ([id, value]) => ({
                   id,
                   value: Number(value),
