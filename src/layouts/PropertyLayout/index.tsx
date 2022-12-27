@@ -74,11 +74,11 @@ const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
 
-  const { data: listing } = useQueryListingById({
+  const { data: listing, isLoading: listingIsLoading } = useQueryListingById({
     listingId: lid && String(lid),
   });
 
-  if (!listing) {
+  if (!listingIsLoading && !listing) {
     return <Error statusCode={404} withDarkMode={false} />;
   }
 
