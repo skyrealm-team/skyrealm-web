@@ -122,11 +122,6 @@ const NearbyResidents: NextPageWithLayout = () => {
                     legend: "Visitors",
                   },
                 }}
-                LineSvgProps={{
-                  axisLeft: {
-                    legend: "Visitors",
-                  },
-                }}
                 indexFormat={(value) => {
                   return String(value).split(":").join(" : ");
                 }}
@@ -139,11 +134,6 @@ const NearbyResidents: NextPageWithLayout = () => {
               isLoading={listingIsLoading}
               data={listing?.stats["Recoded detailed race code"]}
               BarSvgProps={{
-                axisLeft: {
-                  legend: "Visitors",
-                },
-              }}
-              LineSvgProps={{
                 axisLeft: {
                   legend: "Visitors",
                 },
@@ -164,11 +154,6 @@ const NearbyResidents: NextPageWithLayout = () => {
                   legend: "Visitors",
                 },
               }}
-              LineSvgProps={{
-                axisLeft: {
-                  legend: "Visitors",
-                },
-              }}
             />
           </InfoCard>
           <InfoCard title="Education">
@@ -181,11 +166,6 @@ const NearbyResidents: NextPageWithLayout = () => {
                   legend: "Visitors",
                 },
               }}
-              LineSvgProps={{
-                axisLeft: {
-                  legend: "Visits",
-                },
-              }}
             />
           </InfoCard>
           <InfoCard title="Employment Status">
@@ -194,11 +174,6 @@ const NearbyResidents: NextPageWithLayout = () => {
               isLoading={listingIsLoading}
               data={listing?.stats["Employment status recode"]}
               BarSvgProps={{
-                axisLeft: {
-                  legend: "Visitors",
-                },
-              }}
-              LineSvgProps={{
                 axisLeft: {
                   legend: "Visitors",
                 },
@@ -219,11 +194,6 @@ const NearbyResidents: NextPageWithLayout = () => {
                   legend: "Visitors",
                 },
               }}
-              LineSvgProps={{
-                axisLeft: {
-                  legend: "Visitors",
-                },
-              }}
             />
           </InfoCard>
           <InfoCard title="Transportation to work">
@@ -232,11 +202,6 @@ const NearbyResidents: NextPageWithLayout = () => {
               isLoading={listingIsLoading}
               data={listing?.stats["Means of transportation to work"]}
               BarSvgProps={{
-                axisLeft: {
-                  legend: "Visitors",
-                },
-              }}
-              LineSvgProps={{
                 axisLeft: {
                   legend: "Visitors",
                 },
@@ -253,11 +218,6 @@ const NearbyResidents: NextPageWithLayout = () => {
                   legend: "Visitors",
                 },
               }}
-              LineSvgProps={{
-                axisLeft: {
-                  legend: "Visitors",
-                },
-              }}
             />
           </InfoCard>
           <InfoCard title="Family size">
@@ -270,11 +230,6 @@ const NearbyResidents: NextPageWithLayout = () => {
                   legend: "Visitors",
                 },
               }}
-              LineSvgProps={{
-                axisLeft: {
-                  legend: "Visitors",
-                },
-              }}
             />
           </InfoCard>
           <InfoCard title="Marital Status">
@@ -283,11 +238,6 @@ const NearbyResidents: NextPageWithLayout = () => {
               isLoading={listingIsLoading}
               data={listing?.stats["Marital status"]}
               BarSvgProps={{
-                axisLeft: {
-                  legend: "Visitors",
-                },
-              }}
-              LineSvgProps={{
                 axisLeft: {
                   legend: "Visitors",
                 },
