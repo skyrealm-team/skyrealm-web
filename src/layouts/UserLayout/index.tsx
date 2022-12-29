@@ -100,6 +100,7 @@ const UserLayout: FC<PropsWithChildren> = ({ children }) => {
                     pathname: `/user/${key}`,
                   }}
                   legacyBehavior
+                  shallow
                 >
                   <MenuItem
                     {...MenuItemProps}

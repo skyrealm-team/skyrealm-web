@@ -66,17 +66,17 @@ const Visits: NextPageWithLayout = () => {
     <Stack>
       <PropertyHeader listing={listing} />
       <PropertyMap
-        mapContainerStyle={{
-          aspectRatio: 1667 / 410,
+        center={{
+          lat: Number(listing?.latitude),
+          lng: Number(listing?.longitude),
         }}
-        {...(listing && {
-          MarkerProps: {
-            position: {
-              lat: Number(listing?.latitude),
-              lng: Number(listing?.longitude),
-            },
+        zoom={Math.log2((40000000 * 194) / 152.4 / 256 / 2)}
+        MarkerProps={{
+          position: {
+            lat: Number(listing?.latitude),
+            lng: Number(listing?.longitude),
           },
-        })}
+        }}
       />
       <Container
         sx={{

@@ -18,6 +18,7 @@ export const queryListingByIdQuery = gql`
         mediumIncome
         availableSpaces
         stats
+        polyGeom
       }
     }
   }

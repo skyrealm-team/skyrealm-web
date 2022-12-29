@@ -121,6 +121,7 @@ const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
                     pathname: `/listing/${lid}/${key}`,
                   }}
                   legacyBehavior
+                  shallow
                 >
                   <MenuItem
                     {...MenuItemProps}
