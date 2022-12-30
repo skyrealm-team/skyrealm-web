@@ -14,11 +14,13 @@ import Makers from "./Makers";
 export type PropertyMapProps = GoogleMapProps & {
   listing?: Maybe<SingleListing>;
   MarkerProps?: MarkerProps;
+  polyGeom?: boolean;
 };
 const PropertyMap: FC<PropertyMapProps> = ({
   listing,
   MarkerProps,
   center,
+  polyGeom,
   ...props
 }) => {
   return (
@@ -34,21 +36,34 @@ const PropertyMap: FC<PropertyMapProps> = ({
         }}
         center={center}
         onLoad={(map) => {
-          if (listing?.polyGeom) {
-            map.data.setStyle({
-              strokeColor: "#FF6633",
-              fillColor: "#FF6633",
-            });
-            map.data.addGeoJson({
-              type: "FeatureCollection",
-              features: [
-                {
-                  type: "Feature",
-                  geometry: listing?.polyGeom,
-                },
-              ],
-            });
-          }
+          try {
+            if (polyGeom && listing?.polyGeom) {
+              map.data.setStyle({
+                strokeColor: "#FF6633",
+                fillColor: "#FF6633",
+              });
+
+              map.data.addGeoJson({
+                type: "FeatureCollection",
+                features: [
+                  {
+                    type: "Feature",
+                    geometry: listing?.polyGeom,
+                  },
+                ],
+              });
+
+              const bounds = new google.maps.LatLngBounds();
+
+              map.data.forEach((feature) => {
+                feature.getGeometry()?.forEachLatLng((latlng) => {
+                  bounds.extend(latlng);
+                });
+              });
+
+              map.fitBounds(bounds, 0);
+            }
+          } catch {}
         }}
         options={{
           mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID,

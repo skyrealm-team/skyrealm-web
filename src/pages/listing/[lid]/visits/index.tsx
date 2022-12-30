@@ -4,7 +4,13 @@ import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 
-import { Container, Stack, Typography, Unstable_Grid2 } from "@mui/material";
+import {
+  Alert,
+  Container,
+  Stack,
+  Typography,
+  Unstable_Grid2,
+} from "@mui/material";
 
 import moment from "moment";
 
@@ -66,6 +72,7 @@ const Visits: NextPageWithLayout = () => {
     <Stack>
       <PropertyHeader listing={listing} />
       <PropertyMap
+        listing={listing}
         center={{
           lat: Number(listing?.latitude),
           lng: Number(listing?.longitude),
@@ -85,6 +92,10 @@ const Visits: NextPageWithLayout = () => {
         }}
       >
         <Stack gap={4}>
+          <Alert severity="info">
+            Data range: {listing?.stats["timeStart"]} -{" "}
+            {listing?.stats["timeEnd"]}
+          </Alert>
           <InfoCard title="Metrics">
             <Unstable_Grid2 container spacing={4}>
               {[

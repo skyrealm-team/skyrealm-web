@@ -30,6 +30,7 @@ import useOpens from "hooks/useOpens";
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("Required"),
   lastName: Yup.string().required("Required"),
+  phone: Yup.string().required("Required"),
   email: Yup.string()
     .email("please use your corporate email")
     .required("Required"),
@@ -185,6 +186,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ open, ...props }) => {
                   children: formik.touched.firstName && formik.errors.firstName,
                 }}
                 autoComplete="given-name"
+                required
                 fullWidth
               />
               <InputField
@@ -196,9 +198,22 @@ const ContactDialog: FC<ContactDialogProps> = ({ open, ...props }) => {
                   children: formik.touched.lastName && formik.errors.lastName,
                 }}
                 autoComplete="family-name"
+                required
                 fullWidth
               />
             </Stack>
+            <InputField
+              label="Phone Number"
+              value={formik.values.phone}
+              onChange={formik.handleChange("phone")}
+              onBlur={formik.handleBlur("phone")}
+              FormHelperTextProps={{
+                children: formik.touched.phone && formik.errors.phone,
+              }}
+              autoComplete="tel"
+              required
+              fullWidth
+            />
             <InputField
               type="email"
               label="Email"
@@ -209,6 +224,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ open, ...props }) => {
                 children: formik.touched.email && formik.errors.email,
               }}
               autoComplete="username"
+              required
               fullWidth
             />
             <InputField
@@ -219,6 +235,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ open, ...props }) => {
               FormHelperTextProps={{
                 children: formik.touched.company && formik.errors.company,
               }}
+              required
               fullWidth
             />
             <InputField
@@ -233,6 +250,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ open, ...props }) => {
               fullWidth
               multiline
               rows={3}
+              required
             />
             <br />
             <Button

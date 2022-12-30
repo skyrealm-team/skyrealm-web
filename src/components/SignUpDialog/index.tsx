@@ -31,7 +31,7 @@ const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("Required"),
   lastName: Yup.string().required("Required"),
   organization: Yup.string().required("Required"),
-  phoneNumber: Yup.string(),
+  phoneNumber: Yup.string().required("Required"),
   userType: Yup.string().required("Required"),
   email: Yup.string()
     .email("please use your corporate email")
@@ -219,6 +219,7 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
                       formik.touched.phoneNumber && formik.errors.phoneNumber,
                   }}
                   autoComplete="tel"
+                  required
                   fullWidth
                 />
               </Stack>
@@ -292,6 +293,7 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
                   children: formik.touched.email && formik.errors.email,
                 }}
                 autoComplete="username"
+                required
                 fullWidth
               />
               <InputField
@@ -304,6 +306,7 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
                   children: formik.touched.password && formik.errors.password,
                 }}
                 autoComplete="current-password"
+                required
                 fullWidth
               />
               <FormControlLabel

@@ -56,23 +56,14 @@ const NearbyResidents: NextPageWithLayout = () => {
   return (
     <Stack>
       <PropertyHeader listing={listing} />
-      <PropertyMap
-        listing={listing}
-        center={{
-          lat: Number(listing?.latitude),
-          lng: Number(listing?.longitude),
-        }}
-        zoom={12}
-      />
+      <PropertyMap listing={listing} polyGeom />
       <Container
         sx={{
           maxWidth: 1360,
           py: 3,
         }}
       >
-        <Stack gap={4}>
-          <PropertyCharts listing={listing} isLoading={listingIsLoading} />
-        </Stack>
+        <PropertyCharts listing={listing} isLoading={listingIsLoading} />
       </Container>
     </Stack>
   );

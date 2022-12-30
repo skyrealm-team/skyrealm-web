@@ -57,6 +57,7 @@ const VisitorProfile: NextPageWithLayout = () => {
     <Stack>
       <PropertyHeader listing={listing} />
       <PropertyMap
+        listing={listing}
         center={{
           lat: Number(listing?.latitude),
           lng: Number(listing?.longitude),
@@ -75,9 +76,7 @@ const VisitorProfile: NextPageWithLayout = () => {
           py: 3,
         }}
       >
-        <Stack gap={4}>
-          <PropertyCharts listing={listing} isLoading={listingIsLoading} />
-        </Stack>
+        <PropertyCharts listing={listing} isLoading={listingIsLoading} />
       </Container>
     </Stack>
   );
