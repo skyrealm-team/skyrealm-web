@@ -130,67 +130,78 @@ const Charts: FC<ChartsProps> = ({
                 return formatter.format(value);
               }}
               axisLeft={{
+                tickSize: 0,
                 legendPosition: "middle",
                 legendOffset: -50,
-                ...(BarSvgProps?.layout !== "horizontal" && {
-                  format: (value) => {
-                    return formatter.format(Number(value));
-                  },
-                }),
+                ...(BarSvgProps?.layout === "horizontal"
+                  ? {
+                      format: indexFormat,
+                    }
+                  : {
+                      format: (value) => {
+                        return formatter.format(Number(value));
+                      },
+                    }),
                 ...BarSvgProps?.axisLeft,
               }}
               axisBottom={{
-                format: indexFormat,
-                ...(BarSvgProps?.layout === "horizontal" && {
-                  format: (value) => {
-                    return formatter.format(Number(value));
-                  },
-                }),
-                renderTick: ({
-                  opacity,
-                  textAnchor,
-                  textBaseline,
-                  textX,
-                  textY,
-                  value,
-                  x,
-                  y,
-                }) => {
-                  const values = String(
-                    indexFormat ? indexFormat(value) : value
-                  )
-                    .split(" ")
-                    .filter(Boolean);
-                  return (
-                    <g transform={`translate(${x},${y})`} style={{ opacity }}>
-                      <line
-                        x1={0}
-                        x2={0}
-                        y1={0}
-                        y2={5}
-                        style={{
-                          stroke: "rgb(119, 119, 119)",
-                          strokeWidth: 1,
-                        }}
-                      />
-                      <text
-                        alignmentBaseline={textBaseline as never}
-                        textAnchor={textAnchor}
-                        transform={`translate(${textX},${textY})`}
-                        fontSize={10}
-                      >
-                        {(values.length <= 4
-                          ? values
-                          : [...values.slice(0, 3), "..."]
-                        ).map((item, index) => (
-                          <tspan key={index} x={0} y={(index + 1) * 10}>
-                            {item}
-                          </tspan>
-                        ))}
-                      </text>
-                    </g>
-                  );
-                },
+                ...(BarSvgProps?.layout === "horizontal"
+                  ? {
+                      format: (value) => {
+                        return formatter.format(Number(value));
+                      },
+                    }
+                  : {
+                      format: indexFormat,
+                      renderTick: ({
+                        opacity,
+                        textAnchor,
+                        textBaseline,
+                        textX,
+                        textY,
+                        value,
+                        x,
+                        y,
+                      }) => {
+                        const values = String(
+                          indexFormat ? indexFormat(value) : value
+                        )
+                          .split(" ")
+                          .filter(Boolean);
+                        return (
+                          <g
+                            transform={`translate(${x},${y})`}
+                            style={{ opacity }}
+                          >
+                            <line
+                              x1={0}
+                              x2={0}
+                              y1={0}
+                              y2={5}
+                              style={{
+                                stroke: "rgb(119, 119, 119)",
+                                strokeWidth: 1,
+                              }}
+                            />
+                            <text
+                              alignmentBaseline={textBaseline as never}
+                              textAnchor={textAnchor}
+                              transform={`translate(${textX},${textY})`}
+                              fontSize={10}
+                            >
+                              {(values.length <= 4
+                                ? values
+                                : [...values.slice(0, 3), "..."]
+                              ).map((item, index) => (
+                                <tspan key={index} x={0} y={(index + 1) * 10}>
+                                  {item}
+                                </tspan>
+                              ))}
+                            </text>
+                          </g>
+                        );
+                      },
+                    }),
                 ...BarSvgProps?.axisBottom,
               }}
               tooltip={({ formattedValue, color, id, indexValue }) => {

@@ -139,7 +139,15 @@ const Visits: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Visits Trend">
             <Charts
+              defaultType="line"
+              types={["bar", "line"]}
               isLoading={listingIsLoading}
+              data={Object.entries(listing?.stats["Visits Trend"] ?? {}).map(
+                ([id, value]) => ({
+                  id,
+                  value: Number(value),
+                })
+              )}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visits",
@@ -149,6 +157,9 @@ const Visits: NextPageWithLayout = () => {
                 axisLeft: {
                   legend: "Visits",
                 },
+              }}
+              indexFormat={(value) => {
+                return moment(value, "YYYY-MM-DD").format("MMM D");
               }}
             />
           </InfoCard>
@@ -166,24 +177,10 @@ const Visits: NextPageWithLayout = () => {
                 axisLeft: {
                   legend: "Visits",
                 },
-                axisBottom: {
-                  format: (value) => {
-                    return value % 2 === 0
-                      ? moment(value, "H").format("hh:mm A")
-                      : "";
-                  },
-                },
               }}
               LineSvgProps={{
                 axisLeft: {
                   legend: "Visits",
-                },
-                axisBottom: {
-                  format: (value) => {
-                    return value % 2 === 0
-                      ? moment(value, "H").format("hh:mm A")
-                      : "";
-                  },
                 },
               }}
               indexFormat={(value) => {
@@ -240,8 +237,15 @@ const Visits: NextPageWithLayout = () => {
           </InfoCard>
           <InfoCard title="Visitor type">
             <Charts
-              types={["pie", "bar"]}
+              defaultType="pie"
+              types={["bar", "pie"]}
               isLoading={listingIsLoading}
+              data={Object.entries(listing?.stats["Visitors Type"] ?? {}).map(
+                ([id, value]) => ({
+                  id,
+                  value: Number(value),
+                })
+              )}
               BarSvgProps={{
                 axisLeft: {
                   legend: "Visits",

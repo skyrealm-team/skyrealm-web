@@ -167,13 +167,27 @@ const PropertyCharts: FC<PropertyChartsProps> = ({ listing, isLoading }) => {
             listing?.stats[
               "Standard Occupational Classification (SOC) codes for 2018 and later based on 2018 SOC codes"
             ] ?? {}
-          ).map(([id, value]) => ({
-            id,
-            value: Number(value),
-          }))}
+          )
+            .map(([id, value]) => ({
+              id,
+              value: Number(value),
+            }))
+            .sort((a, b) => a.value - b.value)}
+          StackProps={{
+            sx: {
+              aspectRatio: `${1240 / 468 / 2}`,
+            },
+          }}
           BarSvgProps={{
+            layout: "horizontal",
+            margin: {
+              right: 500,
+            },
             axisLeft: {
-              legend: "Visitors",
+              format: () => "",
+            },
+            axisRight: {
+              tickSize: 0,
             },
           }}
         />
