@@ -166,6 +166,7 @@ type SingleListing = {
   availableSpaces: Maybe<Array<Maybe<Scalars["String"]>>>;
   brokersInfo: Maybe<Array<Maybe<Broker>>>;
   frequency: Maybe<Scalars["Float"]>;
+  isPublic: Maybe<Scalars["Boolean"]>;
   latitude: Maybe<Scalars["String"]>;
   listingId: Maybe<Scalars["String"]>;
   longitude: Maybe<Scalars["String"]>;

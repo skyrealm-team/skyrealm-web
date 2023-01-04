@@ -3,7 +3,7 @@ import { FC } from "react";
 import { AppBar, Divider, Link, Stack } from "@mui/material";
 
 import LogoIcon from "assets/icons/logo.svg";
-import { PrivacyPolicy, TermsOfService } from "consts/links";
+import { PrivacyPolicy, TermsOfService, ContactUs } from "consts/links";
 
 const Footer: FC = () => {
   return (
@@ -28,7 +28,12 @@ const Footer: FC = () => {
       >
         <LogoIcon />
         <Stack direction="row" gap={2} alignItems="center">
-          <Link target="_blank" color="inherit" underline="none" href="">
+          <Link
+            target="_blank"
+            color="inherit"
+            underline="none"
+            href={ContactUs}
+          >
             Contact Us
           </Link>
           <Divider

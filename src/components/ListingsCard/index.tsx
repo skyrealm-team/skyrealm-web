@@ -66,7 +66,7 @@ const ListingsCard: FC<ListingsCardProps> = ({
             overflow: "auto",
           }}
         >
-          {!isFetching && data?.listings?.length === 0 ? (
+          {!isFetching && !data?.listings?.length ? (
             <Stack alignItems="center">
               <EmptyIcon />
               <Typography
