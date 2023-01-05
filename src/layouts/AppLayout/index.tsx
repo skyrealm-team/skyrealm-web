@@ -1,46 +1,28 @@
-import { FC, PropsWithChildren } from "react";
-import { useMount } from "react-use";
+import { FC, PropsWithChildren, useEffect } from "react";
 
 import { useRouter } from "next/router";
 
 import { Stack } from "@mui/material";
-
-import { parse } from "querystring";
 
 import Footer from "components/Footer";
 import ForgotPasswordDialog from "components/ForgotPasswordDialog";
 import Header from "components/Header";
 import SignInDialog from "components/SignInDialog";
 import SignUpDialog from "components/SignUpDialog";
-import useRouterState from "hooks/useRouterState";
+import useQueryListingsArgs from "hooks/useQueryListingsArgs";
 
 const AppLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
-  const { setRouterState } = useRouterState();
+  const { setQueryListingsArgs } = useQueryListingsArgs();
 
-  useMount(() => {
-    const routeChangeComplete = (url: string) => {
-      setRouterState(
-        Object.entries(parse(url.slice(2))).reduce((acc, [key, val]) => {
-          try {
-            return {
-              ...acc,
-              [key]: JSON.parse(String(val)),
-            };
-          } catch {
-            return acc;
-          }
-        }, {}),
+  useEffect(() => {
+    try {
+      setQueryListingsArgs(
+        JSON.parse(String(router.query["queryListingsArgs"])),
         true
       );
-    };
-    routeChangeComplete(router.asPath);
-    router.events.on("routeChangeComplete", routeChangeComplete);
-
-    return () => {
-      router.events.off("routeChangeComplete", routeChangeComplete);
-    };
-  });
+    } catch {}
+  }, [router.query["queryListingsArgs"]]);
 
   return (
     <Stack

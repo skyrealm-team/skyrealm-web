@@ -1,5 +1,4 @@
-import { FC } from "react";
-import { useDeepCompareEffect } from "react-use";
+import { FC, useEffect } from "react";
 
 import { AppBar, MenuItem, Stack, Toolbar } from "@mui/material";
 
@@ -8,23 +7,23 @@ import { isEmpty, isUndefined } from "lodash";
 import PlaceField from "components/PlaceField";
 import SelectField from "components/SelectField";
 import useQueryListingFilters from "graphql/useQueryListingFilters";
-import useRouterState from "hooks/useRouterState";
+import useQueryListingsArgs from "hooks/useQueryListingsArgs";
 
 const ListingsFiltersBar: FC = () => {
-  const { routerState, setRouterState } = useRouterState();
+  const { queryListingsArgs, setQueryListingsArgs } = useQueryListingsArgs();
 
   const { data: listingFilters } = useQueryListingFilters();
 
-  useDeepCompareEffect(() => {
+  useEffect(() => {
     const options = listingFilters?.reduce((acc, cur) => {
-      const value = routerState.queryListingsArgs?.[cur?.key as never];
+      const value = queryListingsArgs[cur?.key as never];
 
       const matchedOption = cur?.options?.find((option) => {
         return (
           option?.value === value &&
           (!option?.match ||
             option.match.value ===
-              routerState.queryListingsArgs?.[option?.match?.key as never])
+              queryListingsArgs[option?.match?.key as never])
         );
       });
 
@@ -38,17 +37,14 @@ const ListingsFiltersBar: FC = () => {
       };
     }, {});
 
-    if (!Object.keys(options ?? {}).length) {
+    if (!options || !Object.keys(options).length) {
       return;
     }
 
-    setRouterState({
-      queryListingsArgs: options,
-    });
+    setQueryListingsArgs(options);
   }, [
     listingFilters?.map(
-      (listingFilter) =>
-        routerState.queryListingsArgs?.[listingFilter?.key as never]
+      (listingFilter) => queryListingsArgs[listingFilter?.key as never]
     ),
   ]);
 
@@ -73,23 +69,19 @@ const ListingsFiltersBar: FC = () => {
       >
         <Stack direction="row" gap={2}>
           <PlaceField
-            value={routerState.queryListingsArgs?.address}
+            value={queryListingsArgs.address}
             onChange={(_, prediction) => {
-              setRouterState({
-                queryListingsArgs: {
-                  address: prediction?.structured_formatting.main_text,
-                },
+              setQueryListingsArgs({
+                address: prediction?.structured_formatting.main_text,
               });
             }}
             onResult={(result) => {
               const bounds = result?.geometry?.viewport?.toJSON();
 
               if (bounds) {
-                setRouterState({
-                  queryListingsArgs: {
-                    bounds,
-                    currentPage: 1,
-                  },
+                setQueryListingsArgs({
+                  bounds,
+                  currentPage: 1,
                 });
               }
             }}
@@ -99,15 +91,12 @@ const ListingsFiltersBar: FC = () => {
               <SelectField
                 key={listingFilter?.key}
                 value={
-                  routerState.queryListingsArgs?.[
-                    listingFilter?.key as never
-                  ] ?? listingFilter?.defaultValue?.value
+                  queryListingsArgs[listingFilter?.key as never] ??
+                  listingFilter?.defaultValue?.value
                 }
                 onChange={(event) => {
-                  setRouterState({
-                    queryListingsArgs: {
-                      [listingFilter?.key as never]: event.target.value,
-                    },
+                  setQueryListingsArgs({
+                    [listingFilter?.key as never]: event.target.value,
                   });
                 }}
                 size="small"
@@ -120,8 +109,7 @@ const ListingsFiltersBar: FC = () => {
                   .filter(
                     ({ match }) =>
                       !match ||
-                      routerState.queryListingsArgs?.[match.key as never] ===
-                        match.value
+                      queryListingsArgs[match.key as never] === match.value
                   )
                   .map(({ name, value }) => (
                     <MenuItem

@@ -7,24 +7,23 @@ import { defaultsDeep, isEmpty, merge } from "lodash";
 
 import useQueryListingFilters from "graphql/useQueryListingFilters";
 
-type RouterState = {
-  queryListingsArgs?: Partial<QueriesQueryListingsArgs> & {
-    address?: string;
-    placeId?: string;
-  };
+type QueryListingsArgs = Partial<QueriesQueryListingsArgs> & {
+  address?: string;
+  placeId?: string;
 };
 
-const useGlobalRouterState = createGlobalState<RouterState>({});
+const useGlobalState = createGlobalState<QueryListingsArgs>({});
 
-const useRouterState = () => {
+const useQueryListingsArgs = () => {
   const router = useRouter();
-  const [state, setState] = useGlobalRouterState();
+  const [state, setState] = useGlobalState();
 
   const { data: listingFilters } = useQueryListingFilters();
 
-  const routerState = useMemo<RouterState>(() => {
-    return defaultsDeep(state, {
-      queryListingsArgs: listingFilters?.reduce((acc, cur) => {
+  const queryListingsArgs = useMemo<QueryListingsArgs>(() => {
+    return defaultsDeep(
+      state,
+      listingFilters?.reduce((acc, cur) => {
         if (isEmpty(cur?.defaultValue?.value)) {
           return acc;
         }
@@ -33,13 +32,13 @@ const useRouterState = () => {
           ...acc,
           [cur?.key as never]: cur?.defaultValue?.value,
         };
-      }, {}),
-    });
+      }, {})
+    );
   }, [state, listingFilters]);
 
   return {
-    routerState,
-    setRouterState: (values: RouterState, silence?: boolean) => {
+    queryListingsArgs,
+    setQueryListingsArgs: (values: QueryListingsArgs, silence?: boolean) => {
       return setState((state) => {
         const result = merge(state, values);
 
@@ -48,13 +47,7 @@ const useRouterState = () => {
             pathname: router.pathname,
             query: {
               ...router.query,
-              ...Object.entries(result).reduce(
-                (acc, [key, val]) => ({
-                  ...acc,
-                  [key]: JSON.stringify(val),
-                }),
-                {}
-              ),
+              queryListingsArgs: JSON.stringify(result),
             },
           });
         }
@@ -65,4 +58,4 @@ const useRouterState = () => {
   };
 };
 
-export default useRouterState;
+export default useQueryListingsArgs;

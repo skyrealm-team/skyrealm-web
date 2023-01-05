@@ -171,6 +171,7 @@ type SingleListing = {
   listingId: Maybe<Scalars["String"]>;
   longitude: Maybe<Scalars["String"]>;
   mediumIncome: Maybe<Scalars["String"]>;
+  paid: Maybe<Scalars["Boolean"]>;
   polyGeom: Maybe<Scalars["JSON"]>;
   stats: Maybe<Scalars["JSON"]>;
   totalVisits: Maybe<Scalars["BigInt"]>;

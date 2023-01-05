@@ -8,7 +8,7 @@ import { debounce, defaultsDeep } from "lodash";
 
 import useQueryListings from "graphql/useQueryListings";
 import useDefaultBounds from "hooks/useDefaultBounds";
-import useRouterState from "hooks/useRouterState";
+import useQueryListingsArgs from "hooks/useQueryListingsArgs";
 
 import Markers, { MarkersProps } from "./Markers";
 
@@ -20,19 +20,15 @@ const ListingsMap: FC<ListingsMapProps> = ({
   GoogleMapProps,
   MarkersProps,
 }) => {
-  const { routerState, setRouterState } = useRouterState();
-  const setRouterStateDebounced = debounce(setRouterState, 500);
+  const { queryListingsArgs, setQueryListingsArgs } = useQueryListingsArgs();
+  const setQueryListingsArgsDebounced = debounce(setQueryListingsArgs, 500);
 
   const [defaultBounds, setDefaultBounds] = useDefaultBounds();
   const { data, isFetching } = useQueryListings(
     {
-      ...routerState.queryListingsArgs,
-      bounds: defaultsDeep(
-        routerState.queryListingsArgs?.bounds,
-        defaultBounds
-      ),
-      currentPage:
-        ~~(((routerState.queryListingsArgs?.currentPage ?? 1) - 1) / 5) + 1,
+      ...queryListingsArgs,
+      bounds: defaultsDeep(queryListingsArgs.bounds, defaultBounds),
+      currentPage: ~~(((queryListingsArgs.currentPage ?? 1) - 1) / 5) + 1,
       rowsPerPage: 500,
     },
     {
@@ -46,14 +42,14 @@ const ListingsMap: FC<ListingsMapProps> = ({
     map?.set("boundsPrevented", true);
 
     setTimeout(() => {
-      const bounds = routerState.queryListingsArgs?.bounds;
+      const bounds = queryListingsArgs.bounds;
       if (!bounds) {
         map?.fitBounds(map?.get("defaultBounds") ?? defaultBounds, 0);
       } else {
         map?.fitBounds(defaultsDeep(bounds, defaultBounds), 0);
       }
     });
-  }, [routerState.queryListingsArgs?.bounds]);
+  }, [queryListingsArgs.bounds]);
 
   return (
     <GoogleMap
@@ -62,7 +58,7 @@ const ListingsMap: FC<ListingsMapProps> = ({
       onLoad={(map) => {
         setMap(map);
         map?.fitBounds(
-          defaultsDeep(routerState.queryListingsArgs?.bounds, defaultBounds),
+          defaultsDeep(queryListingsArgs.bounds, defaultBounds),
           0
         );
 
@@ -79,12 +75,10 @@ const ListingsMap: FC<ListingsMapProps> = ({
             }
             map?.set("boundsPrevented", false);
           } else {
-            setRouterStateDebounced({
-              queryListingsArgs: {
-                bounds,
-                currentPage: 1,
-                address: "",
-              },
+            setQueryListingsArgsDebounced({
+              bounds,
+              currentPage: 1,
+              address: "",
             });
           }
         }

@@ -17,7 +17,7 @@ import EmptyIcon from "assets/icons/empty.svg";
 import ListingsItem, { ListingsItemProps } from "components/ListingsItem";
 import useQueryListings from "graphql/useQueryListings";
 import useDefaultBounds from "hooks/useDefaultBounds";
-import useRouterState from "hooks/useRouterState";
+import useQueryListingsArgs from "hooks/useQueryListingsArgs";
 
 export type ListingsCardProps = {
   CardProps?: CardProps;
@@ -30,16 +30,13 @@ const ListingsCard: FC<ListingsCardProps> = ({
   CardProps,
   ListingsItemProps,
 }) => {
-  const { routerState, setRouterState } = useRouterState();
+  const { queryListingsArgs, setQueryListingsArgs } = useQueryListingsArgs();
 
   const [defaultBounds] = useDefaultBounds();
   const { data, isLoading, isFetching } = useQueryListings(
     {
-      ...routerState.queryListingsArgs,
-      bounds: defaultsDeep(
-        routerState.queryListingsArgs?.bounds,
-        defaultBounds
-      ),
+      ...queryListingsArgs,
+      bounds: defaultsDeep(queryListingsArgs.bounds, defaultBounds),
     },
     {
       keepPreviousData: true,
@@ -123,10 +120,8 @@ const ListingsCard: FC<ListingsCardProps> = ({
                 shape="rounded"
                 color="primary"
                 onChange={(event, page) => {
-                  setRouterState({
-                    queryListingsArgs: {
-                      currentPage: page,
-                    },
+                  setQueryListingsArgs({
+                    currentPage: page,
                   });
                 }}
               />

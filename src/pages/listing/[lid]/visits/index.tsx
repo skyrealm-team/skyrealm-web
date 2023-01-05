@@ -17,10 +17,10 @@ import moment from "moment";
 import InfoCard from "components/InfoCard";
 import PropertyHeader from "components/PropertyHeader";
 import PropertyMap from "components/PropertyMap";
-import useQueryListingById, {
-  queryListingByIdRequest,
-  queryListingByIdQuery,
-} from "graphql/useQueryListingById";
+import useQueryListing, {
+  queryListingRequest,
+  queryListingQuery,
+} from "graphql/useQueryListing";
 import PropertyLayout from "layouts/PropertyLayout";
 import { NextPageWithLayout } from "pages/_app";
 
@@ -38,13 +38,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   await Promise.allSettled([
     queryClient.prefetchQuery(
       [
-        queryListingByIdQuery,
+        queryListingQuery,
         {
           listingId: String(lid),
         },
       ],
       () => {
-        return queryListingByIdRequest({
+        return queryListingRequest({
           variables: {
             listingId: String(lid),
           },
@@ -64,7 +64,7 @@ const Visits: NextPageWithLayout = () => {
   const router = useRouter();
   const { lid } = router.query;
 
-  const { data: listing, isLoading: listingIsLoading } = useQueryListingById({
+  const { data: listing, isLoading: listingIsLoading } = useQueryListing({
     listingId: lid && String(lid),
   });
 

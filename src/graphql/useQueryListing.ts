@@ -4,7 +4,7 @@ import { ClientError, gql, RequestOptions } from "graphql-request";
 
 import client from "./client";
 
-export const queryListingByIdQuery = gql`
+export const queryListingQuery = gql`
   query queryListingsByIDs($listingIDs: [String]) {
     queryListingsByIDs(listingIDs: $listingIDs) {
       listings {
@@ -19,12 +19,13 @@ export const queryListingByIdQuery = gql`
         availableSpaces
         stats
         polyGeom
+        paid
       }
     }
   }
 `;
 
-export const queryListingByIdRequest = async (
+export const queryListingRequest = async (
   options?: Partial<
     RequestOptions<
       Partial<{
@@ -40,21 +41,21 @@ export const queryListingByIdRequest = async (
       variables: {
         listingIDs: [options?.variables?.listingId],
       },
-      document: queryListingByIdQuery,
+      document: queryListingQuery,
     })
     .then((data) => data.queryListingsByIDs?.listings?.[0] ?? null);
 };
 
-export const useQueryListingById = (
+export const useQueryListing = (
   variables: {
     listingId?: string;
   },
   options?: UseQueryOptions<Maybe<SingleListing>, ClientError>
 ) => {
   return useQuery<Maybe<SingleListing>, ClientError>(
-    [queryListingByIdQuery, variables],
+    [queryListingQuery, variables],
     () => {
-      return queryListingByIdRequest({ variables });
+      return queryListingRequest({ variables });
     },
     {
       enabled: !!variables.listingId,
@@ -63,4 +64,4 @@ export const useQueryListingById = (
   );
 };
 
-export default useQueryListingById;
+export default useQueryListing;

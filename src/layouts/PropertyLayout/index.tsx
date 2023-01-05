@@ -19,14 +19,19 @@ import {
 } from "@mui/material";
 
 import NearbyResidentsIcon from "assets/icons/nearby-residents.svg";
+import PropertyInfoIcon from "assets/icons/property-info.svg";
 import VisitorProfileIcon from "assets/icons/visitor-profile.svg";
 import VisitsIcon from "assets/icons/visits.svg";
 import ContactButton from "components/ContactButton";
-import useQueryListingById from "graphql/useQueryListingById";
+import useQueryListing from "graphql/useQueryListing";
 
 const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
   const { lid } = router.query;
+
+  const { data: listing, isLoading: listingIsLoading } = useQueryListing({
+    listingId: lid && String(lid),
+  });
 
   const menu: {
     key: string;
@@ -34,15 +39,19 @@ const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
     ListItemIconProps?: ListItemIconProps;
     ListItemTextProps?: ListItemTextProps;
   }[] = [
-    // {
-    //   key: "property-info",
-    //   ListItemIconProps: {
-    //     children: <PropertyInfoIcon />,
-    //   },
-    //   ListItemTextProps: {
-    //     children: "Property info",
-    //   },
-    // },
+    ...(listing?.paid
+      ? [
+          {
+            key: "property-info",
+            ListItemIconProps: {
+              children: <PropertyInfoIcon />,
+            },
+            ListItemTextProps: {
+              children: "Property info",
+            },
+          },
+        ]
+      : []),
     {
       key: "visits",
       ListItemIconProps: {
@@ -73,10 +82,6 @@ const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
   ];
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
-
-  const { data: listing, isLoading: listingIsLoading } = useQueryListingById({
-    listingId: lid && String(lid),
-  });
 
   if (!listingIsLoading && !listing) {
     return <Error statusCode={404} withDarkMode={false} />;

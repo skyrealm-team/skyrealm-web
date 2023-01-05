@@ -1,5 +1,10 @@
 import { CSSProperties, Fragment, useMemo, useRef } from "react";
+import { dehydrate, QueryClient } from "react-query";
 import { useWindowScroll } from "react-use";
+
+import { GetServerSideProps } from "next";
+import Error from "next/error";
+import { useRouter } from "next/router";
 
 import {
   Avatar,
@@ -16,10 +21,51 @@ import ImageCarousel from "components/ImageCarousel";
 import InfoCard from "components/InfoCard";
 import PropertyHeader from "components/PropertyHeader";
 import PropertyMap from "components/PropertyMap";
+import useQueryListing, {
+  queryListingQuery,
+  queryListingRequest,
+} from "graphql/useQueryListing";
 import PropertyLayout from "layouts/PropertyLayout";
 import { NextPageWithLayout } from "pages/_app";
 
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { lid } = context.query;
+
+  const queryClient = new QueryClient();
+
+  await Promise.allSettled([
+    queryClient.prefetchQuery(
+      [
+        queryListingQuery,
+        {
+          listingId: String(lid),
+        },
+      ],
+      () => {
+        return queryListingRequest({
+          variables: {
+            listingId: String(lid),
+          },
+        });
+      }
+    ),
+  ]);
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
+
 const PropertyInfo: NextPageWithLayout = () => {
+  const router = useRouter();
+  const { lid } = router.query;
+
+  const { data: listing, isLoading: listingIsLoading } = useQueryListing({
+    listingId: lid && String(lid),
+  });
+
   const rootRef = useRef<HTMLDivElement>(null);
   const brokerRef = useRef<HTMLDivElement>(null);
   const windowScroll = useWindowScroll();
@@ -45,6 +91,10 @@ const PropertyInfo: NextPageWithLayout = () => {
       right: right,
     };
   }, [windowScroll]);
+
+  if (!listingIsLoading && !listing?.paid) {
+    return <Error statusCode={403} withDarkMode={false} />;
+  }
 
   return (
     <Stack ref={rootRef}>
