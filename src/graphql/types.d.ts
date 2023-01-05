@@ -16,6 +16,7 @@ type Scalars = {
   Float: number;
   BigInt: any;
   JSON: any;
+  Timestamp: any;
 };
 
 type BasicResponse = {
@@ -165,14 +166,23 @@ type SingleListing = {
   address: Maybe<Scalars["String"]>;
   availableSpaces: Maybe<Array<Maybe<Scalars["String"]>>>;
   brokersInfo: Maybe<Array<Maybe<Broker>>>;
+  ceiling: Maybe<Scalars["Float"]>;
   frequency: Maybe<Scalars["Float"]>;
+  frontage: Maybe<Scalars["Float"]>;
   isPublic: Maybe<Scalars["Boolean"]>;
   latitude: Maybe<Scalars["String"]>;
   listingId: Maybe<Scalars["String"]>;
   longitude: Maybe<Scalars["String"]>;
   mediumIncome: Maybe<Scalars["String"]>;
+  overview: Maybe<Scalars["String"]>;
   paid: Maybe<Scalars["Boolean"]>;
+  pics: Maybe<Array<Maybe<Scalars["String"]>>>;
   polyGeom: Maybe<Scalars["JSON"]>;
+  possession: Maybe<Scalars["Timestamp"]>;
+  rentPeriod: Maybe<Scalars["String"]>;
+  rentPrice: Maybe<Scalars["Float"]>;
+  rentUnit: Maybe<Scalars["String"]>;
+  size: Maybe<Scalars["Float"]>;
   stats: Maybe<Scalars["JSON"]>;
   totalVisits: Maybe<Scalars["BigInt"]>;
   visitors: Maybe<Scalars["BigInt"]>;

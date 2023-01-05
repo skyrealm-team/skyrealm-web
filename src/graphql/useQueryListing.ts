@@ -20,6 +20,15 @@ export const queryListingQuery = gql`
         stats
         polyGeom
         paid
+        size
+        ceiling
+        frontage
+        rentPrice
+        rentUnit
+        rentPeriod
+        possession
+        pics
+        overview
       }
     }
   }

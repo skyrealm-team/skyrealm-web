@@ -15,6 +15,8 @@ import {
   Unstable_Grid2,
 } from "@mui/material";
 
+import moment from "moment";
+
 import TelIcon from "assets/icons/tel.svg";
 import ContactButton from "components/ContactButton";
 import ImageCarousel from "components/ImageCarousel";
@@ -27,6 +29,8 @@ import useQueryListing, {
 } from "graphql/useQueryListing";
 import PropertyLayout from "layouts/PropertyLayout";
 import { NextPageWithLayout } from "pages/_app";
+
+const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { lid } = context.query;
@@ -98,8 +102,8 @@ const PropertyInfo: NextPageWithLayout = () => {
 
   return (
     <Stack ref={rootRef}>
-      <PropertyHeader />
-      <ImageCarousel />
+      <PropertyHeader listing={listing} />
+      <ImageCarousel images={listing?.pics ?? []} />
       <Container
         maxWidth={false}
         sx={{
@@ -126,23 +130,31 @@ const PropertyInfo: NextPageWithLayout = () => {
                 {[
                   {
                     key: "Size",
-                    value: "48,591 SF",
+                    value: `${formatter.format(listing?.size ?? 0)} SF`,
                   },
                   {
                     key: "Ceiling",
-                    value: "7.5M",
+                    value: formatter.format(listing?.ceiling ?? 0),
                   },
                   {
                     key: "Frontage",
-                    value: "7.5M",
+                    value: formatter.format(listing?.frontage ?? 0),
                   },
                   {
                     key: "Asking rent",
-                    value: "7.5M",
+                    value: formatter.format(listing?.rentPrice ?? 0),
                   },
                   {
-                    key: "Possessio",
-                    value: "7.5M",
+                    key: "Possession",
+                    value: (() => {
+                      const possession = moment(
+                        listing?.possession ?? Date.now()
+                      );
+
+                      return possession.isAfter(Date.now())
+                        ? possession.format("YYYY-MM-DD")
+                        : "Immediate";
+                    })(),
                   },
                 ].map(({ key, value }, index) => (
                   <Unstable_Grid2
@@ -170,7 +182,7 @@ const PropertyInfo: NextPageWithLayout = () => {
                         noWrap
                         sx={{
                           color: "#333333",
-                          fontSize: 26,
+                          fontSize: 20,
                           fontWeight: 600,
                         }}
                       >
@@ -188,29 +200,29 @@ const PropertyInfo: NextPageWithLayout = () => {
                   lineHeight: "34px",
                 }}
               >
-                277 Park Avenue, situated between 47th and 48th streets, is an
-                iconic New York City office building. Award-winning architect
-                Bohlin Cywinski Jackson is remastering this iconic Emery Roth +
-                Sons designed property with over $100 million invested in
-                capital improvements. These renovations include an outdoor plaza
-                with green space, an expanded Park Avenue entrance to the
-                immersive lobby with 30-foot ceiling heights, state-of-the-art
-                media walls with tenant branding and custom messaging, and
-                destination dispatch elevators. Improvements to the building's
-                infrastructure will offer the latest security and visitor access
-                systems, a main chiller plant modernization, energy-efficient
-                compressors with the latest technology control systems, extended
-                HVAC hours, and an emergency generator covering all life safety
+                {listing?.overview}
               </Typography>
             </InfoCard>
             <InfoCard title="MAP">
               <PropertyMap
+                listing={listing}
                 mapContainerStyle={{
                   aspectRatio: 1177 / 550,
                 }}
+                center={{
+                  lat: Number(listing?.latitude),
+                  lng: Number(listing?.longitude),
+                }}
+                zoom={Math.log2((40000000 * 194) / 152.4 / 256 / 2)}
+                MarkerProps={{
+                  position: {
+                    lat: Number(listing?.latitude),
+                    lng: Number(listing?.longitude),
+                  },
+                }}
               />
             </InfoCard>
-            <InfoCard title="Broker inf">
+            <InfoCard title="Broker info">
               <Stack gap={4}>
                 {[
                   {

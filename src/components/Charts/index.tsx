@@ -61,7 +61,7 @@ const Charts: FC<ChartsProps> = ({
         ...StackProps?.sx,
       }}
     >
-      {data && (
+      {!!data?.length && (
         <>
           {types.length > 1 && (
             <Stack direction="row" alignItems="center" gap={4}>
@@ -408,7 +408,7 @@ const Charts: FC<ChartsProps> = ({
           )}
         </>
       )}
-      {!isLoading && !data && (
+      {!isLoading && !data?.length && (
         <Alert severity="error">
           <AlertTitle>Data Unavailable</AlertTitle>
           We are unable to retrieve data at this time.
