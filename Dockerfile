@@ -25,26 +25,23 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-ARG NEXT_PUBLIC_BACKEND_API
-ENV NEXT_PUBLIC_BACKEND_API=$NEXT_PUBLIC_BACKEND_API
-RUN yarn build
+# RUN yarn build
 
-# Production image, copy all the files and run next
-FROM node:current-alpine AS runner
-WORKDIR /app
+# # Production image, copy all the files and run next
+# FROM node:current-alpine AS runner
+# WORKDIR /app
+
+# COPY --from=builder /app/next.config.js /app/package.json ./
+# COPY --from=builder /app/public ./public
+# COPY --from=builder /app/.next ./.next
+# COPY --from=builder /app/node_modules ./node_modules
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/next.config.js /app/package.json ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-
 USER nextjs
 
 EXPOSE 80
 
 ENV PORT 80
 
-CMD ["yarn", "start"]
+CMD yarn build && yarn start
