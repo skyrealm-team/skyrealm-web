@@ -6,3 +6,6 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+
+env:
+  node_env: development
