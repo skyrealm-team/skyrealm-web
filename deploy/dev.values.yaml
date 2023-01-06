@@ -8,4 +8,4 @@ ingress:
           pathType: ImplementationSpecific
 
 env:
-  NEXT_PUBLIC_BACKEND_API: https://dev.skyrealm.ai/gql/schema
+  next_public_backend_api: https://dev.skyrealm.ai/gql/schema

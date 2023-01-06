@@ -26,6 +26,11 @@ export type MyAppProps = AppProps & {
 const MyApp: FC<MyAppProps> = ({ Component, emotionCache, pageProps }) => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
+  console.log(
+    process.env.next_public_backend_api,
+    process.env.NEXT_PUBLIC_BACKEND_API
+  );
+
   return (
     <>
       <Head>
