@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { NextPage } from "next";
+import getConfig from "next/config";
 
 import { Stack } from "@mui/material";
 
@@ -11,10 +12,14 @@ import ListingsFiltersBar from "components/ListingsFiltersBar";
 import ListingsMap from "components/ListingsMap";
 import Loading from "components/Loading";
 
+const { publicRuntimeConfig } = getConfig();
+
 const libraries: LoadScriptProps["libraries"] = ["places"];
 
 const Home: NextPage = () => {
   const [hovering, setHovering] = useState<SingleListing["listingId"]>();
+
+  console.log(publicRuntimeConfig.env.NEXT_PUBLIC_BACKEND_API);
 
   return (
     <LoadScriptNext

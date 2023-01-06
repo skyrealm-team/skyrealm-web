@@ -25,6 +25,8 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
+ARG NEXT_PUBLIC_BACKEND_API
+ENV NEXT_PUBLIC_BACKEND_API=$NEXT_PUBLIC_BACKEND_API
 RUN yarn build
 
 # Production image, copy all the files and run next

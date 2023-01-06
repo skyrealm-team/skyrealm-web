@@ -7,5 +7,5 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
 
-env:
+args:
   NEXT_PUBLIC_BACKEND_API: https://www.skyrealm.ai/gql/schema
