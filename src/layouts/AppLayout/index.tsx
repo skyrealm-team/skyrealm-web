@@ -1,4 +1,5 @@
-import { FC, PropsWithChildren, useEffect } from "react";
+import { FC, PropsWithChildren } from "react";
+import { useUpdateEffect } from "react-use";
 
 import { useRouter } from "next/router";
 
@@ -15,7 +16,7 @@ const AppLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
   const { setQueryListingsArgs } = useQueryListingsArgs();
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     try {
       setQueryListingsArgs(
         JSON.parse(String(router.query["queryListingsArgs"])),

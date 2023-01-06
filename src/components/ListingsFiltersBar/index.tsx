@@ -1,4 +1,5 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
+import { useDeepCompareEffect } from "react-use";
 
 import { AppBar, MenuItem, Stack, Toolbar } from "@mui/material";
 
@@ -14,7 +15,7 @@ const ListingsFiltersBar: FC = () => {
 
   const { data: listingFilters } = useQueryListingFilters();
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const options = listingFilters?.reduce((acc, cur) => {
       const value = queryListingsArgs[cur?.key as never];
 

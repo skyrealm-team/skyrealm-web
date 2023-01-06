@@ -24,6 +24,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ images }) => {
       <Unstable_Grid2
         ref={ref}
         container
+        justifyContent="center"
         wrap="nowrap"
         sx={{
           overflowX: "auto",
@@ -58,38 +59,42 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ images }) => {
           </Unstable_Grid2>
         ))}
       </Unstable_Grid2>
-      <IconButton
-        onClick={() => {
-          ref.current?.scrollBy({
-            behavior: "smooth",
-            left: -ref.current?.clientWidth,
-          });
-        }}
-        sx={{
-          position: "absolute",
-          left: 0,
-          top: "50%",
-          transform: "translateY(-50%)",
-        }}
-      >
-        <ChevronLeft />
-      </IconButton>
-      <IconButton
-        onClick={() => {
-          ref.current?.scrollBy({
-            behavior: "smooth",
-            left: ref.current?.clientWidth,
-          });
-        }}
-        sx={{
-          position: "absolute",
-          right: 0,
-          top: "50%",
-          transform: "translateY(-50%)",
-        }}
-      >
-        <ChevronRight />
-      </IconButton>
+      {images.length >= 3 && (
+        <>
+          <IconButton
+            onClick={() => {
+              ref.current?.scrollBy({
+                behavior: "smooth",
+                left: -ref.current?.clientWidth,
+              });
+            }}
+            sx={{
+              position: "absolute",
+              left: 0,
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          >
+            <ChevronLeft />
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              ref.current?.scrollBy({
+                behavior: "smooth",
+                left: ref.current?.clientWidth,
+              });
+            }}
+            sx={{
+              position: "absolute",
+              right: 0,
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          >
+            <ChevronRight />
+          </IconButton>
+        </>
+      )}
     </Stack>
   );
 };

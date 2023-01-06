@@ -142,7 +142,9 @@ const PropertyInfo: NextPageWithLayout = () => {
                   },
                   {
                     key: "Asking rent",
-                    value: formatter.format(listing?.rentPrice ?? 0),
+                    value: `${formatter.format(listing?.rentPrice ?? 0)} per ${
+                      listing?.rentUnit
+                    } per ${listing?.rentPeriod}`,
                   },
                   {
                     key: "Possession",
@@ -193,16 +195,18 @@ const PropertyInfo: NextPageWithLayout = () => {
                 ))}
               </Unstable_Grid2>
             </InfoCard>
-            <InfoCard title="Property overview">
-              <Typography
-                sx={{
-                  color: "#333333",
-                  lineHeight: "34px",
-                }}
-              >
-                {listing?.overview}
-              </Typography>
-            </InfoCard>
+            {listing?.overview && (
+              <InfoCard title="Property overview">
+                <Typography
+                  sx={{
+                    color: "#333333",
+                    lineHeight: "34px",
+                  }}
+                >
+                  {listing?.overview}
+                </Typography>
+              </InfoCard>
+            )}
             <InfoCard title="MAP">
               <PropertyMap
                 listing={listing}
