@@ -44,4 +44,4 @@ EXPOSE 80
 
 ENV PORT 80
 
-CMD yarn build:start
+CMD yarn start
