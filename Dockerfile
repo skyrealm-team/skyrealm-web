@@ -31,17 +31,18 @@ RUN yarn build
 FROM node:current-alpine AS runner
 WORKDIR /app
 
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
 COPY --from=builder /app/next.config.js /app/package.json ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
 EXPOSE 80
 
 ENV PORT 80
 
-CMD yarn start
+CMD ["yarn", "start"]
