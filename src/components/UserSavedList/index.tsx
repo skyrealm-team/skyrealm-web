@@ -1,3 +1,5 @@
+import { FC } from "react";
+
 import {
   Box,
   Card,
@@ -11,10 +13,8 @@ import {
 import ListingsItem from "components/ListingsItem";
 import useGetUserInfo from "graphql/useGetUserInfo";
 import useQueryListingsByIDs from "graphql/useQueryListingsByIDs";
-import UserLayout from "layouts/UserLayout";
-import { NextPageWithLayout } from "pages/_app";
 
-const SavedList: NextPageWithLayout = () => {
+const UserSavedList: FC = () => {
   const { data: userInfo, isLoading: userInfoIsLoading } = useGetUserInfo();
   const { data: listings, isLoading: listingsIsLoading } =
     useQueryListingsByIDs({
@@ -80,8 +80,4 @@ const SavedList: NextPageWithLayout = () => {
   );
 };
 
-SavedList.getLayout = (page) => {
-  return <UserLayout>{page}</UserLayout>;
-};
-
-export default SavedList;
+export default UserSavedList;

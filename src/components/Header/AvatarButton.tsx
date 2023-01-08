@@ -13,6 +13,8 @@ import {
   MenuItemProps,
 } from "@mui/material";
 
+import { UrlObject, parse } from "url";
+
 import FavoriteIcon from "assets/icons/favorite.svg";
 import LogoutIcon from "assets/icons/logout.svg";
 import Loading from "components/Loading";
@@ -28,14 +30,19 @@ const AvatarButton: FC = () => {
 
   const menu = useMemo<
     {
-      pathname: string;
+      href: UrlObject;
       MenuItemProps: MenuItemProps;
       ListItemIconProps: ListItemIconProps;
     }[]
   >(
     () => [
       {
-        pathname: "/user/saved-list",
+        href: {
+          pathname: "/user",
+          query: {
+            t: "saved-list",
+          },
+        },
         MenuItemProps: {
           children: "Saved List",
         },
@@ -83,17 +90,16 @@ const AvatarButton: FC = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {menu.map(({ pathname, MenuItemProps, ListItemIconProps }, index) => {
-          const selected = router.asPath === pathname;
+        {menu.map(({ href, MenuItemProps, ListItemIconProps }, index) => {
+          const asPath = parse(router.asPath, true);
+          const selected =
+            asPath.pathname === href.pathname &&
+            Object.entries(href.query ?? {}).every(
+              ([key, val]) => asPath.query[key] === val
+            );
 
           return (
-            <Link
-              key={index}
-              href={{
-                pathname,
-              }}
-              legacyBehavior
-            >
+            <Link key={index} href={href} legacyBehavior>
               <MenuItem
                 selected={selected}
                 {...MenuItemProps}

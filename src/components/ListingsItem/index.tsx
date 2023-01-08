@@ -34,7 +34,7 @@ const ListingsItem: FC<ListingsItemProps> = ({
       <Link
         target="_blank"
         href={{
-          pathname: `/listing/${listing?.listingId}/visits`,
+          pathname: `/listing/${listing?.listingId}`,
         }}
         legacyBehavior
         passHref

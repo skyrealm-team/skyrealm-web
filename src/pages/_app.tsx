@@ -3,6 +3,7 @@ import { Hydrate } from "react-query";
 
 import { NextPage } from "next";
 import { DefaultSeo } from "next-seo";
+import SEO from "next-seo.config";
 import { AppProps } from "next/app";
 import Head from "next/head";
 
@@ -11,8 +12,6 @@ import { EmotionCache } from "@emotion/react";
 import Providers from "Providers";
 
 import AppLayout from "layouts/AppLayout";
-
-import SEO from "../next-seo.config";
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<
   P,

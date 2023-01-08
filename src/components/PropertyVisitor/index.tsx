@@ -10,11 +10,11 @@ const Charts = dynamic(() => import("components/Charts"), {
   ssr: false,
 });
 
-export type PropertyChartsProps = {
+export type PropertyVisitorProps = {
   listing?: Maybe<SingleListing>;
   isLoading?: boolean;
 };
-const PropertyCharts: FC<PropertyChartsProps> = ({ listing, isLoading }) => {
+const PropertyVisitor: FC<PropertyVisitorProps> = ({ listing, isLoading }) => {
   return (
     <Stack gap={4}>
       <Alert severity="info">
@@ -267,4 +267,4 @@ const PropertyCharts: FC<PropertyChartsProps> = ({ listing, isLoading }) => {
   );
 };
 
-export default PropertyCharts;
+export default PropertyVisitor;
