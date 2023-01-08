@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import dynamic from "next/dynamic";
 
-import { Alert, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import InfoCard from "components/InfoCard";
 
@@ -16,10 +16,7 @@ export type PropertyVisitorProps = {
 };
 const PropertyVisitor: FC<PropertyVisitorProps> = ({ listing, isLoading }) => {
   return (
-    <Stack gap={4}>
-      <Alert severity="info">
-        Data range: {listing?.stats["timeStart"]} - {listing?.stats["timeEnd"]}
-      </Alert>
+    <>
       <Stack direction="row" gap={3}>
         <InfoCard
           title="Gender"
@@ -263,7 +260,7 @@ const PropertyVisitor: FC<PropertyVisitorProps> = ({ listing, isLoading }) => {
           }}
         />
       </InfoCard>
-    </Stack>
+    </>
   );
 };
 

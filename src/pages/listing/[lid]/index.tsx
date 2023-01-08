@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 import {
+  Alert,
   Container,
   Drawer,
   ListItemIcon,
@@ -289,21 +290,28 @@ const Listing: NextPage = () => {
                   py: 3,
                 }}
               >
-                {tab === Tabs["property-info"] && (
+                {tab === Tabs["property-info"] ? (
                   <PropertyInfo listing={listing} />
-                )}
-                {tab === Tabs.visits && (
-                  <PropertyVisits
-                    listing={listing}
-                    isLoading={listingIsLoading}
-                  />
-                )}
-                {(tab === Tabs["visitor-profile"] ||
-                  tab === Tabs["nearby-residents"]) && (
-                  <PropertyVisitor
-                    listing={listing}
-                    isLoading={listingIsLoading}
-                  />
+                ) : (
+                  <Stack gap={4}>
+                    <Alert severity="info">
+                      Data range: {listing?.stats["timeStart"]} -{" "}
+                      {listing?.stats["timeEnd"]}
+                    </Alert>
+                    {tab === Tabs.visits && (
+                      <PropertyVisits
+                        listing={listing}
+                        isLoading={listingIsLoading}
+                      />
+                    )}
+                    {(tab === Tabs["visitor-profile"] ||
+                      tab === Tabs["nearby-residents"]) && (
+                      <PropertyVisitor
+                        listing={listing}
+                        isLoading={listingIsLoading}
+                      />
+                    )}
+                  </Stack>
                 )}
               </Container>
             </>
