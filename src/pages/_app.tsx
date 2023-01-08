@@ -2,6 +2,7 @@ import { FC, ReactElement, ReactNode } from "react";
 import { Hydrate } from "react-query";
 
 import { NextPage } from "next";
+import { DefaultSeo } from "next-seo";
 import { AppProps } from "next/app";
 import Head from "next/head";
 
@@ -10,6 +11,8 @@ import { EmotionCache } from "@emotion/react";
 import Providers from "Providers";
 
 import AppLayout from "layouts/AppLayout";
+
+import SEO from "../next-seo.config";
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<
   P,
@@ -26,13 +29,12 @@ export type MyAppProps = AppProps & {
 const MyApp: FC<MyAppProps> = ({ Component, emotionCache, pageProps }) => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  console.log(process.env.NEXT_PUBLIC_BACKEND_API);
-
   return (
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
+      <DefaultSeo {...SEO} />
       <Providers emotionCache={emotionCache}>
         <Hydrate state={pageProps.dehydratedState}>
           <AppLayout>{getLayout(<Component {...pageProps} />)}</AppLayout>

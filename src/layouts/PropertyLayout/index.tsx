@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren } from "react";
 import { useMeasure } from "react-use";
 
+import { NextSeo } from "next-seo";
 import Error from "next/error";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -88,95 +89,106 @@ const PropertyLayout: FC<PropsWithChildren> = ({ children }) => {
   }
 
   return (
-    <Stack direction="row">
-      <Drawer
-        variant="permanent"
-        PaperProps={{
-          ref,
-          elevation: 0,
-          square: true,
-          sx: {
-            width: "fit-content",
-            filter: "drop-shadow(4px 0px 26px rgba(0, 0, 0, 0.03))",
-            alignItems: "center",
-          },
-        }}
-        sx={(theme) => ({
-          width,
-          zIndex: theme.zIndex.appBar - 1,
-        })}
-      >
-        <Toolbar />
-        <MenuList
-          component={Stack}
-          gap={1}
+    <>
+      <NextSeo
+        title={`${listing?.address} | Skyrealm`}
+        description={listing?.overview ?? undefined}
+      />
+      <Stack direction="row">
+        <Drawer
+          variant="permanent"
+          PaperProps={{
+            ref,
+            elevation: 0,
+            square: true,
+            sx: {
+              width: "fit-content",
+              filter: "drop-shadow(4px 0px 26px rgba(0, 0, 0, 0.03))",
+              alignItems: "center",
+            },
+          }}
+          sx={(theme) => ({
+            width,
+            zIndex: theme.zIndex.appBar - 1,
+          })}
+        >
+          <Toolbar />
+          <MenuList
+            component={Stack}
+            gap={1}
+            sx={{
+              py: 1.75,
+            }}
+          >
+            {menu.map(
+              ({
+                key,
+                MenuItemProps,
+                ListItemIconProps,
+                ListItemTextProps,
+              }) => {
+                const selected =
+                  router.asPath.includes(key) || MenuItemProps?.selected;
+
+                return (
+                  <Link
+                    key={key}
+                    href={{
+                      pathname: `/listing/${lid}/${key}`,
+                    }}
+                    legacyBehavior
+                    shallow
+                  >
+                    <MenuItem
+                      {...MenuItemProps}
+                      sx={{
+                        px: 3.4,
+                        py: 0.8,
+                      }}
+                    >
+                      <ListItemIcon
+                        {...ListItemIconProps}
+                        sx={(theme) => ({
+                          color: "#333333",
+                          ...(selected && {
+                            color: theme.palette.primary.main,
+                          }),
+                        })}
+                      />
+                      <ListItemText
+                        disableTypography
+                        {...ListItemTextProps}
+                        sx={(theme) => ({
+                          color: "#999999",
+                          ...(selected && {
+                            color: theme.palette.primary.main,
+                            fontWeight: 700,
+                          }),
+                        })}
+                      />
+                    </MenuItem>
+                  </Link>
+                );
+              }
+            )}
+          </MenuList>
+          <ContactButton
+            sx={{
+              width: 190,
+              height: 50,
+            }}
+          />
+        </Drawer>
+        <Stack
           sx={{
-            py: 1.75,
+            flex: 1,
+            overflow: "hidden",
           }}
         >
-          {menu.map(
-            ({ key, MenuItemProps, ListItemIconProps, ListItemTextProps }) => {
-              const selected =
-                router.asPath.includes(key) || MenuItemProps?.selected;
-
-              return (
-                <Link
-                  key={key}
-                  href={{
-                    pathname: `/listing/${lid}/${key}`,
-                  }}
-                  legacyBehavior
-                  shallow
-                >
-                  <MenuItem
-                    {...MenuItemProps}
-                    sx={{
-                      px: 3.4,
-                      py: 0.8,
-                    }}
-                  >
-                    <ListItemIcon
-                      {...ListItemIconProps}
-                      sx={(theme) => ({
-                        color: "#333333",
-                        ...(selected && {
-                          color: theme.palette.primary.main,
-                        }),
-                      })}
-                    />
-                    <ListItemText
-                      disableTypography
-                      {...ListItemTextProps}
-                      sx={(theme) => ({
-                        color: "#999999",
-                        ...(selected && {
-                          color: theme.palette.primary.main,
-                          fontWeight: 700,
-                        }),
-                      })}
-                    />
-                  </MenuItem>
-                </Link>
-              );
-            }
-          )}
-        </MenuList>
-        <ContactButton
-          sx={{
-            width: 190,
-            height: 50,
-          }}
-        />
-      </Drawer>
-      <Stack
-        sx={{
-          flex: 1,
-          overflow: "hidden",
-        }}
-      >
-        {children}
+          {children}
+        </Stack>
       </Stack>
-    </Stack>
+    </>
   );
 };
 

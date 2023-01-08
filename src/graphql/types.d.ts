@@ -28,7 +28,11 @@ type BasicResponse = {
 type Broker = {
   __typename?: "Broker";
   agency: Maybe<Scalars["String"]>;
-  name: Maybe<Scalars["String"]>;
+  agencyAvatar: Maybe<Scalars["String"]>;
+  avatar: Maybe<Scalars["String"]>;
+  bio: Maybe<Scalars["String"]>;
+  firstName: Maybe<Scalars["String"]>;
+  lastName: Maybe<Scalars["String"]>;
   phone: Maybe<Scalars["String"]>;
 };
 
