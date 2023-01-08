@@ -5,7 +5,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY --chown=node:node package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
@@ -15,19 +15,29 @@ RUN \
 
 
 # Rebuild the source code only when needed
-FROM node:current-alpine AS runner
+FROM node:current-alpine AS builder
 WORKDIR /app
-COPY --chown=node:node --from=deps /app/node_modules ./node_modules
-COPY --chown=node:node . .
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
-ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN yarn build
+
+# Production image, copy all the files and run next
+FROM node:current-alpine AS runner
+WORKDIR /app
+
+COPY --from=builder /app/next.config.js /app/package.json ./
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 80
 
 ENV PORT 80
 
-CMD ["yarn", "build:start"]
+CMD ["yarn", "start"]
