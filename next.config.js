@@ -10,9 +10,6 @@ const nextConfig = {
     return config;
   },
   optimizeFonts: true,
-  publicRuntimeConfig: {
-    env: process.env,
-  },
 };
 
 module.exports = nextConfig;
