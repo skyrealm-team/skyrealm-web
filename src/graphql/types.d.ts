@@ -178,6 +178,7 @@ type SingleListing = {
   listingId: Maybe<Scalars["String"]>;
   longitude: Maybe<Scalars["String"]>;
   mediumIncome: Maybe<Scalars["String"]>;
+  name: Maybe<Scalars["String"]>;
   overview: Maybe<Scalars["String"]>;
   paid: Maybe<Scalars["Boolean"]>;
   pics: Maybe<Array<Maybe<Scalars["String"]>>>;

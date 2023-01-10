@@ -35,7 +35,7 @@ const PropertyHeader: FC<PropertyHeaderProps> = ({ listing }) => {
               fontWeight: 700,
             }}
           >
-            {listing?.address}
+            {listing?.name ?? listing?.address}
           </Typography>
           <Stack direction="row" alignItems="center" gap={0.5}>
             <LocationIcon />
