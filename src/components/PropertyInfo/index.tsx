@@ -165,22 +165,12 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
         </InfoCard>
         <InfoCard title="Broker info">
           <Stack gap={4}>
-            {[
-              {
-                name: "Mark Boisi, Executive Vice Chair",
-                tel: "(754) 465-7291",
-                info: "Mark Boisi has been active in commercial real estate in New York City since 1975 when he started his career with Cross & Brown Co. In 1978, he was a founding member of Abrams Benisch Riker Inc., which became Colliers ABR Inc., one of the predecessor companies to Cassidy Turley. Over his 35-year career, Mark’s primary focus has been on corporate and institutional real estate, principally in tenant representation, property management, and leasing assignments. He has coordinated real estate projects on behalf of dozens of corporate users and owners. He was the co-head of Cassidy Turley's $400 million joint venture investment fund with AEW Capital, which invested in commercial property in the New York metropolitan area.",
-              },
-              {
-                name: "Mark Boisi, Executive Vice Chair",
-                tel: "(754) 465-7291",
-                info: "Mark Boisi has been active in commercial real estate in New York City since 1975 when he started his career with Cross & Brown Co. In 1978, he was a founding member of Abrams Benisch Riker Inc., which became Colliers ABR Inc., one of the predecessor companies to Cassidy Turley. Over his 35-year career, Mark’s primary focus has been on corporate and institutional real estate, principally in tenant representation, property management, and leasing assignments. He has coordinated real estate projects on behalf of dozens of corporate users and owners. He was the co-head of Cassidy Turley's $400 million joint venture investment fund with AEW Capital, which invested in commercial property in the New York metropolitan area.",
-              },
-            ].map(({ name, tel, info }, index, list) => (
+            {listing?.brokersInfo?.map((broker, index, list) => (
               <Fragment key={index}>
                 <Stack direction="row" gap={3}>
                   <Stack gap={1.7} alignItems="center">
                     <Avatar
+                      src={broker?.avatar ?? undefined}
                       variant="rounded"
                       sx={{
                         width: 170,
@@ -189,7 +179,7 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
                     ></Avatar>
                     <Stack direction="row" alignItems="center" gap={1}>
                       <TelIcon />
-                      <Typography>{tel}</Typography>
+                      <Typography>{broker?.phone}</Typography>
                     </Stack>
 
                     <ContactButton size="small" />
@@ -201,9 +191,9 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
                         fontWeight: 700,
                       }}
                     >
-                      {name}
+                      {broker?.firstName} {broker?.lastName}
                     </Typography>
-                    <Typography>{info}</Typography>
+                    <Typography>{broker?.bio}</Typography>
                   </Stack>
                 </Stack>
                 {index < list.length - 1 && (
@@ -243,6 +233,7 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
           <Stack gap={3} alignItems="center">
             <Stack gap={1} alignItems="center">
               <Avatar
+                src={listing?.brokersInfo?.[0]?.avatar ?? undefined}
                 variant="rounded"
                 sx={{
                   width: 130,
@@ -257,11 +248,12 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
                     fontWeight: 700,
                   }}
                 >
-                  Steve Johnson
+                  {listing?.brokersInfo?.[0]?.firstName}{" "}
+                  {listing?.brokersInfo?.[0]?.lastName}
                 </Typography>
                 <Stack direction="row" alignItems="center" gap={1}>
                   <TelIcon />
-                  <Typography>(754) 465-7291</Typography>
+                  <Typography>{listing?.brokersInfo?.[0]?.phone}</Typography>
                 </Stack>
               </Stack>
             </Stack>

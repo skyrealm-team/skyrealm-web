@@ -29,6 +29,15 @@ export const queryListingQuery = gql`
         possession
         pics
         overview
+        brokersInfo {
+          agency
+          agencyAvatar
+          avatar
+          bio
+          firstName
+          lastName
+          phone
+        }
       }
     }
   }
