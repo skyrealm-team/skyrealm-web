@@ -1,39 +1,184 @@
 import { FC } from "react";
+import { useToggle } from "react-use";
 
-import { List } from "@mui/material";
+import { Avatar, Button, Typography } from "@mui/material";
+import { Stack } from "@mui/system";
 
-import ListingsItem from "components/ListingsItem";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+import InputField from "components/InputField";
+// import useGetImgUploadUrl from "graphql/useGetImgUploadUrl";
+import UploadPhotoDialog from "components/UploadPhotoDialog";
+import useBrokerUpdateProfile from "graphql/useBrokerUpdateProfile";
 import useGetUserInfo from "graphql/useGetUserInfo";
-import useQueryListingsByIDs from "graphql/useQueryListingsByIDs";
+
+const validationSchema = Yup.object().shape({
+  firstName: Yup.string().required("Required"),
+  lastName: Yup.string().required("Required"),
+  organization: Yup.string().required("Required"),
+  phoneNumber: Yup.string().required("Required"),
+  bio: Yup.string().max(2000),
+});
 
 const BrokerProfile: FC = () => {
-  const { data: userInfo, isLoading: userInfoIsLoading } = useGetUserInfo();
-  const { data: listings, isLoading: listingsIsLoading } =
-    useQueryListingsByIDs({
-      listingIDs: userInfo?.favorite,
-    });
+  const { data: userInfo } = useGetUserInfo();
+  // const { mutateAsync: getImgUploadUrl } = useGetImgUploadUrl()
+  const { mutateAsync: brokerUpdateProfile } = useBrokerUpdateProfile();
+
+  const formik = useFormik({
+    initialValues: {
+      ...userInfo,
+    },
+    validationSchema,
+    onSubmit: async () => {
+      try {
+      } catch {
+      } finally {
+        formik.setSubmitting(false);
+      }
+    },
+  });
+
+  const [open, toggleOpen] = useToggle(false);
 
   return (
-    <List disablePadding>
-      {(userInfoIsLoading || listingsIsLoading
-        ? Array.from<SingleListing>(new Array(5))
-        : listings?.listings
-      )?.map((listing, index, array) => (
-        <ListingsItem
-          key={listing?.listingId ?? index}
-          ListItemProps={{
-            divider: index < array.length - 1,
+    <form onSubmit={formik.handleSubmit}>
+      <Stack gap={3}>
+        <Stack direction="row" gap={4} alignItems="center">
+          <Stack direction="row" gap={2} alignItems="center">
+            <Avatar
+              src={formik.values?.avatar ?? undefined}
+              sx={(theme) => ({
+                width: 120,
+                height: 120,
+                fontSize: 40,
+                ...(!formik.values?.avatar && {
+                  backgroundColor: theme.palette.primary.main,
+                }),
+              })}
+            >
+              {formik.values?.firstName?.[0]} {formik.values?.lastName?.[0]}
+            </Avatar>
+            <Typography
+              sx={{
+                color: "#333333",
+              }}
+            >
+              {formik.values?.email}
+            </Typography>
+          </Stack>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              toggleOpen(true);
+            }}
+            sx={{
+              width: 140,
+              height: 48,
+            }}
+          >
+            Upload Photo
+          </Button>
+        </Stack>
+        <Stack direction="row" gap={4} alignItems="center">
+          <InputField
+            label="First Name"
+            value={formik.values.firstName}
+            onChange={formik.handleChange("firstName")}
+            onBlur={formik.handleBlur("firstName")}
+            FormHelperTextProps={{
+              children: formik.touched.firstName && formik.errors.firstName,
+            }}
+            autoComplete="given-name"
+            required
+            fullWidth
+          />
+          <InputField
+            label="Last Name"
+            value={formik.values.lastName}
+            onChange={formik.handleChange("lastName")}
+            onBlur={formik.handleBlur("lastName")}
+            FormHelperTextProps={{
+              children: formik.touched.lastName && formik.errors.lastName,
+            }}
+            autoComplete="family-name"
+            required
+            fullWidth
+          />
+        </Stack>
+        <Stack direction="row" gap={4} alignItems="center">
+          <InputField
+            label="Organization"
+            value={formik.values.organization}
+            onChange={formik.handleChange("organization")}
+            onBlur={formik.handleBlur("organization")}
+            FormHelperTextProps={{
+              children:
+                formik.touched.organization && formik.errors.organization,
+            }}
+            required
+            fullWidth
+          />
+          <InputField
+            label="Phone Number"
+            value={formik.values.phoneNumber}
+            onChange={formik.handleChange("phoneNumber")}
+            onBlur={formik.handleBlur("phoneNumber")}
+            FormHelperTextProps={{
+              children: formik.touched.phoneNumber && formik.errors.phoneNumber,
+            }}
+            required
+            fullWidth
+          />
+        </Stack>
+        <Stack alignItems="flex-end">
+          <InputField
+            label="About"
+            value={formik.values.bio ?? ""}
+            placeholder="You can write about your past experience and skills to help connect you with landlord, tenants and investors."
+            onChange={formik.handleChange("bio")}
+            onBlur={formik.handleBlur("bio")}
+            FormHelperTextProps={{
+              children: formik.touched.bio && formik.errors.bio,
+            }}
+            fullWidth
+            multiline
+            rows={6}
+          />
+          <Typography
+            sx={{
+              color: "#999999",
+            }}
+          >
+            {formik.values.bio?.length ?? 0}/2000
+          </Typography>
+        </Stack>
+        <Button
+          variant="contained"
+          onClick={() => {
+            console.log(formik.values);
+            brokerUpdateProfile(formik.values);
           }}
-          ListItemButtonProps={{
-            sx: {
-              px: 2,
-              py: 1.5,
-            },
+          sx={{
+            width: 140,
+            height: 48,
           }}
-          listing={listing}
-        />
-      ))}
-    </List>
+        >
+          Save
+        </Button>
+      </Stack>
+      <UploadPhotoDialog
+        open={open}
+        onClose={() => {
+          toggleOpen(false);
+        }}
+        url={formik.values.avatar ?? undefined}
+        onConfirm={(avatar) => {
+          formik.handleChange("avatar")(avatar ?? "");
+        }}
+      />
+    </form>
   );
 };
 

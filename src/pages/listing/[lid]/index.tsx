@@ -281,13 +281,8 @@ const Listing: NextPage = () => {
                 <PropertyMap listing={listing} polyGeom />
               )}
               <Container
-                {...(m === Menus["property-info"] && {
-                  maxWidth: false,
-                })}
                 sx={{
-                  ...(m !== Menus["property-info"] && {
-                    maxWidth: 1360,
-                  }),
+                  maxWidth: 1360,
                   py: 3,
                 }}
               >

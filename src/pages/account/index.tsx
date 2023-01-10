@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 
 import {
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   Container,
@@ -27,6 +28,7 @@ import {
 
 import FavoriteIcon from "assets/icons/favorite.svg";
 import ProfileIcon from "assets/icons/profile.svg";
+import BrokerProfile from "components/BrokerProfile";
 import UserSavedList from "components/UserSavedList";
 import useGetUserInfo, {
   getUserInfoRequest,
@@ -34,8 +36,8 @@ import useGetUserInfo, {
 } from "graphql/useGetUserInfo";
 
 enum Menus {
-  "saved-list" = "saved-list",
   "profile" = "profile",
+  "saved-list" = "saved-list",
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -239,8 +241,10 @@ const User: NextPage = () => {
                 pb: 4,
               }}
             >
+              {m === Menus["profile"] && <BrokerProfile />}
               {m === Menus["saved-list"] && <UserSavedList />}
             </CardContent>
+            <CardActions />
           </Card>
         </Container>
       </Stack>

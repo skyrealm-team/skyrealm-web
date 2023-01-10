@@ -1,5 +1,4 @@
-import { CSSProperties, FC, Fragment, useMemo, useRef } from "react";
-import { useWindowScroll } from "react-use";
+import React, { FC, Fragment } from "react";
 
 import {
   Avatar,
@@ -22,249 +21,166 @@ export type PropertyInfoProps = {
   listing?: Maybe<SingleListing>;
 };
 const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const brokerRef = useRef<HTMLDivElement>(null);
-  const windowScroll = useWindowScroll();
-
-  const brokerStyle = useMemo<CSSProperties>(() => {
-    const rootRect = rootRef.current?.getBoundingClientRect();
-    const brokerRect = brokerRef.current?.getBoundingClientRect();
-    const right = (rootRect?.right ?? 0) - (brokerRect?.right ?? 0);
-    const top = (rootRect?.top ?? 0) + windowScroll.y;
-
-    if (!brokerRect) {
-      return {};
-    }
-
-    if (brokerRect?.top >= top + right) {
-      return {};
-    }
-
-    return {
-      position: "fixed",
-      width: brokerRect.width,
-      top: top + right,
-      right: right,
-    };
-  }, [windowScroll]);
-
   return (
-    <Stack direction="row" alignItems="flex-start" gap={3}>
-      <Stack
-        gap={4}
-        px={{
-          flex: 1,
-        }}
-      >
-        <InfoCard
-          CardContentProps={{
-            sx: {
-              px: 3,
-              pt: 2.6,
-              pb: 2.2,
-            },
-          }}
-        >
-          <Unstable_Grid2 container spacing={4}>
-            {[
-              {
-                key: "Size",
-                value: `${formatter.format(listing?.size ?? 0)} SF`,
-              },
-              {
-                key: "Ceiling",
-                value: formatter.format(listing?.ceiling ?? 0),
-              },
-              {
-                key: "Frontage",
-                value: formatter.format(listing?.frontage ?? 0),
-              },
-              {
-                key: "Asking rent",
-                value: `${formatter.format(listing?.rentPrice ?? 0)} per ${
-                  listing?.rentUnit
-                } per ${listing?.rentPeriod}`,
-              },
-              {
-                key: "Possession",
-                value: (() => {
-                  const possession = moment(listing?.possession ?? Date.now());
-
-                  return possession.isAfter(Date.now())
-                    ? possession.format("YYYY-MM-DD")
-                    : "Immediate";
-                })(),
-              },
-            ].map(({ key, value }, index) => (
-              <Unstable_Grid2
-                key={index}
-                container
-                alignItems="center"
-                spacing={0}
-                xs={12}
-                sm={6}
-              >
-                <Unstable_Grid2 xs={6}>
-                  <Typography
-                    noWrap
-                    sx={{
-                      color: "#999999",
-                      fontSize: 18,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {key}
-                  </Typography>
-                </Unstable_Grid2>
-                <Unstable_Grid2 xs={6}>
-                  <Typography
-                    noWrap
-                    sx={{
-                      color: "#333333",
-                      fontSize: 20,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {value}
-                  </Typography>
-                </Unstable_Grid2>
-              </Unstable_Grid2>
-            ))}
-          </Unstable_Grid2>
-        </InfoCard>
-        {listing?.overview && (
-          <InfoCard title="Property overview">
-            <Typography
-              sx={{
-                color: "#333333",
-                lineHeight: "34px",
-              }}
-            >
-              {listing?.overview}
-            </Typography>
-          </InfoCard>
-        )}
-        <InfoCard title="MAP">
-          <PropertyMap
-            listing={listing}
-            mapContainerStyle={{
-              aspectRatio: 1177 / 550,
-            }}
-            center={{
-              lat: Number(listing?.latitude),
-              lng: Number(listing?.longitude),
-            }}
-            zoom={Math.log2((40000000 * 194) / 152.4 / 256 / 2)}
-            MarkerProps={{
-              position: {
-                lat: Number(listing?.latitude),
-                lng: Number(listing?.longitude),
-              },
-            }}
-          />
-        </InfoCard>
-        {!!listing?.brokersInfo?.length && (
-          <InfoCard title="Broker info">
-            <Stack gap={4}>
-              {listing?.brokersInfo?.map((broker, index, list) => (
-                <Fragment key={index}>
-                  <Stack direction="row" gap={3}>
-                    <Stack gap={1.7} alignItems="center">
-                      <Avatar
-                        src={broker?.avatar ?? undefined}
-                        variant="rounded"
-                        sx={{
-                          width: 170,
-                          height: 170,
-                        }}
-                      ></Avatar>
-                      <Stack direction="row" alignItems="center" gap={1}>
-                        <TelIcon />
-                        <Typography>{broker?.phone}</Typography>
-                      </Stack>
-
-                      <ContactButton size="small" />
-                    </Stack>
-                    <Stack>
-                      <Typography
-                        paragraph
-                        sx={{
-                          fontWeight: 700,
-                        }}
-                      >
-                        {broker?.firstName} {broker?.lastName}
-                      </Typography>
-                      <Typography>{broker?.bio}</Typography>
-                    </Stack>
-                  </Stack>
-                  {index < list.length - 1 && (
-                    <Divider
-                      sx={{
-                        ml: 20,
-                      }}
-                    />
-                  )}
-                </Fragment>
-              ))}
-            </Stack>
-          </InfoCard>
-        )}
-      </Stack>
-      <Stack
-        ref={brokerRef}
-        sx={{
-          display: {
-            xs: "none",
-            lg: "block",
+    <Stack
+      gap={4}
+      px={{
+        flex: 1,
+      }}
+    >
+      <InfoCard
+        CardContentProps={{
+          sx: {
+            px: 3,
+            pt: 2.6,
+            pb: 2.2,
           },
-          width: 340,
         }}
       >
-        {listing?.brokersInfo?.[0] && (
-          <InfoCard
-            CardProps={{
-              sx: {
-                ...brokerStyle,
-              },
-            }}
-            CardContentProps={{
-              sx: {
-                py: 3.2,
-              },
+        <Unstable_Grid2 container spacing={4}>
+          {[
+            {
+              key: "Size",
+              value: `${formatter.format(listing?.size ?? 0)} SF`,
+            },
+            {
+              key: "Ceiling",
+              value: formatter.format(listing?.ceiling ?? 0),
+            },
+            {
+              key: "Frontage",
+              value: formatter.format(listing?.frontage ?? 0),
+            },
+            {
+              key: "Asking rent",
+              value: `${formatter.format(listing?.rentPrice ?? 0)} per ${
+                listing?.rentUnit
+              } per ${listing?.rentPeriod}`,
+            },
+            {
+              key: "Possession",
+              value: (() => {
+                const possession = moment(listing?.possession ?? Date.now());
+
+                return possession.isAfter(Date.now())
+                  ? possession.format("YYYY-MM-DD")
+                  : "Immediate";
+              })(),
+            },
+          ].map(({ key, value }, index) => (
+            <Unstable_Grid2
+              key={index}
+              container
+              alignItems="center"
+              spacing={0}
+              xs={12}
+              sm={6}
+            >
+              <Unstable_Grid2 xs={6}>
+                <Typography
+                  noWrap
+                  sx={{
+                    color: "#999999",
+                    fontSize: 18,
+                    fontWeight: 600,
+                  }}
+                >
+                  {key}
+                </Typography>
+              </Unstable_Grid2>
+              <Unstable_Grid2 xs={6}>
+                <Typography
+                  noWrap
+                  sx={{
+                    color: "#333333",
+                    fontSize: 20,
+                    fontWeight: 600,
+                  }}
+                >
+                  {value}
+                </Typography>
+              </Unstable_Grid2>
+            </Unstable_Grid2>
+          ))}
+        </Unstable_Grid2>
+      </InfoCard>
+      {listing?.overview && (
+        <InfoCard title="Property overview">
+          <Typography
+            sx={{
+              color: "#333333",
+              lineHeight: "34px",
             }}
           >
-            <Stack gap={3} alignItems="center">
-              <Stack gap={1} alignItems="center">
-                <Avatar
-                  src={listing?.brokersInfo?.[0]?.avatar ?? undefined}
-                  variant="rounded"
-                  sx={{
-                    width: 130,
-                    height: 130,
-                  }}
-                ></Avatar>
-                <Stack alignItems="center">
-                  <Typography
-                    paragraph
-                    sx={{
-                      fontSize: 18,
-                      fontWeight: 700,
-                    }}
-                  >
-                    {listing?.brokersInfo?.[0]?.firstName}{" "}
-                    {listing?.brokersInfo?.[0]?.lastName}
-                  </Typography>
-                  <Stack direction="row" alignItems="center" gap={1}>
-                    <TelIcon />
-                    <Typography>{listing?.brokersInfo?.[0]?.phone}</Typography>
+            {listing?.overview}
+          </Typography>
+        </InfoCard>
+      )}
+      <InfoCard title="MAP">
+        <PropertyMap
+          listing={listing}
+          mapContainerStyle={{
+            aspectRatio: `${1177 / 550}`,
+          }}
+          center={{
+            lat: Number(listing?.latitude),
+            lng: Number(listing?.longitude),
+          }}
+          zoom={Math.log2((40000000 * 194) / 152.4 / 256 / 2)}
+          MarkerProps={{
+            position: {
+              lat: Number(listing?.latitude),
+              lng: Number(listing?.longitude),
+            },
+          }}
+        />
+      </InfoCard>
+      {!!listing?.brokersInfo?.length && (
+        <InfoCard title="Broker info">
+          <Stack gap={4}>
+            {listing?.brokersInfo?.map((broker, index, list) => (
+              <Fragment key={index}>
+                <Stack direction="row" gap={3}>
+                  <Stack gap={1.7} alignItems="center">
+                    <Avatar
+                      src={broker?.avatar ?? undefined}
+                      variant="rounded"
+                      sx={{
+                        width: 170,
+                        height: 170,
+                      }}
+                    ></Avatar>
+                    <Stack direction="row" alignItems="center" gap={1}>
+                      <TelIcon />
+                      <Typography>{broker?.phone}</Typography>
+                    </Stack>
+
+                    <ContactButton size="small" />
+                  </Stack>
+                  <Stack>
+                    <Typography
+                      paragraph
+                      sx={{
+                        fontWeight: 700,
+                      }}
+                    >
+                      {broker?.firstName} {broker?.lastName}
+                    </Typography>
+                    <Typography>{broker?.bio}</Typography>
                   </Stack>
                 </Stack>
-              </Stack>
-              <ContactButton />
-            </Stack>
-          </InfoCard>
-        )}
-      </Stack>
+                {index < list.length - 1 && (
+                  <Divider
+                    sx={{
+                      ml: 20,
+                    }}
+                  />
+                )}
+              </Fragment>
+            ))}
+          </Stack>
+        </InfoCard>
+      )}
     </Stack>
   );
 };

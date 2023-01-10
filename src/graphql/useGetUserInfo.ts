@@ -8,11 +8,15 @@ import client from "./client";
 export const getUserUserInfoQuery = gql`
   query getUserUserInfo {
     getUserUserInfo {
+      avatar
+      bio
       email
       favorite
       firstName
+      isLoggedIn
       lastName
       organization
+      organizationAvatar
       phoneNumber
       userId
       userType

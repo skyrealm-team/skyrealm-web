@@ -36,6 +36,13 @@ type Broker = {
   phone: Maybe<Scalars["String"]>;
 };
 
+type ImgUploadUrl = {
+  __typename?: "ImgUploadURL";
+  expiration: Maybe<Scalars["Int"]>;
+  imgUrl: Maybe<Scalars["String"]>;
+  uploadUrl: Maybe<Scalars["String"]>;
+};
+
 type ListingFilter = {
   __typename?: "ListingFilter";
   defaultValue: Maybe<ListingFilterOption>;
@@ -58,6 +65,8 @@ type ListingFilterOption = {
 
 type Mutation = {
   __typename?: "Mutation";
+  /** Broker update profile */
+  brokerUpdateProfile: Maybe<User>;
   /** Contact broker */
   contactBroker: Maybe<BasicResponse>;
   /** forget password */
@@ -70,6 +79,16 @@ type Mutation = {
   resetForgetPassword: Maybe<User>;
   /** Update (add or remove) listing for user */
   updateFavoriteListings: Maybe<User>;
+};
+
+type MutationBrokerUpdateProfileArgs = {
+  avatar: InputMaybe<Scalars["String"]>;
+  bio: InputMaybe<Scalars["String"]>;
+  firstName: InputMaybe<Scalars["String"]>;
+  lastName: InputMaybe<Scalars["String"]>;
+  organization: InputMaybe<Scalars["String"]>;
+  organizationAvatar: InputMaybe<Scalars["String"]>;
+  phoneNumber: InputMaybe<Scalars["String"]>;
 };
 
 type MutationContactBrokerArgs = {
@@ -113,6 +132,8 @@ type MutationUpdateFavoriteListingsArgs = {
 /** All User and Listing apis available */
 type Queries = {
   __typename?: "Queries";
+  /** Get image upload url */
+  getImgUploadURL: Maybe<ImgUploadUrl>;
   /** Get user info */
   getUserUserInfo: Maybe<User>;
   /** Login */
@@ -123,6 +144,11 @@ type Queries = {
   queryListings: Maybe<QueryListing>;
   /** Returns listings that match the query param(s) */
   queryListingsByIDs: Maybe<QueryListings>;
+};
+
+/** All User and Listing apis available */
+type QueriesGetImgUploadUrlArgs = {
+  imgType: InputMaybe<Scalars["String"]>;
 };
 
 /** All User and Listing apis available */
@@ -196,12 +222,15 @@ type SingleListing = {
 type User = {
   __typename?: "User";
   authToken: Maybe<Scalars["String"]>;
+  avatar: Maybe<Scalars["String"]>;
+  bio: Maybe<Scalars["String"]>;
   email: Maybe<Scalars["String"]>;
   favorite: Maybe<Array<Maybe<Scalars["String"]>>>;
   firstName: Maybe<Scalars["String"]>;
   isLoggedIn: Maybe<Scalars["String"]>;
   lastName: Maybe<Scalars["String"]>;
   organization: Maybe<Scalars["String"]>;
+  organizationAvatar: Maybe<Scalars["String"]>;
   phoneNumber: Maybe<Scalars["String"]>;
   userId: Maybe<Scalars["String"]>;
   userType: Maybe<Scalars["String"]>;

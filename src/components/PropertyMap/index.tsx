@@ -31,7 +31,7 @@ const PropertyMap: FC<PropertyMapProps> = ({
       <GoogleMap
         {...props}
         mapContainerStyle={{
-          aspectRatio: 1667 / 410,
+          aspectRatio: `${1667 / 410}`,
           ...props.mapContainerStyle,
         }}
         center={center}
