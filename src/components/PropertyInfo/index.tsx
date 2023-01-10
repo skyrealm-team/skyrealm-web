@@ -163,50 +163,52 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
             }}
           />
         </InfoCard>
-        <InfoCard title="Broker info">
-          <Stack gap={4}>
-            {listing?.brokersInfo?.map((broker, index, list) => (
-              <Fragment key={index}>
-                <Stack direction="row" gap={3}>
-                  <Stack gap={1.7} alignItems="center">
-                    <Avatar
-                      src={broker?.avatar ?? undefined}
-                      variant="rounded"
-                      sx={{
-                        width: 170,
-                        height: 170,
-                      }}
-                    ></Avatar>
-                    <Stack direction="row" alignItems="center" gap={1}>
-                      <TelIcon />
-                      <Typography>{broker?.phone}</Typography>
-                    </Stack>
+        {!!listing?.brokersInfo?.length && (
+          <InfoCard title="Broker info">
+            <Stack gap={4}>
+              {listing?.brokersInfo?.map((broker, index, list) => (
+                <Fragment key={index}>
+                  <Stack direction="row" gap={3}>
+                    <Stack gap={1.7} alignItems="center">
+                      <Avatar
+                        src={broker?.avatar ?? undefined}
+                        variant="rounded"
+                        sx={{
+                          width: 170,
+                          height: 170,
+                        }}
+                      ></Avatar>
+                      <Stack direction="row" alignItems="center" gap={1}>
+                        <TelIcon />
+                        <Typography>{broker?.phone}</Typography>
+                      </Stack>
 
-                    <ContactButton size="small" />
+                      <ContactButton size="small" />
+                    </Stack>
+                    <Stack>
+                      <Typography
+                        paragraph
+                        sx={{
+                          fontWeight: 700,
+                        }}
+                      >
+                        {broker?.firstName} {broker?.lastName}
+                      </Typography>
+                      <Typography>{broker?.bio}</Typography>
+                    </Stack>
                   </Stack>
-                  <Stack>
-                    <Typography
-                      paragraph
+                  {index < list.length - 1 && (
+                    <Divider
                       sx={{
-                        fontWeight: 700,
+                        ml: 20,
                       }}
-                    >
-                      {broker?.firstName} {broker?.lastName}
-                    </Typography>
-                    <Typography>{broker?.bio}</Typography>
-                  </Stack>
-                </Stack>
-                {index < list.length - 1 && (
-                  <Divider
-                    sx={{
-                      ml: 20,
-                    }}
-                  />
-                )}
-              </Fragment>
-            ))}
-          </Stack>
-        </InfoCard>
+                    />
+                  )}
+                </Fragment>
+              ))}
+            </Stack>
+          </InfoCard>
+        )}
       </Stack>
       <Stack
         ref={brokerRef}
@@ -218,48 +220,50 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
           width: 340,
         }}
       >
-        <InfoCard
-          CardProps={{
-            sx: {
-              ...brokerStyle,
-            },
-          }}
-          CardContentProps={{
-            sx: {
-              py: 3.2,
-            },
-          }}
-        >
-          <Stack gap={3} alignItems="center">
-            <Stack gap={1} alignItems="center">
-              <Avatar
-                src={listing?.brokersInfo?.[0]?.avatar ?? undefined}
-                variant="rounded"
-                sx={{
-                  width: 130,
-                  height: 130,
-                }}
-              ></Avatar>
-              <Stack alignItems="center">
-                <Typography
-                  paragraph
+        {listing?.brokersInfo?.[0] && (
+          <InfoCard
+            CardProps={{
+              sx: {
+                ...brokerStyle,
+              },
+            }}
+            CardContentProps={{
+              sx: {
+                py: 3.2,
+              },
+            }}
+          >
+            <Stack gap={3} alignItems="center">
+              <Stack gap={1} alignItems="center">
+                <Avatar
+                  src={listing?.brokersInfo?.[0]?.avatar ?? undefined}
+                  variant="rounded"
                   sx={{
-                    fontSize: 18,
-                    fontWeight: 700,
+                    width: 130,
+                    height: 130,
                   }}
-                >
-                  {listing?.brokersInfo?.[0]?.firstName}{" "}
-                  {listing?.brokersInfo?.[0]?.lastName}
-                </Typography>
-                <Stack direction="row" alignItems="center" gap={1}>
-                  <TelIcon />
-                  <Typography>{listing?.brokersInfo?.[0]?.phone}</Typography>
+                ></Avatar>
+                <Stack alignItems="center">
+                  <Typography
+                    paragraph
+                    sx={{
+                      fontSize: 18,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {listing?.brokersInfo?.[0]?.firstName}{" "}
+                    {listing?.brokersInfo?.[0]?.lastName}
+                  </Typography>
+                  <Stack direction="row" alignItems="center" gap={1}>
+                    <TelIcon />
+                    <Typography>{listing?.brokersInfo?.[0]?.phone}</Typography>
+                  </Stack>
                 </Stack>
               </Stack>
+              <ContactButton />
             </Stack>
-            <ContactButton />
-          </Stack>
-        </InfoCard>
+          </InfoCard>
+        )}
       </Stack>
     </Stack>
   );

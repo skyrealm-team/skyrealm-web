@@ -17,6 +17,7 @@ import { UrlObject, parse } from "url";
 
 import FavoriteIcon from "assets/icons/favorite.svg";
 import LogoutIcon from "assets/icons/logout.svg";
+import ProfileIcon from "assets/icons/profile.svg";
 import Loading from "components/Loading";
 import useGetUserInfo from "graphql/useGetUserInfo";
 import useLogoff from "graphql/useLogoff";
@@ -36,11 +37,29 @@ const AvatarButton: FC = () => {
     }[]
   >(
     () => [
+      ...(userInfo?.userType === "broker"
+        ? [
+            {
+              href: {
+                pathname: "/account",
+                query: {
+                  m: "profile",
+                },
+              },
+              MenuItemProps: {
+                children: "Profile",
+              },
+              ListItemIconProps: {
+                children: <ProfileIcon />,
+              },
+            },
+          ]
+        : []),
       {
         href: {
-          pathname: "/user",
+          pathname: "/account",
           query: {
-            t: "saved-list",
+            m: "saved-list",
           },
         },
         MenuItemProps: {
@@ -51,7 +70,7 @@ const AvatarButton: FC = () => {
         },
       },
     ],
-    []
+    [userInfo?.userType]
   );
 
   return (

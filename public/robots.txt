@@ -1,5 +1,9 @@
+# *
 User-agent: *
-
 Allow: /
 
+# Host
+Host: https://www.skyrealm.ai
+
+# Sitemaps
 Sitemap: https://www.skyrealm.ai/sitemap.xml

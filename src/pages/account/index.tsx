@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { dehydrate, QueryClient } from "react-query";
 import { useMeasure, useUpdateEffect } from "react-use";
 
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import Error from "next/error";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 import {
+  Card,
+  CardContent,
+  CardHeader,
+  Container,
   Drawer,
   ListItemIcon,
   ListItemIconProps,
@@ -17,19 +22,44 @@ import {
   MenuList,
   Stack,
   Toolbar,
+  Typography,
 } from "@mui/material";
 
 import FavoriteIcon from "assets/icons/favorite.svg";
+import ProfileIcon from "assets/icons/profile.svg";
 import UserSavedList from "components/UserSavedList";
-import useGetUserInfo from "graphql/useGetUserInfo";
+import useGetUserInfo, {
+  getUserInfoRequest,
+  getUserUserInfoQuery,
+} from "graphql/useGetUserInfo";
 
-enum Tabs {
+enum Menus {
   "saved-list" = "saved-list",
+  "profile" = "profile",
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const queryClient = new QueryClient();
+
+  await Promise.allSettled([
+    queryClient.prefetchQuery([getUserUserInfoQuery], () => {
+      return getUserInfoRequest({
+        requestHeaders: {
+          cookie: context.req.headers.cookie,
+        } as never,
+      });
+    }),
+  ]);
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
 
 const User: NextPage = () => {
   const router = useRouter();
-  const { t: tab } = router.query;
 
   const {
     data: userInfo,
@@ -38,13 +68,26 @@ const User: NextPage = () => {
   } = useGetUserInfo();
 
   const menu: {
-    key: Tabs;
+    key: Menus;
     MenuItemProps?: MenuItemProps;
     ListItemIconProps?: ListItemIconProps;
     ListItemTextProps?: ListItemTextProps;
   }[] = [
+    ...(userInfo?.userType === "broker"
+      ? [
+          {
+            key: Menus["profile"],
+            ListItemIconProps: {
+              children: <ProfileIcon />,
+            },
+            ListItemTextProps: {
+              children: "Profile",
+            },
+          },
+        ]
+      : []),
     {
-      key: Tabs["saved-list"],
+      key: Menus["saved-list"],
       ListItemIconProps: {
         children: <FavoriteIcon />,
       },
@@ -65,9 +108,18 @@ const User: NextPage = () => {
     }
   }, [userInfoIsFetched, userInfoIsLoading, userInfo]);
 
-  const tabIsInvalid = !Object.keys(Tabs).includes(String(tab));
+  const { m = menu[0].key } = router.query;
+  const menuIsInvalid = !menu.find((item) => item.key === String(m));
 
-  if (tabIsInvalid || (!userInfoIsLoading && !userInfo)) {
+  useEffect(() => {
+    if (menuIsInvalid) {
+      router.replace({
+        pathname: `/account`,
+      });
+    }
+  }, [menuIsInvalid, router]);
+
+  if (menuIsInvalid || (!userInfoIsLoading && !userInfo)) {
     return <Error statusCode={404} withDarkMode={false} />;
   }
 
@@ -99,15 +151,15 @@ const User: NextPage = () => {
         >
           {menu.map(
             ({ key, MenuItemProps, ListItemIconProps, ListItemTextProps }) => {
-              const selected = key === tab || MenuItemProps?.selected;
+              const selected = key === m || MenuItemProps?.selected;
 
               return (
                 <Link
                   key={key}
                   href={{
-                    pathname: `/user`,
+                    pathname: `/account`,
                     query: {
-                      t: key,
+                      m: key,
                     },
                   }}
                   legacyBehavior
@@ -153,7 +205,44 @@ const User: NextPage = () => {
           overflow: "hidden",
         }}
       >
-        {tab === Tabs["saved-list"] && <UserSavedList />}
+        <Container
+          sx={{
+            maxWidth: 1300,
+            py: 8,
+          }}
+        >
+          <Card elevation={0} square={false}>
+            <CardHeader
+              title={
+                <Typography
+                  sx={{
+                    fontsize: 20,
+                    fontWeight: 700,
+                  }}
+                >
+                  {
+                    menu.find((item) => item.key === m)?.ListItemTextProps
+                      ?.children
+                  }
+                </Typography>
+              }
+              sx={{
+                px: 4,
+                pt: 3,
+                pb: 2,
+              }}
+            />
+            <CardContent
+              sx={{
+                px: 4,
+                pt: 2,
+                pb: 4,
+              }}
+            >
+              {m === Menus["saved-list"] && <UserSavedList />}
+            </CardContent>
+          </Card>
+        </Container>
       </Stack>
     </Stack>
   );

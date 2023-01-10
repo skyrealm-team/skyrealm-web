@@ -10,12 +10,18 @@ const client = new GraphQLClient(
   publicRuntimeConfig.env.NEXT_PUBLIC_BACKEND_API ?? "",
   {
     requestMiddleware: (request) => {
-      const authToken = cookies.get("auth-token");
+      const requestCookies = new Cookies(
+        (request.headers as never)?.["cookie"]
+      );
+      const authorization =
+        requestCookies.get("auth-token") ?? cookies.get("auth-token");
 
       return {
         ...request,
         headers: {
-          authorization: authToken,
+          ...(authorization && {
+            authorization,
+          }),
           ...request.headers,
         },
       };

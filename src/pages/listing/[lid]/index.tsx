@@ -39,7 +39,7 @@ import useQueryListing, {
   queryListingQuery,
 } from "graphql/useQueryListing";
 
-enum Tabs {
+enum Menus {
   "property-info" = "property-info",
   "visits" = "visits",
   "visitor-profile" = "visitor-profile",
@@ -61,6 +61,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       ],
       () => {
         return queryListingRequest({
+          requestHeaders: {
+            cookie: context.req.headers.cookie,
+          } as never,
           variables: {
             listingId: String(listingId),
           },
@@ -84,11 +87,8 @@ const Listing: NextPage = () => {
     listingId: listingId && String(listingId),
   });
 
-  const { t: tab = listing?.paid ? Tabs["property-info"] : Tabs.visits } =
-    router.query;
-
   const menu: {
-    key: Tabs;
+    key: Menus;
     MenuItemProps?: MenuItemProps;
     ListItemIconProps?: ListItemIconProps;
     ListItemTextProps?: ListItemTextProps;
@@ -96,7 +96,7 @@ const Listing: NextPage = () => {
     ...(listing?.paid
       ? [
           {
-            key: Tabs["property-info"],
+            key: Menus["property-info"],
             ListItemIconProps: {
               children: <PropertyInfoIcon />,
             },
@@ -107,7 +107,7 @@ const Listing: NextPage = () => {
         ]
       : []),
     {
-      key: Tabs.visits,
+      key: Menus.visits,
       ListItemIconProps: {
         children: <VisitsIcon />,
       },
@@ -116,7 +116,7 @@ const Listing: NextPage = () => {
       },
     },
     {
-      key: Tabs["visitor-profile"],
+      key: Menus["visitor-profile"],
       ListItemIconProps: {
         children: <VisitorProfileIcon />,
       },
@@ -125,7 +125,7 @@ const Listing: NextPage = () => {
       },
     },
     {
-      key: Tabs["nearby-residents"],
+      key: Menus["nearby-residents"],
       ListItemIconProps: {
         children: <NearbyResidentsIcon />,
       },
@@ -137,18 +137,19 @@ const Listing: NextPage = () => {
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
 
-  const tabIsInvalid = !Object.keys(Tabs).includes(String(tab));
-  const tabIsUnpaid = !listing?.paid && tab === Tabs["property-info"];
+  const { m = menu[0].key } = router.query;
+  const menuIsInvalid = !menu.find((item) => item.key === String(m));
+  const menuIsUnpaid = !listing?.paid && m === Menus["property-info"];
 
   useEffect(() => {
-    if (tabIsInvalid || tabIsUnpaid) {
+    if (menuIsInvalid) {
       router.replace({
         pathname: `/listing/${listingId}`,
       });
     }
-  }, [tabIsInvalid, tabIsUnpaid, router, listingId]);
+  }, [menuIsInvalid, router, listingId]);
 
-  if (tabIsInvalid || (!listingIsLoading && !listing)) {
+  if (menuIsInvalid || (!listingIsLoading && !listing)) {
     return <Error statusCode={404} withDarkMode={false} />;
   }
 
@@ -191,7 +192,7 @@ const Listing: NextPage = () => {
                 ListItemIconProps,
                 ListItemTextProps,
               }) => {
-                const selected = key === tab || MenuItemProps?.selected;
+                const selected = key === m || MenuItemProps?.selected;
 
                 return (
                   <Link
@@ -199,7 +200,7 @@ const Listing: NextPage = () => {
                     href={{
                       pathname: `/listing/${listingId}`,
                       query: {
-                        t: key,
+                        m: key,
                       },
                     }}
                     legacyBehavior
@@ -253,14 +254,14 @@ const Listing: NextPage = () => {
           }}
         >
           <PropertyHeader listing={listing} />
-          {tabIsUnpaid ? (
+          {menuIsUnpaid ? (
             <Error statusCode={403} withDarkMode={false} />
           ) : (
             <>
-              {tab === Tabs["property-info"] && (
+              {m === Menus["property-info"] && (
                 <ImageCarousel images={listing?.pics ?? []} />
               )}
-              {(tab === Tabs.visits || tab === Tabs["visitor-profile"]) && (
+              {(m === Menus.visits || m === Menus["visitor-profile"]) && (
                 <PropertyMap
                   listing={listing}
                   center={{
@@ -276,21 +277,21 @@ const Listing: NextPage = () => {
                   }}
                 />
               )}
-              {tab === Tabs["nearby-residents"] && (
+              {m === Menus["nearby-residents"] && (
                 <PropertyMap listing={listing} polyGeom />
               )}
               <Container
-                {...(tab === Tabs["property-info"] && {
+                {...(m === Menus["property-info"] && {
                   maxWidth: false,
                 })}
                 sx={{
-                  ...(tab !== Tabs["property-info"] && {
+                  ...(m !== Menus["property-info"] && {
                     maxWidth: 1360,
                   }),
                   py: 3,
                 }}
               >
-                {tab === Tabs["property-info"] ? (
+                {m === Menus["property-info"] ? (
                   <PropertyInfo listing={listing} />
                 ) : (
                   <Stack gap={4}>
@@ -298,14 +299,14 @@ const Listing: NextPage = () => {
                       Data range: {listing?.stats["timeStart"]} -{" "}
                       {listing?.stats["timeEnd"]}
                     </Alert>
-                    {tab === Tabs.visits && (
+                    {m === Menus.visits && (
                       <PropertyVisits
                         listing={listing}
                         isLoading={listingIsLoading}
                       />
                     )}
-                    {(tab === Tabs["visitor-profile"] ||
-                      tab === Tabs["nearby-residents"]) && (
+                    {(m === Menus["visitor-profile"] ||
+                      m === Menus["nearby-residents"]) && (
                       <PropertyVisitor
                         listing={listing}
                         isLoading={listingIsLoading}

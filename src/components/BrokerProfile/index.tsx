@@ -6,7 +6,7 @@ import ListingsItem from "components/ListingsItem";
 import useGetUserInfo from "graphql/useGetUserInfo";
 import useQueryListingsByIDs from "graphql/useQueryListingsByIDs";
 
-const UserSavedList: FC = () => {
+const BrokerProfile: FC = () => {
   const { data: userInfo, isLoading: userInfoIsLoading } = useGetUserInfo();
   const { data: listings, isLoading: listingsIsLoading } =
     useQueryListingsByIDs({
@@ -37,4 +37,4 @@ const UserSavedList: FC = () => {
   );
 };
 
-export default UserSavedList;
+export default BrokerProfile;
