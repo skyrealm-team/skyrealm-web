@@ -76,7 +76,7 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
               xs={12}
               sm={6}
             >
-              <Unstable_Grid2 xs={6}>
+              <Unstable_Grid2 xs={5}>
                 <Typography
                   noWrap
                   sx={{
@@ -88,7 +88,7 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
                   {key}
                 </Typography>
               </Unstable_Grid2>
-              <Unstable_Grid2 xs={6}>
+              <Unstable_Grid2 xs={7}>
                 <Typography
                   noWrap
                   sx={{

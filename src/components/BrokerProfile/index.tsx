@@ -8,9 +8,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 import InputField from "components/InputField";
-// import useGetImgUploadUrl from "graphql/useGetImgUploadUrl";
 import UploadPhotoDialog from "components/UploadPhotoDialog";
 import useBrokerUpdateProfile from "graphql/useBrokerUpdateProfile";
+import useGetImgUploadUrl from "graphql/useGetImgUploadUrl";
 import useGetUserInfo from "graphql/useGetUserInfo";
 
 const validationSchema = Yup.object().shape({
@@ -18,12 +18,12 @@ const validationSchema = Yup.object().shape({
   lastName: Yup.string().required("Required"),
   organization: Yup.string().required("Required"),
   phoneNumber: Yup.string().required("Required"),
-  bio: Yup.string().max(2000),
+  bio: Yup.string().max(2000).required("Required"),
 });
 
 const BrokerProfile: FC = () => {
   const { data: userInfo } = useGetUserInfo();
-  // const { mutateAsync: getImgUploadUrl } = useGetImgUploadUrl()
+  const { mutateAsync: getImgUploadUrl } = useGetImgUploadUrl();
   const { mutateAsync: brokerUpdateProfile } = useBrokerUpdateProfile();
 
   const formik = useFormik({
@@ -31,8 +31,33 @@ const BrokerProfile: FC = () => {
       ...userInfo,
     },
     validationSchema,
-    onSubmit: async () => {
+    onSubmit: async (values) => {
       try {
+        if (values.avatar) {
+          const [avatar, type, imgType] =
+            values.avatar?.match(/data:(image\/([^;]+));base64[^"]+/i) ?? [];
+          if (avatar) {
+            const res = await fetch(avatar);
+            const blob = await res.blob();
+            const file = new File([blob], `${Date.now()}`, { type });
+
+            const imgUploadUrl = await getImgUploadUrl({
+              imgType,
+            });
+
+            if (imgUploadUrl?.uploadUrl) {
+              const res = await fetch(imgUploadUrl?.uploadUrl, {
+                method: "PUT",
+                body: file,
+              });
+
+              if (res.ok) {
+                values.avatar = imgUploadUrl.imgUrl;
+              }
+            }
+          }
+        }
+        await brokerUpdateProfile(values);
       } catch {
       } finally {
         formik.setSubmitting(false);
@@ -142,6 +167,7 @@ const BrokerProfile: FC = () => {
             FormHelperTextProps={{
               children: formik.touched.bio && formik.errors.bio,
             }}
+            required
             fullWidth
             multiline
             rows={6}
@@ -155,11 +181,8 @@ const BrokerProfile: FC = () => {
           </Typography>
         </Stack>
         <Button
+          type="submit"
           variant="contained"
-          onClick={() => {
-            console.log(formik.values);
-            brokerUpdateProfile(formik.values);
-          }}
           sx={{
             width: 140,
             height: 48,

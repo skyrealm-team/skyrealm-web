@@ -166,6 +166,7 @@ const UploadPhotoDialog: FC<UploadPhotoDialogProps> = ({
                   <Stack direction="row" justifyContent="space-between">
                     <Link
                       component="button"
+                      color="error"
                       underline="none"
                       onClick={() => {
                         setImage("");

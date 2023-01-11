@@ -75,7 +75,7 @@ const User: NextPage = () => {
     ListItemIconProps?: ListItemIconProps;
     ListItemTextProps?: ListItemTextProps;
   }[] = [
-    ...(userInfo?.userType === "broker"
+    ...(userInfo?.userType !== "broker"
       ? [
           {
             key: Menus["profile"],

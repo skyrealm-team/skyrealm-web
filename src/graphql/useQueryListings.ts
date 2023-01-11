@@ -24,6 +24,7 @@ export const queryListingsQuery = gql`
       totalPage
       listings {
         listingId
+        name
         latitude
         longitude
         address

@@ -9,6 +9,7 @@ export const queryListingsByIDsQuery = gql`
     queryListingsByIDs(listingIDs: $listingIDs) {
       listings {
         listingId
+        name
         latitude
         longitude
         address

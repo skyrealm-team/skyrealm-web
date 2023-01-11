@@ -24,7 +24,6 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ images }) => {
       <Unstable_Grid2
         ref={ref}
         container
-        justifyContent="center"
         wrap="nowrap"
         sx={{
           overflowX: "auto",
@@ -36,6 +35,9 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ images }) => {
             display: "none",
           },
         }}
+        {...(images.length < 3 && {
+          justifyContent: "center",
+        })}
       >
         {images?.map((image, index) => (
           <Unstable_Grid2
