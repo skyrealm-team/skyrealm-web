@@ -81,6 +81,7 @@ const AvatarButton: FC = () => {
         }}
       >
         <Avatar
+          src={userInfo?.avatar ?? undefined}
           sx={(theme) => ({
             bgcolor: theme.palette.primary.main,
           })}
@@ -145,6 +146,7 @@ const AvatarButton: FC = () => {
             await logoff({
               email: userInfo?.email ?? null,
             });
+            router.replace("/");
           }}
         >
           <ListItemIcon

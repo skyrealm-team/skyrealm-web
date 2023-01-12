@@ -4,16 +4,15 @@ import {
   FormControl,
   FormHelperText,
   FormHelperTextProps,
-  InputLabel,
-  InputLabelProps,
   OutlinedInput,
   OutlinedInputProps,
   Stack,
-  Typography,
 } from "@mui/material";
 
+import FieldLabel, { FieldLabelProps } from "components/FieldLabel";
+
 export type InputFieldProps = OutlinedInputProps & {
-  InputLabelProps?: InputLabelProps;
+  InputLabelProps?: FieldLabelProps;
   FormHelperTextProps?: FormHelperTextProps;
 };
 const InputField: FC<InputFieldProps> = ({
@@ -26,28 +25,9 @@ const InputField: FC<InputFieldProps> = ({
   return (
     <FormControl fullWidth={fullWidth}>
       <Stack gap={1}>
-        {label && (
-          <InputLabel
-            focused={false}
-            shrink={true}
-            {...InputLabelProps}
-            sx={{
-              position: "initial",
-              transform: "initial",
-              fontSize: 16,
-              fontWeight: 700,
-              color: "#666",
-              ...InputLabelProps?.sx,
-            }}
-          >
-            {props.required && (
-              <Typography variant="inherit" component="span" color="error">
-                *
-              </Typography>
-            )}
-            {label}
-          </InputLabel>
-        )}
+        <FieldLabel required={props.required} {...InputLabelProps}>
+          {label}
+        </FieldLabel>
         <OutlinedInput
           error={!!FormHelperTextProps?.children}
           {...props}

@@ -1,6 +1,7 @@
 import { useMutation, UseMutationOptions } from "react-query";
 
 import { ClientError, gql } from "graphql-request";
+import { useSnackbar } from "notistack";
 
 import client from "./client";
 
@@ -44,10 +45,20 @@ export const useBrokerUpdateProfile = (
     Partial<MutationBrokerUpdateProfileArgs>
   >
 ) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   return useMutation(
     [brokerUpdateProfileMutation],
     brokerUpdateProfileRequest,
-    options
+    {
+      ...options,
+      onSuccess: async (data, variables, context) => {
+        enqueueSnackbar("Saved Successfully!", {
+          variant: "success",
+        });
+        options?.onSuccess?.(data, variables, context);
+      },
+    }
   );
 };
 

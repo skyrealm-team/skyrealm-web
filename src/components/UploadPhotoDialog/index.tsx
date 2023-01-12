@@ -23,6 +23,7 @@ import AddButtonIcon from "assets/icons/add-button.svg";
 import CloseIcon from "assets/icons/close.svg";
 import MinusCircleIcon from "assets/icons/minus-circle.svg";
 import PlusCircleIcon from "assets/icons/plus-circle.svg";
+import fileToBase64 from "utils/fileToBase64";
 
 export type UploadPhotoDialogProps = DialogProps & {
   url?: string;
@@ -80,88 +81,32 @@ const UploadPhotoDialog: FC<UploadPhotoDialogProps> = ({
         }}
       >
         <Stack direction="row" gap={4}>
-          <Dropzone
-            accept={{
-              "image/jpeg": [],
-              "image/png": [],
-            }}
-            multiple={false}
-            onDrop={([file]) => {
-              const reader = new FileReader();
-              reader.readAsDataURL(file);
-              reader.onload = () => {
-                setImage(reader.result?.toString());
-              };
+          <Stack
+            gap={1}
+            sx={{
+              flex: 1,
             }}
           >
-            {({ getRootProps, getInputProps }) => (
-              <Stack
-                gap={1}
-                sx={{
-                  flex: 1,
-                }}
-              >
-                <Card
-                  elevation={0}
-                  square
+            {image ? (
+              <>
+                <Stack
                   sx={{
                     aspectRatio: `${1 / 1}`,
                     position: "relative",
                   }}
                 >
-                  {image ? (
-                    <Cropper
-                      image={image}
-                      aspect={1 / 1}
-                      cropShape="round"
-                      objectFit="auto-cover"
-                      crop={crop}
-                      zoom={zoom}
-                      onCropChange={setCrop}
-                      onZoomChange={setZoom}
-                      onCropAreaChange={setCroppedArea}
-                    />
-                  ) : (
-                    <CardActionArea
-                      {...getRootProps()}
-                      sx={{
-                        height: "100%",
-                      }}
-                    >
-                      <Stack
-                        gap={2}
-                        alignItems="center"
-                        justifyContent="center"
-                        sx={{
-                          height: "100%",
-                          background: "#F0F0F0",
-                          p: 6,
-                        }}
-                      >
-                        <AddButtonIcon />
-                        <Typography
-                          align="center"
-                          sx={{
-                            fontWeight: 600,
-                          }}
-                        >
-                          Add Photos
-                        </Typography>
-                        <Typography
-                          align="center"
-                          sx={{
-                            color: "#999999",
-                            fontSize: 14,
-                          }}
-                        >
-                          Only jpg/png/ is supported, and the size cannot exceed
-                          3 MB
-                        </Typography>
-                        <input {...getInputProps()} />
-                      </Stack>
-                    </CardActionArea>
-                  )}
-                </Card>
+                  <Cropper
+                    image={image}
+                    aspect={1 / 1}
+                    cropShape="round"
+                    objectFit="auto-cover"
+                    crop={crop}
+                    zoom={zoom}
+                    onCropChange={setCrop}
+                    onZoomChange={setZoom}
+                    onCropAreaChange={setCroppedArea}
+                  />
+                </Stack>
                 {image && (
                   <Stack direction="row" justifyContent="space-between">
                     <Link
@@ -204,9 +149,71 @@ const UploadPhotoDialog: FC<UploadPhotoDialogProps> = ({
                     </Stack>
                   </Stack>
                 )}
-              </Stack>
+              </>
+            ) : (
+              <Dropzone
+                accept={{
+                  "image/jpeg": [],
+                  "image/png": [],
+                }}
+                maxSize={1024 * 1024 * 3}
+                multiple={false}
+                onDrop={async ([file]) => {
+                  const image = await fileToBase64(file);
+                  setImage(image);
+                }}
+              >
+                {({ getRootProps, getInputProps }) => (
+                  <Card
+                    {...getRootProps()}
+                    elevation={0}
+                    square
+                    sx={{
+                      aspectRatio: `${1 / 1}`,
+                    }}
+                  >
+                    <CardActionArea
+                      sx={{
+                        height: "100%",
+                      }}
+                    >
+                      <Stack
+                        gap={2}
+                        alignItems="center"
+                        justifyContent="center"
+                        sx={{
+                          height: "100%",
+                          background: "#F0F0F0",
+                          p: 6,
+                        }}
+                      >
+                        <AddButtonIcon />
+                        <Typography
+                          align="center"
+                          sx={{
+                            fontWeight: 600,
+                          }}
+                        >
+                          Add Photos
+                        </Typography>
+                        <Typography
+                          align="center"
+                          sx={{
+                            color: "#999999",
+                            fontSize: 14,
+                          }}
+                        >
+                          Only jpg/png/ is supported, and the size cannot exceed
+                          3 MB
+                        </Typography>
+                        <input {...getInputProps()} />
+                      </Stack>
+                    </CardActionArea>
+                  </Card>
+                )}
+              </Dropzone>
             )}
-          </Dropzone>
+          </Stack>
           <Avatar
             src={image}
             sx={{

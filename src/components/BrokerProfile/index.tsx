@@ -1,17 +1,31 @@
 import { FC } from "react";
+import Dropzone from "react-dropzone";
 import { useToggle } from "react-use";
 
-import { Avatar, Button, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardActionArea,
+  CircularProgress,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import { Stack } from "@mui/system";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
+import AddButtonIcon from "assets/icons/add-button.svg";
+import RemoveCircleIcon from "assets/icons/remove-circle.svg";
+import FieldLabel from "components/FieldLabel";
 import InputField from "components/InputField";
 import UploadPhotoDialog from "components/UploadPhotoDialog";
 import useBrokerUpdateProfile from "graphql/useBrokerUpdateProfile";
 import useGetImgUploadUrl from "graphql/useGetImgUploadUrl";
-import useGetUserInfo from "graphql/useGetUserInfo";
+import useGetUserInfo, { useSetUserInfoData } from "graphql/useGetUserInfo";
+import base64ToFile from "utils/base64ToFile";
+import uploadFile from "utils/uploadFile";
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("Required"),
@@ -24,7 +38,18 @@ const validationSchema = Yup.object().shape({
 const BrokerProfile: FC = () => {
   const { data: userInfo } = useGetUserInfo();
   const { mutateAsync: getImgUploadUrl } = useGetImgUploadUrl();
-  const { mutateAsync: brokerUpdateProfile } = useBrokerUpdateProfile();
+  const { mutateAsync: brokerUpdateProfile } = useBrokerUpdateProfile({
+    onError: ({ response }) => {
+      response.errors?.forEach((error) => {
+        Object.keys(formik.values).forEach((key) => {
+          if (error.message.toLowerCase().includes(key)) {
+            formik.setFieldError(key, error.message);
+          }
+        });
+      });
+    },
+  });
+  const setUserInfoDate = useSetUserInfoData();
 
   const formik = useFormik({
     initialValues: {
@@ -33,31 +58,57 @@ const BrokerProfile: FC = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        if (values.avatar) {
-          const [avatar, type, imgType] =
-            values.avatar?.match(/data:(image\/([^;]+));base64[^"]+/i) ?? [];
-          if (avatar) {
-            const res = await fetch(avatar);
-            const blob = await res.blob();
-            const file = new File([blob], `${Date.now()}`, { type });
+        await Promise.allSettled([
+          Promise.resolve().then(async () => {
+            if (values.avatar) {
+              const file = await base64ToFile(values.avatar);
 
-            const imgUploadUrl = await getImgUploadUrl({
-              imgType,
-            });
+              if (file) {
+                const [, imgType] =
+                  values.avatar?.match(/data:image\/([^;]+);base64[^"]+/i) ??
+                  [];
 
-            if (imgUploadUrl?.uploadUrl) {
-              const res = await fetch(imgUploadUrl?.uploadUrl, {
-                method: "PUT",
-                body: file,
-              });
+                const imgUploadUrl = await getImgUploadUrl({
+                  imgType,
+                });
 
-              if (res.ok) {
-                values.avatar = imgUploadUrl.imgUrl;
+                if (imgUploadUrl?.uploadUrl) {
+                  const ok = await uploadFile(imgUploadUrl?.uploadUrl, file);
+
+                  if (ok) {
+                    values.avatar = imgUploadUrl?.imgUrl;
+                  }
+                }
               }
             }
-          }
-        }
+          }),
+          Promise.resolve().then(async () => {
+            if (values.organizationAvatar) {
+              const file = await base64ToFile(values.organizationAvatar);
+
+              if (file) {
+                const [, imgType] =
+                  values.organizationAvatar?.match(
+                    /data:image\/([^;]+);base64[^"]+/i
+                  ) ?? [];
+
+                const imgUploadUrl = await getImgUploadUrl({
+                  imgType,
+                });
+
+                if (imgUploadUrl?.uploadUrl) {
+                  const ok = await uploadFile(imgUploadUrl?.uploadUrl, file);
+                  if (ok) {
+                    values.organizationAvatar = imgUploadUrl?.imgUrl;
+                  }
+                }
+              }
+            }
+          }),
+        ]);
+
         await brokerUpdateProfile(values);
+        setUserInfoDate(values);
       } catch {
       } finally {
         formik.setSubmitting(false);
@@ -157,6 +208,100 @@ const BrokerProfile: FC = () => {
             fullWidth
           />
         </Stack>
+        <Stack gap={1} alignItems="flex-start">
+          <FieldLabel>Organization Logo</FieldLabel>
+          {!!formik.values.organizationAvatar ? (
+            <Stack
+              sx={{
+                position: "relative",
+              }}
+            >
+              <Avatar
+                src={formik.values.organizationAvatar}
+                variant="rounded"
+                sx={{
+                  width: 220,
+                  height: 220,
+                }}
+              />
+              <IconButton
+                onClick={() => {
+                  formik.handleChange("organizationAvatar")("");
+                }}
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                }}
+              >
+                <RemoveCircleIcon />
+              </IconButton>
+            </Stack>
+          ) : (
+            <Dropzone
+              accept={{
+                "image/jpeg": [],
+                "image/png": [],
+              }}
+              maxSize={1024 * 1024 * 20}
+              multiple={false}
+              onDrop={([file]) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                  if (reader.result) {
+                    formik.handleChange("organizationAvatar")(
+                      reader.result?.toString()
+                    );
+                  }
+                };
+              }}
+            >
+              {({ getRootProps, getInputProps }) => (
+                <Card
+                  {...getRootProps()}
+                  elevation={0}
+                  sx={{
+                    width: 220,
+                    height: 220,
+                    border: "2px dashed #3056D3",
+                    borderRadius: 2.5,
+                    position: "relative",
+                  }}
+                >
+                  <CardActionArea
+                    sx={{
+                      height: "100%",
+                    }}
+                  >
+                    <Stack
+                      gap={2}
+                      alignItems="center"
+                      justifyContent="center"
+                      sx={{
+                        height: "100%",
+                        background: "#F0F0F0",
+                        p: 1,
+                      }}
+                    >
+                      <AddButtonIcon />
+                      <Typography
+                        align="center"
+                        sx={{
+                          color: "#999999",
+                          fontSize: 14,
+                        }}
+                      >
+                        jpg/png format RGB mode, maximum 20M
+                      </Typography>
+                      <input {...getInputProps()} />
+                    </Stack>
+                  </CardActionArea>
+                </Card>
+              )}
+            </Dropzone>
+          )}
+        </Stack>
         <Stack alignItems="flex-end">
           <InputField
             label="About"
@@ -183,12 +328,13 @@ const BrokerProfile: FC = () => {
         <Button
           type="submit"
           variant="contained"
+          disabled={!formik.isValid || formik.isSubmitting}
           sx={{
             width: 140,
             height: 48,
           }}
         >
-          Save
+          {formik.isSubmitting ? <CircularProgress /> : <>Save</>}
         </Button>
       </Stack>
       <UploadPhotoDialog
