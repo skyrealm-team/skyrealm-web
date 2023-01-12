@@ -92,6 +92,7 @@ type MutationBrokerUpdateProfileArgs = {
 };
 
 type MutationContactBrokerArgs = {
+  brokerId: InputMaybe<Scalars["String"]>;
   company: InputMaybe<Scalars["String"]>;
   email: InputMaybe<Scalars["String"]>;
   firstName: InputMaybe<Scalars["String"]>;
@@ -138,6 +139,8 @@ type Queries = {
   getUserUserInfo: Maybe<User>;
   /** Login */
   login: Maybe<User>;
+  /** Returns broker owned listings */
+  queryBrokerListings: Maybe<QueryListings>;
   /** Returns available filters for listings */
   queryListingFilters: Maybe<Array<Maybe<ListingFilter>>>;
   /** Returns listings that match the query param(s) */

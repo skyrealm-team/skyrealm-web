@@ -63,8 +63,12 @@ const ListingsFiltersBar: FC = () => {
       <Toolbar
         variant="dense"
         sx={{
-          py: 0.8,
           overflow: "auto",
+          msOverflowStyle: "none",
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
         <Stack

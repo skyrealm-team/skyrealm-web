@@ -124,6 +124,7 @@ const BrokerProfile: FC = () => {
         gap={3}
         alignItems={{
           xs: "center",
+          sm: "initial",
         }}
       >
         <Stack
