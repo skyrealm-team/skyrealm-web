@@ -16,7 +16,9 @@ import {
   IconButton,
   Link,
   Stack,
+  Theme,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 
 import AddButtonIcon from "assets/icons/add-button.svg";
@@ -34,6 +36,8 @@ const UploadPhotoDialog: FC<UploadPhotoDialogProps> = ({
   onConfirm,
   ...props
 }) => {
+  const upSM = useMediaQuery<Theme>((theme) => theme.breakpoints.up("sm"));
+
   const [image, setImage] = useState(url);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -55,7 +59,7 @@ const UploadPhotoDialog: FC<UploadPhotoDialogProps> = ({
   }, [props.open]);
 
   return (
-    <Dialog scroll="body" fullWidth {...props}>
+    <Dialog scroll="body" fullScreen={!upSM} fullWidth {...props}>
       <DialogTitle
         sx={{
           fontWeight: 700,

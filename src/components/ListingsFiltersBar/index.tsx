@@ -61,14 +61,19 @@ const ListingsFiltersBar: FC = () => {
       })}
     >
       <Toolbar
+        variant="dense"
         sx={{
           py: 0.8,
-        }}
-        style={{
-          minHeight: "initial",
+          overflow: "auto",
         }}
       >
-        <Stack direction="row" gap={2}>
+        <Stack
+          direction="row"
+          gap={{
+            xs: 1,
+            sm: 2,
+          }}
+        >
           <PlaceField
             value={queryListingsArgs.address}
             onChange={(_, prediction) => {

@@ -12,7 +12,14 @@ const AuthButtons: FC = () => {
   const { data: userInfo, isLoading } = useGetUserInfo();
 
   return (
-    <Stack direction="row" alignItems="center" gap={3}>
+    <Stack
+      direction="row"
+      alignItems="center"
+      gap={{
+        xs: 1,
+        sm: 3,
+      }}
+    >
       {!isLoading && (
         <>
           {!userInfo ? (

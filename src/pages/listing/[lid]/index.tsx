@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { dehydrate, QueryClient } from "react-query";
-import { useMeasure } from "react-use";
 
 import { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
@@ -11,7 +10,6 @@ import { useRouter } from "next/router";
 import {
   Alert,
   Container,
-  Drawer,
   ListItemIcon,
   ListItemIconProps,
   ListItemText,
@@ -20,7 +18,6 @@ import {
   MenuItemProps,
   MenuList,
   Stack,
-  Toolbar,
 } from "@mui/material";
 
 import NearbyResidentsIcon from "assets/icons/nearby-residents.svg";
@@ -29,6 +26,7 @@ import VisitorProfileIcon from "assets/icons/visitor-profile.svg";
 import VisitsIcon from "assets/icons/visits.svg";
 import ContactButton from "components/ContactButton";
 import ImageCarousel from "components/ImageCarousel";
+import MenuDrawer from "components/MenuDrawer";
 import PropertyHeader from "components/PropertyHeader";
 import PropertyInfo from "components/PropertyInfo";
 import PropertyMap from "components/PropertyMap";
@@ -38,8 +36,9 @@ import useQueryListing, {
   queryListingRequest,
   queryListingQuery,
 } from "graphql/useQueryListing";
+import useOpens from "hooks/useOpens";
 
-enum Menus {
+enum Menu {
   "property-info" = "property-info",
   "visits" = "visits",
   "visitor-profile" = "visitor-profile",
@@ -86,9 +85,10 @@ const Listing: NextPage = () => {
   const { data: listing, isLoading: listingIsLoading } = useQueryListing({
     listingId: listingId && String(listingId),
   });
+  const [opens, setOpens] = useOpens();
 
-  const menu: {
-    key: Menus;
+  const menus: {
+    key: Menu;
     MenuItemProps?: MenuItemProps;
     ListItemIconProps?: ListItemIconProps;
     ListItemTextProps?: ListItemTextProps;
@@ -96,7 +96,7 @@ const Listing: NextPage = () => {
     ...(listing?.paid
       ? [
           {
-            key: Menus["property-info"],
+            key: Menu["property-info"],
             ListItemIconProps: {
               children: <PropertyInfoIcon />,
             },
@@ -107,7 +107,7 @@ const Listing: NextPage = () => {
         ]
       : []),
     {
-      key: Menus.visits,
+      key: Menu.visits,
       ListItemIconProps: {
         children: <VisitsIcon />,
       },
@@ -116,7 +116,7 @@ const Listing: NextPage = () => {
       },
     },
     {
-      key: Menus["visitor-profile"],
+      key: Menu["visitor-profile"],
       ListItemIconProps: {
         children: <VisitorProfileIcon />,
       },
@@ -125,7 +125,7 @@ const Listing: NextPage = () => {
       },
     },
     {
-      key: Menus["nearby-residents"],
+      key: Menu["nearby-residents"],
       ListItemIconProps: {
         children: <NearbyResidentsIcon />,
       },
@@ -135,11 +135,9 @@ const Listing: NextPage = () => {
     },
   ];
 
-  const [ref, { width }] = useMeasure<HTMLDivElement>();
-
-  const { m = menu[0].key } = router.query;
-  const menuIsInvalid = !menu.find((item) => item.key === String(m));
-  const menuIsUnpaid = !listing?.paid && m === Menus["property-info"];
+  const { m: menu = menus[0].key } = router.query;
+  const menuIsInvalid = !menus.find((item) => item.key === String(menu));
+  const menuIsUnpaid = !listing?.paid && menu === Menu["property-info"];
 
   useEffect(() => {
     if (menuIsInvalid) {
@@ -160,24 +158,7 @@ const Listing: NextPage = () => {
         description={listing?.overview ?? undefined}
       />
       <Stack direction="row">
-        <Drawer
-          variant="permanent"
-          PaperProps={{
-            ref,
-            elevation: 0,
-            square: true,
-            sx: {
-              width: "fit-content",
-              filter: "drop-shadow(4px 0px 26px rgba(0, 0, 0, 0.03))",
-              alignItems: "center",
-            },
-          }}
-          sx={(theme) => ({
-            width,
-            zIndex: theme.zIndex.appBar - 1,
-          })}
-        >
-          <Toolbar />
+        <MenuDrawer>
           <MenuList
             component={Stack}
             gap={1}
@@ -185,14 +166,14 @@ const Listing: NextPage = () => {
               py: 1.75,
             }}
           >
-            {menu.map(
+            {menus.map(
               ({
                 key,
                 MenuItemProps,
                 ListItemIconProps,
                 ListItemTextProps,
               }) => {
-                const selected = key === m || MenuItemProps?.selected;
+                const selected = key === menu || MenuItemProps?.selected;
 
                 return (
                   <Link
@@ -209,6 +190,12 @@ const Listing: NextPage = () => {
                   >
                     <MenuItem
                       {...MenuItemProps}
+                      onClick={() => {
+                        setOpens({
+                          ...opens,
+                          menuDrawer: false,
+                        });
+                      }}
                       sx={{
                         px: 3.4,
                         py: 0.8,
@@ -241,12 +228,13 @@ const Listing: NextPage = () => {
             )}
           </MenuList>
           <ContactButton
+            listing={listing}
             sx={{
               width: 190,
               height: 50,
             }}
           />
-        </Drawer>
+        </MenuDrawer>
         <Stack
           sx={{
             flex: 1,
@@ -258,10 +246,10 @@ const Listing: NextPage = () => {
             <Error statusCode={403} withDarkMode={false} />
           ) : (
             <>
-              {m === Menus["property-info"] && (
+              {menu === Menu["property-info"] && (
                 <ImageCarousel images={listing?.pics ?? []} />
               )}
-              {(m === Menus.visits || m === Menus["visitor-profile"]) && (
+              {(menu === Menu.visits || menu === Menu["visitor-profile"]) && (
                 <PropertyMap
                   listing={listing}
                   center={{
@@ -277,16 +265,23 @@ const Listing: NextPage = () => {
                   }}
                 />
               )}
-              {m === Menus["nearby-residents"] && (
+              {menu === Menu["nearby-residents"] && (
                 <PropertyMap listing={listing} polyGeom />
               )}
               <Container
                 sx={{
                   maxWidth: 1360,
-                  py: 3,
+                  py: {
+                    xs: 0,
+                    sm: 3,
+                  },
+                  px: {
+                    xs: 0,
+                    sm: 3,
+                  },
                 }}
               >
-                {m === Menus["property-info"] ? (
+                {menu === Menu["property-info"] ? (
                   <PropertyInfo listing={listing} />
                 ) : (
                   <Stack gap={4}>
@@ -294,14 +289,14 @@ const Listing: NextPage = () => {
                       Data range: {listing?.stats["timeStart"]} -{" "}
                       {listing?.stats["timeEnd"]}
                     </Alert>
-                    {m === Menus.visits && (
+                    {menu === Menu.visits && (
                       <PropertyVisits
                         listing={listing}
                         isLoading={listingIsLoading}
                       />
                     )}
-                    {(m === Menus["visitor-profile"] ||
-                      m === Menus["nearby-residents"]) && (
+                    {(menu === Menu["visitor-profile"] ||
+                      menu === Menu["nearby-residents"]) && (
                       <PropertyVisitor
                         listing={listing}
                         isLoading={listingIsLoading}

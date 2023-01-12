@@ -8,7 +8,7 @@ import ContactIcon from "assets/icons/contact.svg";
 import ContactDialog from "components/ContactDialog";
 
 export type ContactButtonProps = ButtonProps & {
-  listing?: SingleListing;
+  listing?: Maybe<SingleListing>;
 };
 
 const ContactButton: FC<ContactButtonProps> = ({ listing, ...props }) => {

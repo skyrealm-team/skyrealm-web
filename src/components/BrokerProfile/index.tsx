@@ -120,9 +120,29 @@ const BrokerProfile: FC = () => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Stack gap={3}>
-        <Stack direction="row" gap={4} alignItems="center">
-          <Stack direction="row" gap={2} alignItems="center">
+      <Stack
+        gap={3}
+        alignItems={{
+          xs: "center",
+        }}
+      >
+        <Stack
+          direction={{
+            sm: "row",
+          }}
+          gap={{
+            xs: 2,
+            sm: 4,
+          }}
+          alignItems="center"
+        >
+          <Stack
+            direction={{
+              sm: "row",
+            }}
+            gap={2}
+            alignItems="center"
+          >
             <Avatar
               src={formik.values?.avatar ?? undefined}
               sx={(theme) => ({
@@ -157,7 +177,14 @@ const BrokerProfile: FC = () => {
             Upload Photo
           </Button>
         </Stack>
-        <Stack direction="row" gap={4} alignItems="center">
+        <Stack
+          direction="row"
+          gap={{
+            xs: 2,
+            sm: 4,
+          }}
+          alignItems="center"
+        >
           <InputField
             label="First Name"
             value={formik.values.firstName}
@@ -183,7 +210,14 @@ const BrokerProfile: FC = () => {
             fullWidth
           />
         </Stack>
-        <Stack direction="row" gap={4} alignItems="center">
+        <Stack
+          direction="row"
+          gap={{
+            xs: 2,
+            sm: 4,
+          }}
+          alignItems="center"
+        >
           <InputField
             label="Organization"
             value={formik.values.organization}
@@ -208,7 +242,13 @@ const BrokerProfile: FC = () => {
             fullWidth
           />
         </Stack>
-        <Stack gap={1} alignItems="flex-start">
+        <Stack
+          gap={1}
+          alignItems={{
+            xs: "center",
+            sm: "flex-start",
+          }}
+        >
           <FieldLabel>Organization Logo</FieldLabel>
           {!!formik.values.organizationAvatar ? (
             <Stack
@@ -302,7 +342,7 @@ const BrokerProfile: FC = () => {
             </Dropzone>
           )}
         </Stack>
-        <Stack alignItems="flex-end">
+        <Stack alignSelf="stretch" alignItems="flex-end">
           <InputField
             label="About"
             value={formik.values.bio ?? ""}

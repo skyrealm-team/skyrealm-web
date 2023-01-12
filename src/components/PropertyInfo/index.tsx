@@ -37,7 +37,13 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
           },
         }}
       >
-        <Unstable_Grid2 container spacing={4}>
+        <Unstable_Grid2
+          container
+          spacing={{
+            xs: 1,
+            sm: 4,
+          }}
+        >
           {[
             {
               key: "Size",
@@ -140,7 +146,12 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
           <Stack gap={4}>
             {listing?.brokersInfo?.map((broker, index, list) => (
               <Fragment key={index}>
-                <Stack direction="row" gap={3}>
+                <Stack
+                  direction={{
+                    sm: "row",
+                  }}
+                  gap={3}
+                >
                   <Stack gap={1.7} alignItems="center">
                     <Avatar
                       src={broker?.avatar ?? undefined}
@@ -155,7 +166,7 @@ const PropertyInfo: FC<PropertyInfoProps> = ({ listing }) => {
                       <Typography>{broker?.phone}</Typography>
                     </Stack>
 
-                    <ContactButton size="small" />
+                    <ContactButton listing={listing} size="small" />
                   </Stack>
                   <Stack>
                     <Typography

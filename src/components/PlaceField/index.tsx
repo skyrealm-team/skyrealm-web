@@ -62,7 +62,6 @@ const PlaceField: FC<PlaceFieldProps> = ({
       includeInputInList={false}
       autoComplete
       sx={(theme) => ({
-        width: 323,
         ":hover": {
           fieldset: {
             borderColor: `${theme.palette.border?.main} !important`,
@@ -105,6 +104,7 @@ const PlaceField: FC<PlaceFieldProps> = ({
           InputProps={{
             ...params.InputProps,
             sx: {
+              width: 323,
               ...(TextFieldProps?.size === "small" && {
                 py: "0 7.5px !important",
               }),

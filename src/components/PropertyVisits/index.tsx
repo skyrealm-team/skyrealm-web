@@ -17,7 +17,13 @@ const PropertyVisits: FC<PropertyVisitsProps> = ({ listing, isLoading }) => {
   return (
     <>
       <InfoCard title="Metrics">
-        <Unstable_Grid2 container spacing={4}>
+        <Unstable_Grid2
+          container
+          spacing={{
+            xs: 1,
+            sm: 4,
+          }}
+        >
           {[
             {
               key: "Visits",
@@ -57,7 +63,7 @@ const PropertyVisits: FC<PropertyVisitsProps> = ({ listing, isLoading }) => {
                   noWrap
                   sx={{
                     color: "#333333",
-                    fontSize: 26,
+                    fontSize: 20,
                     fontWeight: 600,
                   }}
                 >

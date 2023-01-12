@@ -76,6 +76,7 @@ const AvatarButton: FC = () => {
   return (
     <>
       <IconButton
+        edge="end"
         onClick={async (event) => {
           setAnchorEl(event.currentTarget);
         }}

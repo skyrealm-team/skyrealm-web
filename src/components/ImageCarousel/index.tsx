@@ -1,9 +1,7 @@
 import { FC, useRef } from "react";
 
-import { Box, IconButton, Stack, Unstable_Grid2 } from "@mui/material";
-
-import ChevronLeft from "assets/icons/chevron-left.svg";
-import ChevronRight from "assets/icons/chevron-right.svg";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { alpha, Box, IconButton, Stack, Unstable_Grid2 } from "@mui/material";
 
 export type ImageCarouselProps = {
   images?: Maybe<string>[];
@@ -42,7 +40,8 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ images }) => {
         {images?.map((image, index) => (
           <Unstable_Grid2
             key={index}
-            xs={5}
+            xs={8}
+            sm={5}
             sx={{
               flexShrink: 0,
             }}
@@ -70,14 +69,23 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ images }) => {
                 left: -ref.current?.clientWidth,
               });
             }}
-            sx={{
+            disableRipple
+            sx={(theme) => ({
+              color: "white",
+              background: alpha("#000", 0.5),
               position: "absolute",
-              left: 0,
+              left: theme.spacing(1),
               top: "50%",
               transform: "translateY(-50%)",
-            }}
+            })}
           >
-            <ChevronLeft />
+            <ChevronLeft
+              sx={{
+                fontSize: {
+                  sm: 60,
+                },
+              }}
+            />
           </IconButton>
           <IconButton
             onClick={() => {
@@ -86,14 +94,23 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ images }) => {
                 left: ref.current?.clientWidth,
               });
             }}
-            sx={{
+            disableRipple
+            sx={(theme) => ({
+              color: "white",
+              background: alpha("#000", 0.5),
               position: "absolute",
-              right: 0,
+              right: theme.spacing(1),
               top: "50%",
               transform: "translateY(-50%)",
-            }}
+            })}
           >
-            <ChevronRight />
+            <ChevronRight
+              sx={{
+                fontSize: {
+                  sm: 60,
+                },
+              }}
+            />
           </IconButton>
         </>
       )}

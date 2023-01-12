@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { dehydrate, QueryClient } from "react-query";
-import { useMeasure, useUpdateEffect } from "react-use";
+import { useUpdateEffect } from "react-use";
 
 import { GetServerSideProps, NextPage } from "next";
 import Error from "next/error";
@@ -13,7 +13,6 @@ import {
   CardContent,
   CardHeader,
   Container,
-  Drawer,
   ListItemIcon,
   ListItemIconProps,
   ListItemText,
@@ -22,18 +21,19 @@ import {
   MenuItemProps,
   MenuList,
   Stack,
-  Toolbar,
   Typography,
 } from "@mui/material";
 
 import FavoriteIcon from "assets/icons/favorite.svg";
 import ProfileIcon from "assets/icons/profile.svg";
 import BrokerProfile from "components/BrokerProfile";
+import MenuDrawer from "components/MenuDrawer";
 import UserSavedList from "components/UserSavedList";
 import useGetUserInfo, {
   getUserInfoRequest,
   getUserUserInfoQuery,
 } from "graphql/useGetUserInfo";
+import useOpens from "hooks/useOpens";
 
 enum Menus {
   "profile" = "profile",
@@ -69,6 +69,8 @@ const User: NextPage = () => {
     isFetched: userInfoIsFetched,
   } = useGetUserInfo();
 
+  const [opens, setOpens] = useOpens();
+
   const menu: {
     key: Menus;
     MenuItemProps?: MenuItemProps;
@@ -99,8 +101,6 @@ const User: NextPage = () => {
     },
   ];
 
-  const [ref, { width }] = useMeasure<HTMLDivElement>();
-
   useUpdateEffect(() => {
     if (
       (!userInfoIsFetched && !userInfoIsLoading) ||
@@ -127,23 +127,7 @@ const User: NextPage = () => {
 
   return (
     <Stack direction="row">
-      <Drawer
-        variant="permanent"
-        PaperProps={{
-          ref,
-          elevation: 0,
-          square: true,
-          sx: {
-            width: "fit-content",
-            filter: "drop-shadow(4px 0px 26px rgba(0, 0, 0, 0.03))",
-          },
-        }}
-        sx={(theme) => ({
-          width,
-          zIndex: theme.zIndex.appBar - 1,
-        })}
-      >
-        <Toolbar />
+      <MenuDrawer>
         <MenuList
           component={Stack}
           gap={1}
@@ -169,6 +153,12 @@ const User: NextPage = () => {
                 >
                   <MenuItem
                     {...MenuItemProps}
+                    onClick={() => {
+                      setOpens({
+                        ...opens,
+                        menuDrawer: false,
+                      });
+                    }}
                     sx={{
                       px: 3.4,
                       py: 0.8,
@@ -200,7 +190,7 @@ const User: NextPage = () => {
             }
           )}
         </MenuList>
-      </Drawer>
+      </MenuDrawer>
       <Stack
         sx={{
           flex: 1,
@@ -210,7 +200,14 @@ const User: NextPage = () => {
         <Container
           sx={{
             maxWidth: 1300,
-            py: 8,
+            py: {
+              xs: 0,
+              sm: 8,
+            },
+            px: {
+              xs: 0,
+              sm: 3,
+            },
           }}
         >
           <Card elevation={0} square={false}>
@@ -229,16 +226,28 @@ const User: NextPage = () => {
                 </Typography>
               }
               sx={{
-                px: 4,
-                pt: 3,
-                pb: 2,
+                px: {
+                  sm: 4,
+                },
+                pt: {
+                  sm: 3,
+                },
+                pb: {
+                  sm: 2,
+                },
               }}
             />
             <CardContent
               sx={{
-                px: 4,
-                pt: 2,
-                pb: 4,
+                px: {
+                  sm: 4,
+                },
+                pt: {
+                  sm: 2,
+                },
+                pb: {
+                  sm: 4,
+                },
               }}
             >
               {m === Menus["profile"] && <BrokerProfile />}

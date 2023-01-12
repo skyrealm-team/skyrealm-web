@@ -17,21 +17,30 @@ const PropertyHeader: FC<PropertyHeaderProps> = ({ listing }) => {
       }}
       CardContentProps={{
         sx: {
-          px: 3,
-          py: 1.2,
+          px: {
+            sm: 3,
+          },
+          py: {
+            sm: 1.2,
+          },
         },
       }}
     >
-      <Stack direction="row" alignItems="center" gap={3}>
+      <Stack direction="row" alignItems="center" gap={1}>
         <Stack
-          gap={1}
+          gap={{
+            sm: 1,
+          }}
           sx={{
             flex: 1,
           }}
         >
           <Typography
+            variant="subtitle1"
             sx={{
-              fontSize: 26,
+              fontSize: {
+                sm: 26,
+              },
               fontWeight: 700,
             }}
           >
@@ -40,7 +49,11 @@ const PropertyHeader: FC<PropertyHeaderProps> = ({ listing }) => {
           <Stack direction="row" alignItems="center" gap={0.5}>
             <LocationIcon />
             <Typography
+              variant="subtitle2"
               sx={{
+                fontSize: {
+                  sm: 16,
+                },
                 color: "#999999",
               }}
             >

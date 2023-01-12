@@ -13,7 +13,9 @@ import {
   Link,
   MenuItem,
   Stack,
+  Theme,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 
 import { useFormik } from "formik";
@@ -44,6 +46,8 @@ const validationSchema = Yup.object().shape({
 
 export type SignUpDialogProps = Omit<DialogProps, "open">;
 const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
+  const upSM = useMediaQuery<Theme>((theme) => theme.breakpoints.up("sm"));
+
   const [opens, setOpens] = useOpens();
 
   const [success, setSuccess] = useToggle(false);
@@ -117,6 +121,7 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
     <>
       <Dialog
         scroll="body"
+        fullScreen={!upSM}
         fullWidth
         {...props}
         open={opens.signupDialog}
@@ -153,12 +158,7 @@ const SignUpDialog: FC<SignUpDialogProps> = ({ ...props }) => {
         </IconButton>
         <DialogContent>
           <form onSubmit={formik.handleSubmit}>
-            <Stack
-              gap={3}
-              sx={{
-                p: 3,
-              }}
-            >
+            <Stack gap={3}>
               <Typography
                 paragraph
                 sx={{

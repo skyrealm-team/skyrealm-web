@@ -50,7 +50,9 @@ const InfoCard: FC<PropsWithChildren<InfoCardProps>> = ({
             }
             {...CardHeaderProps}
             sx={{
-              p: 2,
+              p: {
+                sm: 2,
+              },
               ...CardHeaderProps?.sx,
             }}
           />
@@ -61,8 +63,12 @@ const InfoCard: FC<PropsWithChildren<InfoCardProps>> = ({
         {...CardContentProps}
         sx={{
           flex: 1,
-          p: 3,
-          pt: 1.5,
+          p: {
+            sm: 3,
+          },
+          pt: {
+            sm: 1.5,
+          },
           ...CardContentProps?.sx,
         }}
       >

@@ -17,7 +17,15 @@ export type PropertyVisitorProps = {
 const PropertyVisitor: FC<PropertyVisitorProps> = ({ listing, isLoading }) => {
   return (
     <>
-      <Stack direction="row" gap={3}>
+      <Stack
+        direction={{
+          sm: "row",
+        }}
+        gap={{
+          xs: 4,
+          sm: 3,
+        }}
+      >
         <InfoCard
           title="Gender"
           CardProps={{

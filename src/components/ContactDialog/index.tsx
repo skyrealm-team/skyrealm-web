@@ -13,7 +13,9 @@ import {
   IconButton,
   Link,
   Stack,
+  Theme,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 
 import { useFormik } from "formik";
@@ -21,8 +23,8 @@ import { merge } from "lodash";
 import * as Yup from "yup";
 
 import CloseIcon from "assets/icons/close.svg";
-import LocationIcon from "assets/icons/location.svg";
 import InputField from "components/InputField";
+import PropertyHeader from "components/PropertyHeader";
 import useContactBroker from "graphql/useContactBroker";
 import useGetUserInfo from "graphql/useGetUserInfo";
 import useOpens from "hooks/useOpens";
@@ -39,12 +41,14 @@ const validationSchema = Yup.object().shape({
 });
 
 export type ContactDialogProps = DialogProps & {
-  listing?: SingleListing;
+  listing?: Maybe<SingleListing>;
 };
 
-const ContactDialog: FC<ContactDialogProps> = ({ open, ...props }) => {
+const ContactDialog: FC<ContactDialogProps> = ({ listing, open, ...props }) => {
   const router = useRouter();
   const { lid } = router.query;
+
+  const upSM = useMediaQuery<Theme>((theme) => theme.breakpoints.up("sm"));
 
   const { data: userInfo } = useGetUserInfo();
   const { mutateAsync: contactBroker } = useContactBroker();
@@ -94,6 +98,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ open, ...props }) => {
   return (
     <Dialog
       scroll="body"
+      fullScreen={!upSM}
       fullWidth
       {...props}
       open={open && !opens.signinDialog}
@@ -129,32 +134,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ open, ...props }) => {
       <DialogContent>
         <form onSubmit={formik.handleSubmit}>
           <Stack gap={3}>
-            <Stack
-              alignItems="center"
-              gap={1}
-              sx={{
-                flex: 1,
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: 26,
-                  fontWeight: 700,
-                }}
-              >
-                270 W 43rd St, New York, NY 100
-              </Typography>
-              <Stack direction="row" alignItems="center" gap={0.5}>
-                <LocationIcon />
-                <Typography
-                  sx={{
-                    color: "#999999",
-                  }}
-                >
-                  Washington Square, New York, NY 10012
-                </Typography>
-              </Stack>
-            </Stack>
+            <PropertyHeader listing={listing} />
             {!userInfo && (
               <Typography
                 align="center"

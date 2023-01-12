@@ -1,5 +1,7 @@
 import { FC } from "react";
 
+import { Theme, useMediaQuery } from "@mui/material";
+
 import {
   GoogleMap,
   GoogleMapProps,
@@ -23,6 +25,8 @@ const PropertyMap: FC<PropertyMapProps> = ({
   polyGeom,
   ...props
 }) => {
+  const upSM = useMediaQuery<Theme>((theme) => theme.breakpoints.up("sm"));
+
   return (
     <LoadScriptNext
       googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}
@@ -31,7 +35,10 @@ const PropertyMap: FC<PropertyMapProps> = ({
       <GoogleMap
         {...props}
         mapContainerStyle={{
-          aspectRatio: `${1667 / 410}`,
+          aspectRatio: `${2 / 1}`,
+          ...(upSM && {
+            aspectRatio: `${1667 / 410}`,
+          }),
           ...props.mapContainerStyle,
         }}
         center={center}

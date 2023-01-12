@@ -4,6 +4,7 @@ const useOpens = createGlobalState({
   signupDialog: false,
   signinDialog: false,
   forgotPasswordDialog: false,
+  menuDrawer: false,
 });
 
 export default useOpens;
