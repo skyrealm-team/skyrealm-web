@@ -55,6 +55,7 @@ const ContactDialog: FC<ContactDialogProps> = ({ listing, open, ...props }) => {
 
   const formik = useFormik<MutationContactBrokerArgs>({
     initialValues: {
+      brokerId: "",
       listingId: String(lid),
       firstName: userInfo?.firstName ?? "",
       lastName: userInfo?.lastName ?? "",
