@@ -17,7 +17,6 @@ import { LoadScriptNext, LoadScriptProps } from "@react-google-maps/api";
 import ListingsCard from "components/ListingsCard";
 import ListingsFiltersBar from "components/ListingsFiltersBar";
 import ListingsMap from "components/ListingsMap";
-import Loading from "components/Loading";
 
 const libraries: LoadScriptProps["libraries"] = ["places"];
 
@@ -52,7 +51,6 @@ const Home: NextPage = () => {
     <LoadScriptNext
       googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}
       libraries={libraries}
-      loadingElement={<Loading />}
     >
       <>
         <ListingsFiltersBar />

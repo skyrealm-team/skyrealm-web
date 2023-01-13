@@ -9,8 +9,6 @@ import {
   MarkerProps,
 } from "@react-google-maps/api";
 
-import Loading from "components/Loading";
-
 import Makers from "./Makers";
 
 export type PropertyMapProps = GoogleMapProps & {
@@ -30,7 +28,6 @@ const PropertyMap: FC<PropertyMapProps> = ({
   return (
     <LoadScriptNext
       googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}
-      loadingElement={<Loading />}
     >
       <GoogleMap
         {...props}
