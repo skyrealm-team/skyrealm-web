@@ -37,7 +37,7 @@ const Header: FC = () => {
   return (
     <>
       <AppBar
-        component="nav"
+        component="header"
         color="inherit"
         sx={(theme) => ({
           boxShadow: "0px 1px 10px rgba(0, 0, 0, 0.1)",

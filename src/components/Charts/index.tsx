@@ -58,7 +58,7 @@ const Charts: FC<ChartsProps> = ({
         width: "100%",
         height: "100%",
         aspectRatio: {
-          xs: `${1 / 1}`,
+          xs: `${3 / 2}`,
           sm: `${1240 / 468}`,
         },
         ...StackProps?.sx,

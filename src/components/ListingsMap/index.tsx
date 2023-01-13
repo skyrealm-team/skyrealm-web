@@ -39,16 +39,9 @@ const ListingsMap: FC<ListingsMapProps> = ({
   const [map, setMap] = useState<google.maps.Map>();
 
   useUpdateEffect(() => {
+    const bounds = queryListingsArgs.bounds;
     map?.set("boundsPrevented", true);
-
-    setTimeout(() => {
-      const bounds = queryListingsArgs.bounds;
-      if (!bounds) {
-        map?.fitBounds(map?.get("defaultBounds") ?? defaultBounds, 0);
-      } else {
-        map?.fitBounds(defaultsDeep(bounds, defaultBounds), 0);
-      }
-    });
+    map?.fitBounds(defaultsDeep(bounds, defaultBounds), 0);
   }, [queryListingsArgs.bounds]);
 
   return (
@@ -64,16 +57,13 @@ const ListingsMap: FC<ListingsMapProps> = ({
 
         GoogleMapProps?.onLoad?.(map);
       }}
-      onBoundsChanged={() => {
+      onCenterChanged={() => {
         const bounds = map?.getBounds()?.toJSON();
 
-        if (bounds) {
+        if (bounds && Object.values(bounds).every((item) => !isNaN(item))) {
           if (map?.get("boundsPrevented") !== false) {
-            setDefaultBounds(bounds);
-            if (!map?.get("defaultBounds")) {
-              map?.set("defaultBounds", bounds);
-            }
             map?.set("boundsPrevented", false);
+            setDefaultBounds(bounds);
           } else {
             setQueryListingsArgsDebounced({
               bounds,
@@ -83,7 +73,7 @@ const ListingsMap: FC<ListingsMapProps> = ({
           }
         }
 
-        GoogleMapProps?.onBoundsChanged?.();
+        GoogleMapProps?.onCenterChanged?.();
       }}
       options={{
         mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID,
